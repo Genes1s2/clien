@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Start Custom styles for the modal scrollbar */
+    .sidebar-scrollbar {
+      scrollbar-width: none;
+    }
+  
+    .sidebar-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  }
