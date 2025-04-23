@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AsyncState, LoadingType } from "../../models/store";
-import { loginAction, registerAction } from "./actions";
+import { loginAction, registerAction, restoreUser } from "./actions";
 import { RootState } from "..";
 
 type AuthState = {
@@ -21,6 +21,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    clearError: (state) => {
+      state.currentUser.error = null;
+      state.currentUser.status = LoadingType.IDLE;
+    },
     logout: (state) => {
       state.currentUser = {
         entities: null,
@@ -28,6 +32,7 @@ const authSlice = createSlice({
         error: null,
       };
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
@@ -39,11 +44,11 @@ const authSlice = createSlice({
       })
       .addCase(loginAction.fulfilled, (state, action) => {
         state.currentUser.status = LoadingType.SUCCESS;
-        state.currentUser.entities = action.payload.data;
+        state.currentUser.entities = action.payload;
         state.currentUser.error = null;
         state.isAuthenticated = true;
-        console.log("log slice, ", state.currentUser.entities, action.payload.data);
-        
+        console.log("action.payload.data, ", action.payload);
+
       })
       .addCase(loginAction.rejected, (state, action) => {
         state.currentUser.status = LoadingType.REJECTED;
@@ -70,13 +75,52 @@ const authSlice = createSlice({
         state.currentUser.error = action.payload as string;
         state.isAuthenticated = false;
       });
+
+    // Restore user
+    builder
+      .addCase(restoreUser.pending, (state) => {
+        state.currentUser.status = LoadingType.PENDING;
+      })
+      .addCase(restoreUser.fulfilled, (state, action) => {
+        state.currentUser.status = LoadingType.SUCCESS;
+        state.currentUser.entities = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(restoreUser.rejected, (state) => {
+        state.currentUser.status = LoadingType.IDLE;
+        state.currentUser.entities = null;
+        state.isAuthenticated = false;
+      });
+    
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.currentUser;
-export const selectIsAuthenticated = (state: RootState) => 
+console.log("selectCurrentUser", selectCurrentUser);
+
+export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
+console.log("selectIsAuthenticated", selectIsAuthenticated);
+
 
 export default authSlice.reducer;
+
+// Restor user
+// builder
+// .addCase(restoreUser.pending, (state) => {
+//   state.currentUser.status = LoadingType.PENDING;
+// })
+// .addCase(restoreUser.fulfilled, (state, action) => {
+//   state.currentUser.status = LoadingType.SUCCESS;
+//   state.currentUser.entities = action.payload;
+//   state.isAuthenticated = true;
+//   console.log("restoreUser slice, ", action.payload);
+  
+// })
+// .addCase(restoreUser.rejected, (state) => {
+//   state.currentUser.status = LoadingType.REJECTED;
+//   state.currentUser.entities = null;
+//   state.isAuthenticated = false;
+// });

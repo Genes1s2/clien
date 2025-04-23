@@ -1,30 +1,40 @@
 import React from "react";
-import { logout } from '../../store/auth/slice';
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
-import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { AuthUser } from "../../models/auth";
+import { RootState } from "../../store";
+
 
 const Header = () => {
-  
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector<RootState, AuthUser | null>(
+    (state) => state.auth.currentUser.entities
+  );
 
-  const log_out = () => {
-    dispatch(logout());
-    navigate('/authentification');
+  if (!user) {
+    return (
+      <header className="sticky top-0 p-3 flex items-center justify-end bg-blue-600 text-white shadow-md">
+        <div className=" animate-pulse">Loading user data...</div>
+      </header>
+    );
   }
-  
+
   return (
-    <header className="sticky top-0 p-3 flex items-center justify-between bg-blue-600 text-white shadow-md">
-      header
-      <div className="mt-6 text-center">
-        <button
-          onClick={log_out}
-          className="text-white hover:text-blue-800 font-medium"
-        >
-          Logout
-        </button>
-      </div>
+    <header className="sticky top-0 p-4 flex items-center justify-between bg-blue-600 text-white shadow-md">
+      <div className="text-xl font-bold">Dashboard</div>
+      
+      {user && (
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="font-medium">{`${user.firstName} ${user.lastName}`}</p>
+            <p className="text-sm opacity-90">{user.email}</p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-blue-400 flex items-center justify-center">
+            <span className="font-medium">
+              {user.firstName[0]}
+              {user.lastName[0]}
+            </span>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

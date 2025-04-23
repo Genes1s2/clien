@@ -1,6 +1,6 @@
-import React from "react";
-import { Provider } from "react-redux";
-import { store } from "./store";
+import React, { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+import { AppDispatch, store } from "./store";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import MainLayout from "./layouts/Main";
 import DashboardLayout from "./layouts/Dashboard";
@@ -13,12 +13,18 @@ import LogIn from "./pages/auth/LogIn";
 import Register from "./pages/auth/Register";
 import AuthLayout from "./layouts/Auth";
 import AuthForms from "./pages/auth/LogIn";
+import { restoreUser } from "./store/auth/actions";
 // import CategoryList from "./pages/Dashboard/Categories";
 // import DocumentList from "./pages/Dashboard/document";
 
 const App = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(restoreUser());
+  }, [dispatch]);
+
   return (
-    <Provider store={store}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -45,7 +51,6 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
-    </Provider>
   );
 };
 

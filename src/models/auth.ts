@@ -17,8 +17,8 @@ export interface ILoginInput {
     lastName: string;
     email: string;
     roleId: string;
-    createdAt: Date;
-    // Add other user properties as needed from your backend
+    createdAt: string;
+    token: string;
   }
   
   export interface AuthResponse {

@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ApiResponse } from "../../models/store";
 import { RootState } from "../index";
-import { ILoginInput, IRegisterInput } from "../../models/auth";
+import { AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
 
 export const loginAction = createAsyncThunk<
-  ApiResponse<{ token: string }>,
+  ApiResponse,
   ILoginInput,
   { state: RootState }
 >(
@@ -20,30 +20,28 @@ export const loginAction = createAsyncThunk<
       });
 
       const data = await response.json();
-      
-      
+
       if (!response.ok) {
-        console.log("Login failed try", data);
-        
-         alert(data.error)
-        return rejectWithValue(data);
+
+        return rejectWithValue(data.error);
       }
-      
-      console.log("login sucessful: ", data);
+      console.log("login sucessful, ", data);
+
+      // Store the token in localStorage
+      localStorage.setItem("token", data.token);
+
+
       return data;
     } catch (error: any) {
-      console.log("Login failed log", error);
-      return alert(error)
-      
-      return rejectWithValue({ 
-        message: error.message || "Login failed" 
+      return rejectWithValue({
+        message: error.message || "Login failed"
       });
     }
   }
 );
 
 export const registerAction = createAsyncThunk<
-  ApiResponse,
+  ApiResponse<AuthUser>,
   IRegisterInput,
   { state: RootState }
 >(
@@ -59,17 +57,55 @@ export const registerAction = createAsyncThunk<
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
-         alert(data.error)
-        return rejectWithValue(data);
+
+        return rejectWithValue(data.error);
       }
 
       return data;
     } catch (error: any) {
-      return rejectWithValue({ 
-        message: error.message || "Registration failed" 
-      });
+
+      return rejectWithValue(error);
     }
   }
 );
+
+export const restoreUser = createAsyncThunk<
+  AuthUser,
+  void,
+  { state: RootState }
+>("auth/restoreUser", async (_, { rejectWithValue }) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return rejectWithValue("No token found");
+  }
+
+  try {
+    const response = await fetch("http://127.0.0.1:4000/api/auth/me", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await response.json();
+    console.log("restore user data: ", data);
+    
+    
+    if (!response.ok) {
+      console.log("restore user data: ", data.error);
+      alert("Error restoring user: ");
+      // Optionally, you can clear the token if the restoration fails
+      localStorage.removeItem("token");
+      return rejectWithValue(data.error || "Failed to restore user");
+    }
+
+    return data; 
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Restore failed");
+  }
+});
+
