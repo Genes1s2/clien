@@ -13,19 +13,19 @@ import LogIn from "./pages/auth/LogIn";
 import Register from "./pages/auth/Register";
 import AuthLayout from "./layouts/Auth";
 import AuthForms from "./pages/auth/LogIn";
+// import { restoreUser } from "./store/auth/restoreUser/actions";
 import { restoreUser } from "./store/auth/actions";
 // import CategoryList from "./pages/Dashboard/Categories";
 // import DocumentList from "./pages/Dashboard/document";
 
 const App = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(restoreUser());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(restoreUser());
+  // }, [dispatch]);
 
   return (
-      <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route path="/" index element={<Navigate to={`home`} />} />
@@ -50,7 +50,6 @@ const App = () => {
             <Route path="*" element={<NotfoundDashboard />} />
           </Route>
         </Routes>
-      </BrowserRouter>
   );
 };
 

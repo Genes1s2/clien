@@ -1,7 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ApiResponse } from "../../models/store";
 import { RootState } from "../index";
-import { AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
+import { AuthError, AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
+import fetchWithRetry from "../../utils/FetchWithRetry";
+import { logError } from "../../utils/ErrorLogging";
 
 export const loginAction = createAsyncThunk<
   ApiResponse,
@@ -18,6 +20,14 @@ export const loginAction = createAsyncThunk<
         },
         body: JSON.stringify(credentials),
       });
+      // const response = await fetchWithRetry(
+      //   "http://127.0.0.1:4000/api/auth/login",
+      //   {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(credentials),
+      //   },
+      // );
 
       const data = await response.json();
 
@@ -33,6 +43,7 @@ export const loginAction = createAsyncThunk<
 
       return data;
     } catch (error: any) {
+      logError(error)
       return rejectWithValue({
         message: error.message || "Login failed"
       });
@@ -83,7 +94,7 @@ export const restoreUser = createAsyncThunk<
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:4000/api/auth/me", {
+    const response = await fetchWithRetry("http://127.0.0.1:4000/api/auth/me", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -97,7 +108,6 @@ export const restoreUser = createAsyncThunk<
     
     if (!response.ok) {
       console.log("restore user data: ", data.error);
-      alert("Error restoring user: ");
       // Optionally, you can clear the token if the restoration fails
       localStorage.removeItem("token");
       return rejectWithValue(data.error || "Failed to restore user");
@@ -105,7 +115,16 @@ export const restoreUser = createAsyncThunk<
 
     return data; 
   } catch (error: any) {
-    return rejectWithValue(error.message || "Restore failed");
+    let errorMessage: AuthError = 'SESSION_RESTORE_FAILED';
+    
+    if (error.message.includes("401")) {
+      errorMessage = 'SESSION_EXPIRED';
+    } else if (error.message.includes("Network Error")) {
+      errorMessage = 'NETWORK_ERROR';
+    }
+    
+    return rejectWithValue(errorMessage || "Failed to restore user");
+    // return rejectWithValue(error.message || "Failed to restore user");
   }
 });
 

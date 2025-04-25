@@ -20,9 +20,11 @@
 // Update your store configuration
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/slice";
+import sessionReducer from "./auth/restoreUser/slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  session: sessionReducer,
 });
 
 export const store = configureStore({

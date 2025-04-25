@@ -25,3 +25,10 @@ export interface ILoginInput {
     user: AuthUser;
     token: string;
   }
+
+  export type AuthError =
+  | 'INVALID_TOKEN'
+  | 'SESSION_EXPIRED'
+  | 'NETWORK_ERROR'
+  | 'SERVER_ERROR'
+  | string;

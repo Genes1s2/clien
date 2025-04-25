@@ -26,11 +26,7 @@ const authSlice = createSlice({
       state.currentUser.status = LoadingType.IDLE;
     },
     logout: (state) => {
-      state.currentUser = {
-        entities: null,
-        status: LoadingType.IDLE,
-        error: null,
-      };
+      state.currentUser = initialState.currentUser;
       state.isAuthenticated = false;
       localStorage.removeItem("token");
     },
@@ -77,20 +73,21 @@ const authSlice = createSlice({
       });
 
     // Restore user
-    builder
-      .addCase(restoreUser.pending, (state) => {
-        state.currentUser.status = LoadingType.PENDING;
-      })
-      .addCase(restoreUser.fulfilled, (state, action) => {
-        state.currentUser.status = LoadingType.SUCCESS;
-        state.currentUser.entities = action.payload;
-        state.isAuthenticated = true;
-      })
-      .addCase(restoreUser.rejected, (state) => {
-        state.currentUser.status = LoadingType.IDLE;
-        state.currentUser.entities = null;
-        state.isAuthenticated = false;
-      });
+    // builder
+    //   .addCase(restoreUser.pending, (state) => {
+    //     state.currentUser.status = LoadingType.PENDING;
+    //   })
+    //   .addCase(restoreUser.fulfilled, (state, action) => {
+    //     state.currentUser.status = LoadingType.SUCCESS;
+    //     state.currentUser.entities = action.payload;
+    // state.isAuthenticated = true;
+    //     state.currentUser.error = null;
+    //   })
+    //   .addCase(restoreUser.rejected, (state, action) => {
+    //     state.currentUser.status = LoadingType.REJECTED;
+    //     state.currentUser.error = action.payload as string;
+    //     state.isAuthenticated = false;
+    //   });
     
   },
 });
@@ -106,21 +103,3 @@ console.log("selectIsAuthenticated", selectIsAuthenticated);
 
 
 export default authSlice.reducer;
-
-// Restor user
-// builder
-// .addCase(restoreUser.pending, (state) => {
-//   state.currentUser.status = LoadingType.PENDING;
-// })
-// .addCase(restoreUser.fulfilled, (state, action) => {
-//   state.currentUser.status = LoadingType.SUCCESS;
-//   state.currentUser.entities = action.payload;
-//   state.isAuthenticated = true;
-//   console.log("restoreUser slice, ", action.payload);
-  
-// })
-// .addCase(restoreUser.rejected, (state) => {
-//   state.currentUser.status = LoadingType.REJECTED;
-//   state.currentUser.entities = null;
-//   state.isAuthenticated = false;
-// });

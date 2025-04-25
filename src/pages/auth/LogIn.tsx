@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import { LoadingType } from '../../models/store';
 import { ILoginInput, IRegisterInput } from '../../models/auth';
 import { loginAction, registerAction } from '../../store/auth/actions';
+import { showPromise } from '../../utils/Notifications';
 
 const AuthForms = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,8 +45,22 @@ const AuthForms = () => {
 
   // Form submission handler
   const handleSubmit = async (values: ILoginInput | IRegisterInput) => {
+    
       if (isLogin) {
-        await dispatch(loginAction(values as ILoginInput));
+        await showPromise(
+          dispatch(loginAction(values)).unwrap(),
+          //  dispatch(loginAction(values as ILoginInput)),
+          {
+            loading: 'Authenticating...',
+            success: 'Welcome back!',
+            error: (err) => {
+              if (err instanceof Error) {
+                return err.message;
+              }
+              return 'Login failed. Please try again.';
+            }
+          }
+        );
       } else {
         await dispatch(registerAction(values as IRegisterInput));
       }
