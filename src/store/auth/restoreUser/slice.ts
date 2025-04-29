@@ -8,13 +8,6 @@ type AuthState = {
   isAuthenticated: boolean;
 };
 
-// interface SessionState {
-//   restoreStatus: LoadingType;
-//   restoreError: string | null;
-//   isAuthenticated: boolean;
-// }
-
-
 const initialState: AuthState = {
   currentUser: {
     entities: null,
@@ -23,12 +16,6 @@ const initialState: AuthState = {
   },
   isAuthenticated: false,
 };
-
-// const initialState: SessionState = {
-//   restoreStatus: LoadingType.IDLE,
-//   restoreError: null,
-//   isAuthenticated: false,
-// };
 
 const authSlice = createSlice({
   name: "session",
@@ -47,7 +34,6 @@ const authSlice = createSlice({
       .addCase(restoreUser.fulfilled, (state, action) => {
         state.currentUser.status = LoadingType.SUCCESS;
         state.currentUser.entities = action.payload;
-        console.log('action: ', action.payload)
         state.isAuthenticated = true;
         state.currentUser.error = null;
       })

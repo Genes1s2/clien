@@ -7,18 +7,24 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import AuthLoader from './components/AuthLoader';
 import { BrowserRouter } from 'react-router';
+import { Toaster } from 'react-hot-toast';
+import { ErrorBoundary } from './utils/ErrorLogging';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <AuthLoader>
-          <App />
-        </AuthLoader>
-      </BrowserRouter>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AuthLoader>
+            <Toaster />
+            <App />
+          </AuthLoader>
+        </BrowserRouter>
+      </ErrorBoundary>
     </Provider>
   </React.StrictMode>
 );

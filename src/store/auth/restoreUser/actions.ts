@@ -24,8 +24,6 @@ export const restoreUser = createAsyncThunk<
     });
 
     const data = await response.json();
-    console.log("restore user data: ", data);
-    
     
     if (!response.ok) {
       console.log("restore error ", data.error);

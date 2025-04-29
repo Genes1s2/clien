@@ -35,7 +35,6 @@ export const loginAction = createAsyncThunk<
 
         return rejectWithValue(data.error);
       }
-      console.log("login sucessful, ", data);
 
       // Store the token in localStorage
       localStorage.setItem("token", data.token);
@@ -82,49 +81,47 @@ export const registerAction = createAsyncThunk<
   }
 );
 
-export const restoreUser = createAsyncThunk<
-  AuthUser,
-  void,
-  { state: RootState }
->("auth/restoreUser", async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem("token");
+// export const restoreUser = createAsyncThunk<
+//   AuthUser,
+//   void,
+//   { state: RootState }
+// >("auth/restoreUser", async (_, { rejectWithValue }) => {
+//   const token = localStorage.getItem("token");
 
-  if (!token) {
-    return rejectWithValue("No token found");
-  }
+//   if (!token) {
+//     return rejectWithValue("No token found");
+//   }
 
-  try {
-    const response = await fetchWithRetry("http://127.0.0.1:4000/api/auth/me", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
+//   try {
+//     const response = await fetchWithRetry("http://127.0.0.1:4000/api/auth/me", {
+//       method: "GET",
+//       headers: {
+//         "Authorization": `Bearer ${token}`,
+//         "Content-Type": "application/json"
+//       }
+//     });
 
-    const data = await response.json();
-    console.log("restore user data: ", data);
+//     const data = await response.json();
     
-    
-    if (!response.ok) {
-      console.log("restore user data: ", data.error);
-      // Optionally, you can clear the token if the restoration fails
-      localStorage.removeItem("token");
-      return rejectWithValue(data.error || "Failed to restore user");
-    }
+//     if (!response.ok) {
+//       console.log("restore user data: ", data.error);
+//       // Optionally, you can clear the token if the restoration fails
+//       localStorage.removeItem("token");
+//       return rejectWithValue(data.error || "Failed to restore user");
+//     }
 
-    return data; 
-  } catch (error: any) {
-    let errorMessage: AuthError = 'SESSION_RESTORE_FAILED';
+//     return data; 
+//   } catch (error: any) {
+//     let errorMessage: AuthError = 'SESSION_RESTORE_FAILED';
     
-    if (error.message.includes("401")) {
-      errorMessage = 'SESSION_EXPIRED';
-    } else if (error.message.includes("Network Error")) {
-      errorMessage = 'NETWORK_ERROR';
-    }
+//     if (error.message.includes("401")) {
+//       errorMessage = 'SESSION_EXPIRED';
+//     } else if (error.message.includes("Network Error")) {
+//       errorMessage = 'NETWORK_ERROR';
+//     }
     
-    return rejectWithValue(errorMessage || "Failed to restore user");
-    // return rejectWithValue(error.message || "Failed to restore user");
-  }
-});
+//     return rejectWithValue(errorMessage || "Failed to restore user");
+//     // return rejectWithValue(error.message || "Failed to restore user");
+//   }
+// });
 

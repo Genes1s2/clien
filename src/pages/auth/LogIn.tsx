@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 // import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ const AuthForms = () => {
   useEffect(() => {
     dispatch(clearError());
   }, [isLogin, dispatch]);
-  
+
   // Handle alerts and redirection
   // useEffect(() => {
   //   if (status === LoadingType.SUCCESS) {
@@ -45,25 +45,28 @@ const AuthForms = () => {
 
   // Form submission handler
   const handleSubmit = async (values: ILoginInput | IRegisterInput) => {
-    
-      if (isLogin) {
-        await showPromise(
-          dispatch(loginAction(values)).unwrap(),
-          //  dispatch(loginAction(values as ILoginInput)),
-          {
-            loading: 'Authenticating...',
-            success: 'Welcome back!',
-            error: (err) => {
-              if (err instanceof Error) {
-                return err.message;
-              }
-              return 'Login failed. Please try again.';
+
+    if (isLogin) {
+      // if (status === LoadingType.SUCCESS) {
+      //       alert(isLogin ? 'Login successful!' : 'Registration successful!');
+      //     }
+      await showPromise(
+        // dispatch(loginAction(values)).unwrap(),
+        dispatch(loginAction(values as ILoginInput)),
+        {
+          loading: 'Authenticating...',
+          success: 'Welcome back!',
+          error: (err) => {
+            if (err instanceof Error) {
+              return err.message;
             }
+            return 'Login failed. Please try again.';
           }
-        );
-      } else {
-        await dispatch(registerAction(values as IRegisterInput));
-      }
+        }
+      );
+    } else {
+      await dispatch(registerAction(values as IRegisterInput));
+    }
   };
 
   // User Registration Schema
@@ -117,13 +120,14 @@ const AuthForms = () => {
                   <Field
                     name="firstName"
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.firstName && touched.firstName
-                        ? 'border-red-500 focus:ring-red-500'
-                        : 'border-gray-300 focus:ring-blue-500'
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
                       }`}
                   />
                   {errors.firstName && touched.firstName && (
                     <div className="text-red-500 text-sm mt-1">{errors.firstName}</div>
                   )}
+
                 </div>
 
                 <div>
@@ -133,13 +137,14 @@ const AuthForms = () => {
                   <Field
                     name="lastName"
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.lastName && touched.lastName
-                        ? 'border-red-500 focus:ring-red-500'
-                        : 'border-gray-300 focus:ring-blue-500'
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
                       }`}
                   />
-                  {errors.lastName && touched.lastName && (
+                  {/* {errors.lastName && touched.lastName && (
                     <div className="text-red-500 text-sm mt-1">{errors.lastName}</div>
-                  )}
+                  )} */}
+                  <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
                 </div>
               </div>
             )}
@@ -152,8 +157,8 @@ const AuthForms = () => {
                 name="email"
                 type="email"
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email && touched.email
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 focus:ring-blue-500'
+                  ? 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500'
                   }`}
               />
               {errors.email && touched.email && (
@@ -170,8 +175,8 @@ const AuthForms = () => {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.password && touched.password
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-blue-500'
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-blue-500'
                     }`}
                 />
                 <button

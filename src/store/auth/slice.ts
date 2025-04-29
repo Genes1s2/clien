@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AsyncState, LoadingType } from "../../models/store";
-import { loginAction, registerAction, restoreUser } from "./actions";
+import { loginAction, registerAction } from "./actions";
 import { RootState } from "..";
 
 type AuthState = {
@@ -95,11 +95,9 @@ const authSlice = createSlice({
 export const { logout, clearError } = authSlice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.currentUser;
-console.log("selectCurrentUser", selectCurrentUser);
 
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
-console.log("selectIsAuthenticated", selectIsAuthenticated);
 
 
 export default authSlice.reducer;

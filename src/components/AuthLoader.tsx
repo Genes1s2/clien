@@ -38,7 +38,7 @@
 //             } else {
 //                 dispatch(clearError());
 //                 console.log('yes');
-                
+
 //                 navigate("/authentification");
 //             }
 //         };
@@ -63,15 +63,15 @@
 
 //     useEffect(() => {
 //         if (status === LoadingType.PENDING) {
-            
+
 //           const timer = setTimeout(() => {
 //             setShowDelayMessage(true);
 //           }, 3000);
-          
+
 //           return () => clearTimeout(timer);
 //         }
 //       }, [status]);
-    
+
 //       if (status === LoadingType.PENDING) {
 //         return (
 //           <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center">
@@ -103,16 +103,20 @@
 // export default AuthLoader
 
 // components/AuthLoader.tsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { useNavigate } from "react-router";
 import { restoreUser } from "../store/auth/restoreUser/actions";
 import { LoadingType } from "../models/store";
+import { clearError } from "../store/auth/slice";
+import { showError } from "../utils/Notifications";
+import { getAuthError } from "../utils/ErrorMessages";
 
 const AuthLoader = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [showDelayMessage, setShowDelayMessage] = useState(false);
   const { status, error } = useSelector((state: RootState) => state.session.currentUser);
   const { entities } = useSelector((state: RootState) => state.auth.currentUser);
 
@@ -124,11 +128,46 @@ const AuthLoader = ({ children }: { children: React.ReactNode }) => {
     if (status === LoadingType.SUCCESS && entities) {
       navigate("/dashboard");
     }
-    
+
     if (status === LoadingType.REJECTED) {
       navigate("/authentification");
     }
   }, [status, entities, navigate]);
+
+  // Show error alert if exists
+  useEffect(() => {
+    if (error) {
+      const friendlyMessage = getAuthError(error);
+      showError(friendlyMessage);
+      dispatch(clearError());
+
+      if (['INVALID_TOKEN', 'SESSION_EXPIRED'].includes(error)) {
+        navigate('/authentification');
+      }
+    }
+  }, [error, dispatch, navigate]);
+
+  useEffect(() => {
+    if (status === LoadingType.PENDING) {
+
+      const timer = setTimeout(() => {
+        setShowDelayMessage(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
+  if (status === LoadingType.PENDING) {
+    return (
+      <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        {showDelayMessage && (
+          <p className="mt-4 text-gray-600">Taking longer than usual...</p>
+        )}
+      </div>
+    );
+  }
 
   return <>{children}</>;
 };
