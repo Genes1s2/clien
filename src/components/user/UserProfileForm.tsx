@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from '../../store';
 import { updateUserProfile } from '../../store/user/actions';
 import { showError, showSuccess } from '../../utils/Notifications';
 import { AuthUser } from '../../models/auth';
-import PasswordChangeForm from './PasswordChangeForm';
+import { restoreUser } from '../../store/auth/restoreUser/actions';
 
 const profileSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -20,12 +20,10 @@ const profileSchema = Yup.object().shape({
         .required('Email is required')
 });
 
-const ProfileForm = () => {
+const UserProfileForm = () => {
     const dispatch = useDispatch<AppDispatch>();
-    
-    const user = useSelector<RootState, AuthUser | null>(
-        (state) => state.session.currentUser.entities
-    );
+    const user = useSelector<RootState, AuthUser | null>((state) => state.session.currentUser.entities);
+
 
     const { status } = useSelector((state: RootState) => state.user.currentProfile);
 
@@ -36,7 +34,7 @@ const ProfileForm = () => {
     }
 
     return (
-        <div>
+        <div className=" p-8 bg-white rounded-lg shadow-lg">
 
             <Formik
                 initialValues={initialValues}
@@ -48,6 +46,8 @@ const ProfileForm = () => {
                             data: values
                         })).unwrap();
 
+                        await dispatch(restoreUser()).unwrap();
+
                         showSuccess('Profile updated successfully');
                         resetForm({ values });
                     } catch (error: any) {
@@ -56,45 +56,53 @@ const ProfileForm = () => {
                 }}
             >
                 {({ errors, touched }) => (
-                    <Form className="space-y-4">
+                    <Form className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium">First Name</label>
                             <Field
                                 name="firstName"
-                                className={`mt-1 block w-full rounded-md ${errors.firstName && touched.firstName
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
-                                    } shadow-sm`}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.firstName && touched.firstName
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-blue-500'
+                                    }`}
                             />
 
-                            <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
+                            {errors.firstName && touched.firstName && (
+                                <div className="text-red-500 text-sm mt-1">{errors.firstName}</div>
+                            )}
                         </div>
 
-
                         <div>
-                            <label className="block text-sm font-medium">Last Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Last Name
+                            </label>
                             <Field
                                 name="lastName"
-                                className={`mt-1 block w-full rounded-md ${errors.lastName && touched.lastName
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
-                                    } shadow-sm`}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.lastName && touched.lastName
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-blue-500'
+                                    }`}
                             />
-                            <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+                            {errors.lastName && touched.lastName && (
+                                <div className="text-red-500 text-sm mt-1">{errors.lastName}</div>
+                            )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium">Email</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Email
+                            </label>
                             <Field
                                 name="email"
                                 type="email"
-                                className={`mt-1 block w-full rounded-md ${errors.email && touched.email
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
-                                    } shadow-sm`}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email && touched.email
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-blue-500'
+                                    }`}
                             />
-                            <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
-
+                            {errors.email && touched.email && (
+                                <div className="text-red-500 text-sm mt-1">{errors.email}</div>
+                            )}
                         </div>
 
                         <button
@@ -111,4 +119,4 @@ const ProfileForm = () => {
     );
 };
 
-export default ProfileForm;
+export default UserProfileForm;

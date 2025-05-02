@@ -6,6 +6,8 @@ interface ConfirmationModalProps {
   onConfirm: () => void;
   title: string;
   message: string;
+  bgColor: string;
+  hoverbgColor: string;
 }
 
 const ConfirmationModal = ({
@@ -13,7 +15,9 @@ const ConfirmationModal = ({
   onClose,
   onConfirm,
   title,
-  message
+  message,
+  bgColor,
+  hoverbgColor
 }: ConfirmationModalProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -35,7 +39,8 @@ const ConfirmationModal = ({
             </button>
             <button
               onClick={onConfirm}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              className={`${bgColor} ${hoverbgColor} px-4 py-2 text-white rounded`}
+              // className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
               Confirm
             </button>

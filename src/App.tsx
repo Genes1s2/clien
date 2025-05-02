@@ -15,6 +15,8 @@ import SupportPage from "./pages/Dashboard/others/SupportPage";
 import UserProfile from "./pages/Dashboard/user/UserProfile";
 import AdminRoute from "./components/routesProtection/AdminRoutes";
 import UserList from "./pages/Dashboard/user/UserList";
+import UserAdminProfile from "./pages/Dashboard/user/UserAdminProfile";
+import RolesPage from "./pages/Dashboard/rolePermissions/RolesPage";
 // import CategoryList from "./pages/Dashboard/Categories";
 // import DocumentList from "./pages/Dashboard/document";
 
@@ -44,9 +46,14 @@ const App = () => {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="documentation" element={<DocumentationPage />} />
         <Route path="support" element={<SupportPage />} />
+
         <Route path="admin/users" element={<AdminRoute />}>
           <Route index element={<UserList />} />
+          <Route path=":userId" element={<UserAdminProfile />} />
+          <Route path="roles" element={<RolesPage />} />
+          {/* <Route path="permissions" element={<PermissionsPage />} /> */}
         </Route>
+        
         {/* <Route path="categories" element={<CategoryList />} /> */}
         {/* <Route path="courses" element={<DocumentList />} /> */}
         <Route path="*" element={<NotfoundDashboard />} />

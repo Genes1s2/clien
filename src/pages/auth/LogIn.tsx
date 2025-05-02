@@ -10,6 +10,7 @@ import { LoadingType } from '../../models/store';
 import { ILoginInput, IRegisterInput } from '../../models/auth';
 import { loginAction, registerAction } from '../../store/auth/actions';
 import { showPromise } from '../../utils/Notifications';
+import { restoreUser } from '../../store/auth/restoreUser/actions';
 
 const AuthForms = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,18 +24,8 @@ const AuthForms = () => {
   // Clear errors when switching between forms
   useEffect(() => {
     dispatch(clearError());
+    // dispatch(restoreUser());
   }, [isLogin, dispatch]);
-
-  // Handle alerts and redirection
-  // useEffect(() => {
-  //   if (status === LoadingType.SUCCESS) {
-  //     alert(isLogin ? 'Login successful!' : 'Registration successful!');
-  //   }
-
-  //   if (error) {
-  //     console.log("error logi: ", error);
-  //   }
-  // }, [status, error, isLogin]);
 
   // Redirect when authenticated
   useEffect(() => {
@@ -47,12 +38,10 @@ const AuthForms = () => {
   const handleSubmit = async (values: ILoginInput | IRegisterInput) => {
 
     if (isLogin) {
-      // if (status === LoadingType.SUCCESS) {
-      //       alert(isLogin ? 'Login successful!' : 'Registration successful!');
-      //     }
+
       await showPromise(
-        // dispatch(loginAction(values)).unwrap(),
-        dispatch(loginAction(values as ILoginInput)),
+
+        dispatch(loginAction(values as ILoginInput)).unwrap(),
         {
           loading: 'Authenticating...',
           success: 'Welcome back!',
@@ -65,7 +54,7 @@ const AuthForms = () => {
         }
       );
     } else {
-      await dispatch(registerAction(values as IRegisterInput));
+      await dispatch(registerAction(values as IRegisterInput)).unwrap();
     }
   };
 
@@ -141,10 +130,9 @@ const AuthForms = () => {
                       : 'border-gray-300 focus:ring-blue-500'
                       }`}
                   />
-                  {/* {errors.lastName && touched.lastName && (
+                  {errors.lastName && touched.lastName && (
                     <div className="text-red-500 text-sm mt-1">{errors.lastName}</div>
-                  )} */}
-                  <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+                  )}
                 </div>
               </div>
             )}

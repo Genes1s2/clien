@@ -26,7 +26,6 @@ export const restoreUser = createAsyncThunk<
     const data = await response.json();
     
     if (!response.ok) {
-      console.log("restore error ", data.error);
       
       localStorage.removeItem("token");
       return rejectWithValue(data.error || "Failed to restore user");

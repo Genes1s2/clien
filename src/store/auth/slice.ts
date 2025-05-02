@@ -43,7 +43,6 @@ const authSlice = createSlice({
         state.currentUser.entities = action.payload;
         state.currentUser.error = null;
         state.isAuthenticated = true;
-        console.log("action.payload.data, ", action.payload);
 
       })
       .addCase(loginAction.rejected, (state, action) => {
@@ -71,23 +70,6 @@ const authSlice = createSlice({
         state.currentUser.error = action.payload as string;
         state.isAuthenticated = false;
       });
-
-    // Restore user
-    // builder
-    //   .addCase(restoreUser.pending, (state) => {
-    //     state.currentUser.status = LoadingType.PENDING;
-    //   })
-    //   .addCase(restoreUser.fulfilled, (state, action) => {
-    //     state.currentUser.status = LoadingType.SUCCESS;
-    //     state.currentUser.entities = action.payload;
-    // state.isAuthenticated = true;
-    //     state.currentUser.error = null;
-    //   })
-    //   .addCase(restoreUser.rejected, (state, action) => {
-    //     state.currentUser.status = LoadingType.REJECTED;
-    //     state.currentUser.error = action.payload as string;
-    //     state.isAuthenticated = false;
-    //   });
     
   },
 });

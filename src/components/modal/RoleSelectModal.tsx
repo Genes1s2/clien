@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { LoadingType } from '../../models/store';
+import { UserRole } from '../../models/rolePermissions';
+import { AppDispatch, RootState } from '../../store';
+import { fetchRoles } from '../../store/rolePermissions/action';
 
 interface RoleSelectModalProps {
   isOpen: boolean;
@@ -15,11 +20,25 @@ const RoleSelectModal = ({
   currentRole
 }: RoleSelectModalProps) => {
   const [selectedRole, setSelectedRole] = useState(currentRole);
-  const roles = [
-    { id: 'admin', name: 'Administrator' },
-    { id: 'editor', name: 'Editor' },
-    { id: 'viewer', name: 'Viewer' }
-  ];
+  // const roles = [
+  //   { id: 'admin', name: 'Administrator' },
+  //   { id: 'editor', name: 'Editor' },
+  //   { id: 'viewer', name: 'Viewer' }
+  // ];
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { roles, status, error } = useSelector((state: RootState) => state.rolePermissions);
+
+  useEffect(() => {
+    dispatch(fetchRoles());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setSelectedRole(currentRole);
+  }, [currentRole]);
+  
+  if (status === LoadingType.PENDING) return <div>Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -32,7 +51,7 @@ const RoleSelectModal = ({
           </Dialog.Title>
 
           <div className="space-y-2 mb-6">
-            {roles.map(role => (
+            {roles.map((role: UserRole) => (
               <label key={role.id} className="flex items-center space-x-3">
                 <input
                   type="radio"

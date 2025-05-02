@@ -9,6 +9,9 @@ import { AuthUser } from '../../models/auth';
 import { useNavigate } from 'react-router';
 import { logout } from '../../store/auth/slice';
 
+interface UserPasswordChangeForm {
+    user: AuthUser;
+}
 
 const passwordSchema = Yup.object().shape({
     currentPassword: Yup.string().required('Current password is required'),
@@ -23,15 +26,12 @@ const passwordSchema = Yup.object().shape({
 const PasswordChangeForm = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-
-    const user = useSelector<RootState, AuthUser | null>(
-        (state) => state.session.currentUser.entities
-    );
+    const user = useSelector<RootState, AuthUser | null>((state) => state.session.currentUser.entities);
 
     const { status } = useSelector((state: RootState) => state.user.currentProfile);
 
     return (
-        <div>
+        <div className=" bg-white p-8 rounded-lg shadow-lg">
             <Formik
                 initialValues={{ currentPassword: '', newPassword: '' }}
                 validationSchema={passwordSchema}
@@ -44,7 +44,7 @@ const PasswordChangeForm = () => {
 
                         showSuccess('Password changed successfully');
                         dispatch(logout());
-                            navigate("/authentification");
+                        navigate("/authentification");
                         resetForm();
                     } catch (error: any) {
                         console.log("error: ", error);
@@ -54,34 +54,34 @@ const PasswordChangeForm = () => {
                 }}
             >
                 {({ errors, touched }) => (
-                    <Form className="space-y-4">
+                    <Form className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium">Current Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                             <Field
                                 name="currentPassword"
                                 type="password"
-                                className={`mt-1 block w-full rounded-md ${errors.currentPassword && touched.currentPassword
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
-                                    } shadow-sm`}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.currentPassword && touched.currentPassword
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-blue-500'
+                                    }`}
                             />
                             {errors.currentPassword && touched.currentPassword && (
-                                <div className="text-red-500 text-sm">{errors.currentPassword}</div>
+                                <div className="text-red-500 text-sm mt-1">{errors.currentPassword}</div>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium">New Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                             <Field
                                 name="newPassword"
                                 type="password"
-                                className={`mt-1 block w-full rounded-md ${errors.newPassword && touched.newPassword
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
-                                    } shadow-sm`}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.newPassword && touched.newPassword
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-blue-500'
+                                    }`}
                             />
                             {errors.newPassword && touched.newPassword && (
-                                <div className="text-red-500 text-sm">{errors.newPassword}</div>
+                                <div className="text-red-500 text-sm mt-1">{errors.newPassword}</div>
                             )}
                         </div>
 
