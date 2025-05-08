@@ -19,9 +19,9 @@ const UserProfilePage = () => {
   const user = useSelector<RootState, AuthUser | null>((state) => state.session.currentUser.entities);
 
 
-  // if (status === LoadingType.PENDING) {
-  //   return <div className="text-center p-8">Loading user profile...</div>;
-  // }
+  if (status === LoadingType.PENDING) {
+    return <div className="text-center p-8">Loading user profile...</div>;
+  }
 
   // if (error) {
   //   return <div className="text-red-500 p-8">Error: {error}</div>;
@@ -34,10 +34,6 @@ const UserProfilePage = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <UserHeadProfile user={user} />
-      {/* <div className=' grid grid-cols-2 gap-4 my-6'>
-        <UserProfileForm  />
-        <PasswordChangeForm />
-      </div> */}
 
       {/* Navigation Tabs */}
       <nav className="flex overflow-hidden my-6 bg-white shadow-md rounded">

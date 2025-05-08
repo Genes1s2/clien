@@ -7,13 +7,14 @@ interface UserActivityProps {
 }
 
 export const UserActivity = ({ auditLogs }: UserActivityProps) => {
+  
   const getActionIcon = (action: any) => {
     switch (action) {
       case 'DOCUMENT_CREATED':
         return <File className="h-5 w-5 text-green-500" />;
       case 'DOCUMENT_UPDATED':
         return <Edit className="h-5 w-5 text-blue-500" />;
-      case 'DOCUMENT_DELETED':
+      case 'DOCUMENT_SOFT_DELETED':
         return <Trash className="h-5 w-5 text-red-500" />;
       default:
         return <Text className="h-5 w-5 text-gray-500" />;

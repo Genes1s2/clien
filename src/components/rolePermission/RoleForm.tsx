@@ -82,13 +82,14 @@ const RoleForm = ({ existingRole, onSuccess }: { existingRole?: any; onSuccess?:
       onSubmit={async (values, { setSubmitting }) => {
         try {
           if (existingRole) {
+            console.log('Updating role:', existingRole.id, values);
+
             await dispatch(updateRole({ roleId: existingRole.id, data: values as UserRole })).unwrap();
-            await dispatch(fetchRoles());
+            await dispatch(fetchRoles()).unwrap();
             showSuccess('Role updated successfully!');
             // setSubmitting(false);
           } else {
             await dispatch(createRole(values as UserRole)).unwrap();
-            await dispatch(fetchRoles());
             showSuccess('Role created successfully!');
             setSubmitting(false);
           }
@@ -100,11 +101,11 @@ const RoleForm = ({ existingRole, onSuccess }: { existingRole?: any; onSuccess?:
         }
       }}
     >
-      {({ isSubmitting, values, setFieldValue,  errors, touched }) => (
+      {({ isSubmitting, values, setFieldValue, errors, touched }) => (
         <Form className="space-y-4">
           {/* Role Name Field */}
           <div>
-         
+
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Role Name
             </label>
@@ -135,6 +136,8 @@ const RoleForm = ({ existingRole, onSuccess }: { existingRole?: any; onSuccess?:
                       className="flex items-center space-x-3 p-2 border rounded-lg hover:bg-gray-50"
                     >
                       <Field
+                        name="permissionIds"
+                        value={permission.id}
                         type="checkbox"
                         checked={values.permissionIds.includes(permission.id)}
                         onChange={(e: any) => {

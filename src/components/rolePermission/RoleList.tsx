@@ -18,8 +18,6 @@ const RoleList = ({ onEdit }: RoleListProps) => {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const { roles, status, error } = useSelector((state: RootState) => state.rolePermissions);
 
-  // console.log('Roles:', roles);
-
   useEffect(() => {
     dispatch(fetchRoles());
   }, [dispatch]);
@@ -63,7 +61,7 @@ const RoleList = ({ onEdit }: RoleListProps) => {
               <td className="px-6 py-4 whitespace-nowrap">
                 {role.permissions?.map((p: any) => (
                   <span key={p.id} className="mr-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    {p.name}
+                    {p.name.replace(/_/g, ' ')}
                   </span>
                 ))}
               </td>

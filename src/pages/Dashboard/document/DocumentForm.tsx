@@ -80,13 +80,6 @@
 //             <Form>
 //               <Input label="Nom du document" name="title" type="text" isRequired errorMessage={touched.title && errors.title} />
 
-//               {/* <Input
-//                 label="Description"
-//                 name="description"
-//                 type="text"
-//                 isRequired
-//                 errorMessage={touched.description && errors.description}
-//               /> */}
 
 //               {/* file Upload Field */}
 //               <div className="mb-4">

@@ -17,6 +17,11 @@ import AdminRoute from "./components/routesProtection/AdminRoutes";
 import UserList from "./pages/Dashboard/user/UserList";
 import UserAdminProfile from "./pages/Dashboard/user/UserAdminProfile";
 import RolesPage from "./pages/Dashboard/rolePermissions/RolesPage";
+import CategoriesPage from "./pages/Dashboard/Categories/CategoryPage";
+import DocumentsPage from "./pages/Dashboard/document/DocumentPage";
+import AllDeletedDocuments from "./components/document/AllDeletedDocuments";
+import DeletedDocumentsPage from "./pages/Dashboard/document/DeletedDocumentsPage";
+import DocumentDetailPage from "./pages/Dashboard/document/DocumentDetailPage";
 // import CategoryList from "./pages/Dashboard/Categories";
 // import DocumentList from "./pages/Dashboard/document";
 
@@ -24,15 +29,16 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      {/* <Route path="/" element={<MainLayout />}>
         <Route path="/" index element={<Navigate to={`home`} />} />
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Notfound />} />
-      </Route>
+      </Route> */}
 
-      <Route path="authentification" element={<AuthLayout />}>
-        <Route path="" index element={<AuthForms />} />
+      <Route path="" element={<AuthLayout />}>
+        <Route path="/" index element={<Navigate to={`authentification`} />} />
+        <Route path="authentification" element={<AuthForms />} />
         {/* <Route path="/se-connecter" index element={<Navigate to={`se-connecter`} />} /> */}
         {/* <Route path="auth/se-connecter" index element={<LogIn />} /> */}
         {/* <Route path="/créé-un-compte" element={<Register />} /> */}
@@ -42,6 +48,12 @@ const App = () => {
 
       <Route path="dashboard" element={<DashboardLayout />}>
         <Route path="" index element={<Dashboard />} />
+        <Route path="documents" >
+          <Route path="" index element={<DocumentsPage />} />
+          <Route path="deleted-documents" element={<DeletedDocumentsPage />} />
+          <Route path=":documentId" element={<DocumentDetailPage />} />
+
+        </Route>
         <Route path="profile" element={<UserProfile />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="documentation" element={<DocumentationPage />} />
@@ -51,11 +63,8 @@ const App = () => {
           <Route index element={<UserList />} />
           <Route path=":userId" element={<UserAdminProfile />} />
           <Route path="roles" element={<RolesPage />} />
-          {/* <Route path="permissions" element={<PermissionsPage />} /> */}
+          <Route path="categories" element={<CategoriesPage />} />
         </Route>
-        
-        {/* <Route path="categories" element={<CategoryList />} /> */}
-        {/* <Route path="courses" element={<DocumentList />} /> */}
         <Route path="*" element={<NotfoundDashboard />} />
       </Route>
     </Routes>

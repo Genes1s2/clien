@@ -46,8 +46,6 @@ const AllActiveUser = () => {
 
         try {
             if (selectedUser) {
-                console.log("selectedUser.id: ", selectedUser.id);
-
                 await dispatch(desactivateUser(selectedUser.id)).unwrap();
                 await dispatch(getAllActiveUsers());
                 setShowDeleteModal(false);

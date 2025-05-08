@@ -1,98 +1,43 @@
-// import { Category } from "./category";
+import { AuthUser } from "./auth";
+import { AccessRight, AuditLog } from "./logActions";
 
-// export type Document = {
-// 	id: number;
-// 	title: string;
-// 	description?: string;
-// 	image?: string;
-// 	categoryId: number;
-// 	category: Category;
-// 	createdAt: Date;
-// 	updatedAt: Date;
-//   };
-  
-//   export type DocumentFormArgs = {
-// 	id?: number;
-// 	title: string;
-// 	description?: string;
-// 	image?: string;
-// 	categoryId: number;
-//   };
-
-//   export type CreateDocumentArgs = {
-// 	title: string;
-// 	description: string;
-// 	image?: string | File; // Allow File type for uploads
-// 	categoryId: number;
-//   }
-//   export type FetchDocumentsAgrs = {
-// 	page?: number;
-// 	limit?: number;
-//   };
 
 export interface Document {
     id: string;
     title: string;
+    description?: string;
     filePath: string;
     categoryId: string;
     userId: string;
     tags: string[];
+    user: AuthUser;
+    versions: DocumentVersion[];
+    comments: DocumentComment[];
+    auditLogs: AuditLog[]
+    // workflows: Workflow[];
+    accessLogs: AccessRight[];
+    deletedAt: string;
     isArchived: boolean;
     isSensitive: boolean;
-    readonly createdAt: Date; // Helps track
-}
-
-export interface CreateDocumentInput {
-    // title: string;
-    // categoryId: string;
-    // tags?: string[];
-    // isSensitive?: boolean;
-    // id: string;
-    title: string;
-    filePath: string;
-    categoryId: string;
-    // userId: string;
-    // tags: string[];
-    // isArchived: boolean;
-    // isSensitive: boolean;
-    // readonly createdAt: Date; // Helps track
+    readonly createdAt: Date;
 }
 
 export interface DocumentVersion {
-    // title?: string;
-    // categoryId?: string;
-    // tags?: string[];
-    // isSensitive?: boolean;
     id: string;
-    title: string;
-    filePath: string;
-    categoryId: string;
+    documentId: string;
+    document: string;
+    versionNumber: string;
     userId: string;
-    tags: string[];
-    isArchived: boolean;
-    isSensitive: boolean;
-    readonly createdAt: Date; // Helps track
+    description: string;
+    uploadedBy: string;
+    readonly createdAt: Date;
 }
-
-// export interface DocumentVersion {
-//     id: string;
-//     documentId: string;
-//     filePath: string;
-//     versionNumber: number;
-//     readonly createdAt: Date; // Helps track
-// }
 
 export interface DocumentComment {
     id: string;
     content: string;
     documentId: string;
     userId: string;
-    readonly createdAt: Date; // Helps track
-}
-
-export interface AccessControlInput {
-    userId: string;
-    canRead: boolean;
-    canWrite: boolean;
-    canDelete: boolean;
+    user: AuthUser;
+    readonly createdAt: Date;
 }

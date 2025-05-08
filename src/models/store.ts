@@ -44,7 +44,6 @@ export interface ApiResponse<T = any> {
   data?: T;
   message?: string;
   success: boolean;
-  // Add any other standard fields from your API
   error?: string;
   statusCode?: number;
 }

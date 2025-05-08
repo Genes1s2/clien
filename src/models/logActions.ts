@@ -1,7 +1,12 @@
+import { AuthUser } from "./auth";
+import { Document } from "./documents";
+
 export interface AccessRight {
     id: string;
     documentId: string;
+    document: Document
     userId: string;
+    user: AuthUser;
     canRead: boolean;
     canWrite: boolean;
     canDelete: boolean;
@@ -13,5 +18,6 @@ export interface AccessRight {
     details: string;
     documentId: string;
     userId: string;
-    createdAt: string;
+    user: AuthUser
+    readonly createdAt: Date;
   }

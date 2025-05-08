@@ -2,13 +2,17 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/slice";
 import usereducer from "./user/slice";
 import sessionReducer from "./auth/restoreUser/slice";
-import rolePermissioneducer from "./rolePermissions/slice";
+import rolePermissionreducer from "./rolePermissions/slice";
+import categoryreducer from "./categories/slice";
+import documentreducer from "./document/slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   session: sessionReducer,
   user: usereducer,
-  rolePermissions: rolePermissioneducer
+  rolePermissions: rolePermissionreducer,
+  categories: categoryreducer,
+  documents: documentreducer
 });
 
 export const store = configureStore({

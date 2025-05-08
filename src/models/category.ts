@@ -12,11 +12,6 @@
 //   description: string;
 // };
 
-export type FetchCategoriesAgrs = {
-  page?: number;
-  limit?: number;
-};
-
 export interface Category {
   id: string;
   name: string;

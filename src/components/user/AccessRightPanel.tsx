@@ -7,6 +7,7 @@ interface AccessRightsPanelProps {
   }
 
 export const AccessRightsPanel = ({ accessRights }: AccessRightsPanelProps) => {
+  
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Document Access Rights</h3>
@@ -15,7 +16,7 @@ export const AccessRightsPanel = ({ accessRights }: AccessRightsPanelProps) => {
         {accessRights.map((right, index) => (
           <div key={index} className="border rounded-lg p-4">
             <div className="flex justify-between items-start mb-2">
-              <span className="font-medium">Document ID: {right.documentId}</span>
+              <span className="font-medium">User : {right.user.firstName} {right.user.lastName}</span>
             </div>
             
             <div className="space-y-2">

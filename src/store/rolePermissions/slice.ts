@@ -46,7 +46,8 @@ const rolePermissionSlice = createSlice({
       })
       .addCase(createRole.fulfilled, (state, action) => {
         state.status = LoadingType.SUCCESS;
-        state.roles = action.payload;
+        // state.roles = action.payload;
+        state.roles.unshift(action.payload);
       })
       .addCase(createRole.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
@@ -60,7 +61,9 @@ const rolePermissionSlice = createSlice({
     })
     .addCase(updateRole.fulfilled, (state, action) => {
       state.status = LoadingType.SUCCESS;
-      state.roles = action.payload;
+      // state.roles = action.payload;
+        const index = state.roles.findIndex(c => c.id === action.payload.id);
+        if (index !== -1) state.roles[index] = action.payload;
     })
     .addCase(updateRole.rejected, (state, action) => {
       state.status = LoadingType.REJECTED;
@@ -73,6 +76,7 @@ const rolePermissionSlice = createSlice({
       })
       .addCase(deleteRole.fulfilled, (state, action) => {
         state.status = LoadingType.SUCCESS;
+        state.roles = state.roles.filter(c => c.id !== action.payload);
       })
       .addCase(deleteRole.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;

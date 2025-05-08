@@ -21,13 +21,6 @@ const UserAdminProfile = () => {
     }
   }, [dispatch, userId, user?.id, status]);
   
-
-  //  useEffect(() => {
-  //     if (userId) {
-  //       dispatch(fetchUserProfile(userId));
-  //     }
-  //   }, [dispatch, userId]);
-  
     if (status === LoadingType.PENDING) {
       return <div className="text-center p-8">Loading user profile...</div>;
     }
