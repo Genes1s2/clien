@@ -619,3 +619,51 @@ export const controlDocument = createAsyncThunk(
     }
   }
 );
+
+// Arvhived document
+export const archiveDocument = createAsyncThunk(
+  'documents/archive',
+  async ({ documentId, isArchived }: { documentId: string; isArchived: boolean }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/archive`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ isArchived })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to update archive status');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to update archive status');
+    }
+  }
+);
+
+// Sensitive document
+export const sensitiveDocument = createAsyncThunk(
+  'documents/sensitive',
+  async ({ documentId, isSensitive }: { documentId: string; isSensitive: boolean }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/sensitive`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ isSensitive })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to update sensitivity status');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to update sensitivity status');
+    }
+  }
+);

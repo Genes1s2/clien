@@ -1,17 +1,16 @@
-// components/UserProfileLayout.jsx
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UserActivity } from './UserActivity';
-import { AccessRightsPanel } from './AccessRightPanel';
 import { AuthUser } from '../../models/auth';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDown, Edit, Trash } from 'lucide-react';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import RoleSelectModal from '../modal/RoleSelectModal';
-import { deleteUser, fetchUserProfile, getAllUsers, updateUserRole } from '../../store/user/actions';
+import { deleteUser, fetchUserProfile, updateUserRole } from '../../store/user/actions';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
+import { AccessRightProfile } from './AccessRigntProfile';
 
 interface UserProfileLayoutProps {
   user: AuthUser;
@@ -146,7 +145,7 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
 
       {/* Tab Content */}
       {activeTab === 'activity' && <UserActivity auditLogs={user.auditLogs} />}
-      {activeTab === 'access' && <AccessRightsPanel accessRights={user.accessRights} />}
+      {activeTab === 'access' && <AccessRightProfile accessRights={user.accessRights} />}
 
       {/* Modals */}
       <ConfirmationModal

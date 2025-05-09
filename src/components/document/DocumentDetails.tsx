@@ -4,11 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
 import Modal from '../modal/Modal';
-import { fetchDocuments, getDocumentById, softDeleteDocument } from '../../store/document/actions';
+import { archiveDocument, fetchDocuments, getDocumentById, sensitiveDocument, softDeleteDocument, uploadNewVersionDocument } from '../../store/document/actions';
 import { LoadingType } from '../../models/store';
 import { useNavigate } from 'react-router';
 import { UserActivity } from '../user/UserActivity';
 import { AccessRightsPanel } from '../user/AccessRightPanel';
+import { DocumentComments } from './DocumentComment';
+import { DocumentVersions } from './DocumentVersions';
+import DocumentFormVersions from './DocumentFormVersion';
 
 interface DocumentDetailProps {
     document: Document;
@@ -19,6 +22,7 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('activity');
+    const { status } = useSelector((state: RootState) => state.documents);
 
     const getFileIcon = (fileName: string) => {
         const ext = fileName.split('.').pop()?.toLowerCase();
@@ -44,8 +48,58 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
         }
     };
 
+    const handleArchive = async () => {
+        try {
+            await dispatch(archiveDocument({
+                documentId: document.id,
+                isArchived: !document.isArchived
+            })).unwrap();
+            
+            showSuccess(document.isArchived 
+                ? 'Document unarchived successfully' 
+                : 'Document archived successfully');
+            
+            // Refresh document data
+            await dispatch(getDocumentById(document.id)).unwrap();
+        } catch (error) {
+            showError('Failed to update archive status');
+        }
+    };
+
+    const handleSensitivity = async () => {
+        try {
+            await dispatch(sensitiveDocument({
+                documentId: document.id,
+                isSensitive: !document.isSensitive
+            })).unwrap();
+            
+            showSuccess(document.isSensitive 
+                ? 'Document marked as normal' 
+                : 'Document marked as sensitive');
+            
+            // Refresh document data
+            await dispatch(getDocumentById(document.id)).unwrap();
+        } catch (error) {
+            showError('Failed to update sensitivity status');
+        }
+    };
+
+    const handleUploadVersion = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        // await dispatch(uploadNewVersionDocument({ document.id, formData })).unwrap();
+        // Refresh versions after upload
+      } catch (error) {
+        console.error('Version upload failed:', error);
+      }
+    }
+  };
+
     return (
-        <div className="p-4">
+        <div>
 
             <div className="">
 
@@ -54,8 +108,10 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                         <span className="text-3xl">{getFileIcon(document.filePath)}</span>
                         <div className="flex-1">
                             <h3 className="font-medium truncate">{document.title}</h3>
-                            <p className="text-xs text-gray-500 truncate">
+                           <p className="text-xs text-gray-500 truncate">
                                 {new Date(document.createdAt).toLocaleDateString()}
+                                {document.isArchived && ' (Archived)'}
+                                {document.isSensitive && ' (Sensitive)'}
                             </p>
                         </div>
                     </div>
@@ -66,21 +122,25 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                         <div className="text-xs text-gray-500 truncate">
                             uploaded by: {document.user?.firstName} {document.user?.lastName}
                         </div>
-                        {/* <a
-                href={doc.filePath}
-                download
-                className="text-blue-600 hover:text-blue-800"
-              >
-                Download File
-              </a> */}
-                        {/* <button
-                  // onClick={() => handleDownload(doc)}
-                  onClick={() => handleDownload(doc.filePath, doc.title)}
-                  className="text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  Download
-                </button> */}
                         <div className='flex gap-2'>
+                            <button
+                                onClick={handleArchive}
+                                disabled={status === LoadingType.PENDING}
+                                className={`text-yellow-600 hover:text-yellow-800 text-sm ${
+                                    status === LoadingType.PENDING ? 'opacity-50' : ''
+                                }`}
+                            >
+                                {document.isArchived ? 'Unarchive' : 'Archive'}
+                            </button>
+                            <button
+                                onClick={handleSensitivity}
+                                disabled={status === LoadingType.PENDING}
+                                className={`text-purple-600 hover:text-purple-800 text-sm ${
+                                    status === LoadingType.PENDING ? 'opacity-50' : ''
+                                }`}
+                            >
+                                {document.isSensitive ? 'Mark Normal' : 'Mark Sensitive'}
+                            </button>
                             <button
                                 onClick={() => onEdit(document)}
                                 className="text-green-600 hover:text-green-800 text-sm"
@@ -98,31 +158,51 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                 </div>
 
                 {/* Navigation Tabs */}
-                      <nav className="flex space-x-4 mb-6 border-b border-gray-200">
-                        <button
-                          onClick={() => setActiveTab('activity')}
-                          className={`pb-4 px-1 ${activeTab === 'activity'
+                <nav className="flex space-x-4 my-6 border-b border-gray-200">
+                    <button
+                        onClick={() => setActiveTab('activity')}
+                        className={`pb-4 px-1 ${activeTab === 'activity'
                             ? 'border-b-2 border-purple-500 text-purple-600'
                             : 'text-gray-500 hover:text-gray-700'
                             }`}
-                        >
-                          Activity Log
-                        </button>
-                        <button
-                          onClick={() => setActiveTab('access')}
-                          className={`pb-4 px-1 ${activeTab === 'access'
+                    >
+                        Activity Log
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('access')}
+                        className={`pb-4 px-1 ${activeTab === 'access'
                             ? 'border-b-2 border-purple-500 text-purple-600'
                             : 'text-gray-500 hover:text-gray-700'
                             }`}
-                        >
-                          Access Rights
-                        </button>
-                      </nav>
-                
-                      {/* Tab Content */}
-                      {activeTab === 'activity' && <UserActivity auditLogs={document.auditLogs} />}
-                      {activeTab === 'access' && <AccessRightsPanel accessRights={document.accessLogs} />}
-                
+                    >
+                        Access Rights
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('comments')}
+                        className={`pb-4 px-1 ${activeTab === 'comments'
+                            ? 'border-b-2 border-purple-500 text-purple-600'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                    >
+                        Comments
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('versions')}
+                        className={`pb-4 px-1 ${activeTab === 'versions'
+                            ? 'border-b-2 border-purple-500 text-purple-600'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                    >
+                        Version
+                    </button>
+                </nav>
+
+                {/* Tab Content */}
+                {activeTab === 'activity' && <UserActivity auditLogs={document.auditLogs} />}
+                {activeTab === 'access' && <AccessRightsPanel accessRights={document.accessLogs} />}
+                {activeTab === 'comments' && <DocumentComments comment={document.comments} />}
+                {activeTab === 'versions' && <DocumentVersions version={document.versions} />}
+
 
 
             </div>

@@ -195,14 +195,13 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForm) => {
     <Formik
       initialValues={{
         title: existingDocument?.title || '',
-        description: existingDocument?.description || '',
+        // description: existingDocument?.description || '',
         categoryId: existingDocument?.categoryId || '',
         tags: existingDocument?.tags || [],
         filePath: null
       }}
       validationSchema={documentSchema}
       onSubmit={async (values, { setSubmitting }) => {
-        console.log("values: ", values);
 
         try {
           const formData = new FormData();
@@ -246,80 +245,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForm) => {
         } 
       }}
     >
-      {({ setFieldValue, values, isSubmitting, errors, touched }) => (
-        <Form className="space-y-4">
-          {/* Title Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <Field
-              name="title"
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.title && touched.title
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
-                }`}
-            />
-            <ErrorMessage name="title" component="div" className="text-red-500 text-sm mb-2" />
-          </div>
-
-          {/* Category Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <Select
-              options={categories.map(c => ({ value: c.id, label: c.name }))}
-              onChange={(selected: any) => setFieldValue('categoryId', selected?.value)}
-              classNamePrefix="react-select"
-              className={`${errors.categoryId && touched.categoryId
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
-                }`}
-            />
-            <ErrorMessage name="categoryId" component="div" className="text-red-500 text-sm mb-2" />
-          </div>
-
-          {/* Optional Tags Input */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tags (optional)</label>
-            <CreatableSelect
-              isMulti
-              components={animatedComponents}
-              options={[]}
-              onCreateOption={(inputValue: string) => {
-                const newTags = [...values.tags, inputValue];
-                setFieldValue('tags', newTags);
-              }}
-              value={values.tags.map((tag: string) => ({ value: tag, label: tag }))}
-              onChange={(selected: any) =>
-                setFieldValue('tags', selected.map((s: any) => s.value))
-              }
-              classNamePrefix="react-select"
-              className="border-gray-300 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* File Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Document File</label>
-            <input
-              type="file"
-              name="filePath"
-              onChange={(e) => setFieldValue("filePath", e.target.files?.[0])}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.filePath && touched.filePath
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
-                }`}
-            />
-            <ErrorMessage name="filePath" component="div" className="text-red-500 text-sm mb-2" />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {isSubmitting ? 'Submitting...' : existingDocument ? 'Update Category' : 'Create Category'}
-          </button>
-        </Form>
-      )}
+       
     </Formik>
   );
 };

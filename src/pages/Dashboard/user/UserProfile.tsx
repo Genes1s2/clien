@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { LoadingType } from '../../../models/store';
 import { AuthUser } from '../../../models/auth';
 import UserHeadProfile from '../../../components/user/UserHeadProfile';
@@ -7,7 +7,7 @@ import UserProfileForm from '../../../components/user/UserProfileForm';
 import PasswordChangeForm from '../../../components/user/PasswordChangeForm';
 import { RootState } from '../../../store';
 import { UserActivity } from '../../../components/user/UserActivity';
-import { AccessRightsPanel } from '../../../components/user/AccessRightPanel';
+import { AccessRightProfile } from '../../../components/user/AccessRigntProfile';
 
 const UserProfilePage = () => {
 
@@ -71,7 +71,7 @@ const UserProfilePage = () => {
         <UserProfileForm />
         <PasswordChangeForm />
       </div>}{activeTab === 'activity' && <UserActivity auditLogs={user.auditLogs} />}
-      {activeTab === 'access' && <AccessRightsPanel accessRights={user.accessRights} />}
+      {activeTab === 'access' && <AccessRightProfile accessRights={user.accessRights} />}
 
 
     </div>

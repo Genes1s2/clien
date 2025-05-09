@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Edit, File, Text, Trash } from 'lucide-react';
+import { Clock, Edit, File, Text, Trash, View } from 'lucide-react';
 import { AuditLog } from '../../models/logActions';
 
 interface UserActivityProps {
@@ -16,6 +16,10 @@ export const UserActivity = ({ auditLogs }: UserActivityProps) => {
         return <Edit className="h-5 w-5 text-blue-500" />;
       case 'DOCUMENT_SOFT_DELETED':
         return <Trash className="h-5 w-5 text-red-500" />;
+      case 'DOCUMENT_VIEWED':
+        return <View className="h-5 w-5 text-orange-500" />;
+      case 'DOCUMENT_COMMENTED':
+        return <Text className="h-5 w-5 text-gray-500" />;
       default:
         return <Text className="h-5 w-5 text-gray-500" />;
     }

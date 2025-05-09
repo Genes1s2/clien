@@ -24,8 +24,9 @@ export interface Document {
 
 export interface DocumentVersion {
     id: string;
+    filePath: string;
     documentId: string;
-    document: string;
+    document: Document;
     versionNumber: string;
     userId: string;
     description: string;
@@ -37,6 +38,7 @@ export interface DocumentComment {
     id: string;
     content: string;
     documentId: string;
+    document: Document;
     userId: string;
     user: AuthUser;
     readonly createdAt: Date;

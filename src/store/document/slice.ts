@@ -130,6 +130,8 @@ import {
   softDeleteDocument,
   hardeleteDocument,
   controlDocument,
+  sensitiveDocument,
+  archiveDocument,
 } from './actions';
 import { LoadingType } from '../../models/store';
 
@@ -170,7 +172,7 @@ const documentSlice = createSlice({
       })
       .addCase(fetchDocuments.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Create doc
@@ -184,7 +186,7 @@ const documentSlice = createSlice({
       })
       .addCase(createDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // all deleted doc
@@ -199,7 +201,7 @@ const documentSlice = createSlice({
       })
       .addCase(allDeletedDocuments.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // all deleted doc by owner
@@ -214,7 +216,7 @@ const documentSlice = createSlice({
       })
       .addCase(allDeletedDocumentsByOwner.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // all doc by owner
@@ -229,7 +231,7 @@ const documentSlice = createSlice({
       })
       .addCase(allDocumentsByOwner.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // get doc by id
@@ -244,7 +246,7 @@ const documentSlice = createSlice({
       })
       .addCase(getDocumentById.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // update doc
@@ -259,7 +261,7 @@ const documentSlice = createSlice({
       })
       .addCase(updateDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Soft delete (owner or admin)
@@ -274,7 +276,7 @@ const documentSlice = createSlice({
       })
       .addCase(softDeleteDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Hard delete (admin only)
@@ -289,7 +291,7 @@ const documentSlice = createSlice({
       })
       .addCase(hardeleteDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Restore document
@@ -304,7 +306,7 @@ const documentSlice = createSlice({
       })
       .addCase(restoreDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Document Versions
@@ -319,7 +321,7 @@ const documentSlice = createSlice({
       })
       .addCase(uploadNewVersionDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // Comments doc
@@ -334,7 +336,7 @@ const documentSlice = createSlice({
       })
       .addCase(commentDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
 
     // access control
@@ -349,8 +351,39 @@ const documentSlice = createSlice({
       })
       .addCase(controlDocument.rejected, (state, action) => {
         state.status = LoadingType.REJECTED;
-        state.error = action.payload as string;
+        // state.error = action.payload as string;
       })
+
+    // Archived ocument
+    builder
+      .addCase(archiveDocument.pending, (state) => {
+        state.status = LoadingType.PENDING;
+        state.error = null;
+      })
+      .addCase(archiveDocument.fulfilled, (state, action) => {
+        state.status = LoadingType.SUCCESS;
+        state.currentDocument = action.payload;
+      })
+      .addCase(archiveDocument.rejected, (state, action) => {
+        state.status = LoadingType.REJECTED;
+        // state.error = action.payload as string;
+      })
+
+    // sensitive ocument
+    builder
+      .addCase(sensitiveDocument.pending, (state) => {
+        state.status = LoadingType.PENDING;
+        state.error = null;
+      })
+      .addCase(sensitiveDocument.fulfilled, (state, action) => {
+        state.status = LoadingType.SUCCESS;
+        state.currentDocument = action.payload;
+      })
+      .addCase(sensitiveDocument.rejected, (state, action) => {
+        state.status = LoadingType.REJECTED;
+        // state.error = action.payload as string;
+      })
+
   }
 });
 
