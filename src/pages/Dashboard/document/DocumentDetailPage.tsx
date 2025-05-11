@@ -6,9 +6,6 @@ import { LoadingType } from '../../../models/store';
 import { getDocumentById } from '../../../store/document/actions';
 import DocumentDetail from '../../../components/document/DocumentDetails';
 import Modal from '../../../components/modal/Modal';
-import DocumentForm from '../../../components/document/DocumentForm';
-import { showError } from '../../../utils/Notifications';
-import { DocumentVersions } from '../../../components/document/DocumentVersions';
 import DocumentFormVersions from '../../../components/document/DocumentFormVersion';
 
 const DocumentDetailPage = () => {
