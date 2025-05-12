@@ -15,7 +15,6 @@ const Sidebar = () => {
     { path: "/dashboard", label: "Dashboard", requireAdmin: false },
     { path: "/dashboard/documents", label: "Documents", requireAdmin: false },
     { path: "/dashboard/admin/users", label: "Users", requireAdmin: true },
-    { path: "/dashboard/courses", label: "Courses", requireAdmin: false },
     { path: "/dashboard/admin/users/roles", label: "Roles", requireAdmin: true },
     { path: "/dashboard/admin/users/categories", label: "Categories", requireAdmin: true },
   ];

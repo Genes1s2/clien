@@ -1,16 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import DocumentViewer from '../components/DocumentViewer';
-import { e } from 'react-router/dist/development/route-data-Cq_b5feC';
 import Modal from '../../../components/modal/Modal';
 import DocumentList from '../../../components/document/DocumentList';
 import DocumentForm from '../../../components/document/DocumentForm';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
 import { Document } from '../../../models/documents';
-import { LoadingType } from '../../../models/store';
 import { Link } from 'react-router';
-import { Delete, Trash, Trash2, Trash2Icon, TrashIcon } from 'lucide-react';
-import AllDeletedDocuments from '../../../components/document/AllDeletedDocuments';
+import { Trash2 } from 'lucide-react';
 import AllDocumentsOwner from '../../../components/document/AllDocumentsOwner';
 
 const DocumentsPage = () => {

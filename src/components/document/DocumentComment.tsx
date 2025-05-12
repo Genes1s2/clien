@@ -1,6 +1,5 @@
 import React from 'react';
-import { CheckCircle, Text, XCircle } from 'lucide-react';
-import { AccessRight } from '../../models/logActions';
+import { Text } from 'lucide-react';
 import { DocumentComment } from '../../models/documents';
 
 interface DocumentCommentProps {
@@ -21,10 +20,10 @@ export const DocumentComments = ({ comment }: DocumentCommentProps) => {
         ? (comment && comment.map((com, index) => (
           <div key={index} className="border-l-4 border-purple-200 pl-4">
             <div className="flex items-start gap-3">
-              <div className="mt-1">{com.user?.firstName} {com.user?.lastName}</div>
+              {/* <div className="mt-1">{com.user?.firstName} {com.user?.lastName}</div> */}
               <div>
                 <p className="font-medium text-gray-900">{com.content}</p>
-                {/* <p className="text-sm text-gray-600">{com.details}</p> */}
+                <p className="text-sm text-gray-600">By: {com.user?.firstName ?? "User Deleted"} {com.user?.lastName ?? "User Deleted"}</p>
                 <time className="text-xs text-gray-500 mt-1 block">
                   {new Date(com.createdAt).toLocaleDateString('en-US', {
                     year: 'numeric',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 // import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { LoadingType } from '../../models/store';
 import { ILoginInput, IRegisterInput } from '../../models/auth';
 import { loginAction, registerAction } from '../../store/auth/actions';
 import { showPromise } from '../../utils/Notifications';
-import { restoreUser } from '../../store/auth/restoreUser/actions';
+import { Eye, EyeOff } from 'lucide-react';
 
 const AuthForms = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,6 +53,7 @@ const AuthForms = () => {
           }
         }
       );
+      
     } else {
       await dispatch(registerAction(values as IRegisterInput)).unwrap();
     }
@@ -172,7 +173,7 @@ const AuthForms = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
                 >
-                  {/* {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />} */}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {errors.password && touched.password && (

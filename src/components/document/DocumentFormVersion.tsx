@@ -1,4 +1,3 @@
-// components/DocumentFormVersions.tsx
 import { useDispatch } from 'react-redux';
 import { getDocumentById, uploadNewVersionDocument } from '../../store/document/actions';
 import { AppDispatch } from '../../store';
@@ -18,20 +17,6 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
         description: Yup.string().nullable(),
         filePath: Yup.mixed().required('File is required')
     });
-
-
-    const handleUploadVersion = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-                await dispatch(uploadNewVersionDocument({ documentId, formData })).unwrap();
-            } catch (error) {
-                console.error('Version upload failed:', error);
-            }
-        }
-    };
 
     return (
         <div className="space-y-4">
@@ -54,7 +39,6 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                         setSubmitting(false);
                         onSuccess?.();
                     } catch (error: any) {
-                        // await dispatch(fetchDocuments()).unwrap()
                         showError('Failed to process upload');
                     }
                 }}

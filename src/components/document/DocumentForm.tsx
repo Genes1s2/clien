@@ -12,7 +12,7 @@ import CreatableSelect from 'react-select/creatable';
 
 const animatedComponents = makeAnimated();
 
-interface DocumentForm {
+interface DocumentForms {
   existingDocument?: any;
   onSuccess?: () => void
 }
@@ -30,7 +30,7 @@ const documentSchema = Yup.object().shape({
   filePath: Yup.mixed().required('File is required')
 });
 
-const DocumentForm = ({ existingDocument, onSuccess }: DocumentForm) => {
+const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
   const dispatch = useDispatch<AppDispatch>();
   const { items: categories } = useSelector((state: RootState) => state.categories);
 
