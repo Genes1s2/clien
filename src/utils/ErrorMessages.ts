@@ -1,13 +1,46 @@
 import { AuthError } from "../models/auth";
 
 export const getAuthError = (error: AuthError): string => {
-    const messages: Record<AuthError, string> = {
-      'INVALID_TOKEN': 'Your session is invalid. Please log in again.',
-      'SESSION_EXPIRED': 'Your session has expired. Please log in again.',
-      'NETWORK_ERROR': 'Network error. Please check your internet connection.',
-      'SERVER_ERROR': 'Server error. Please try again later.',
-      'DEFAULT': 'An unknown error occurred. Please try again.',
-    };
-  
-    return messages[error] || messages.DEFAULT;
+  const messages: Record<AuthError, string> = {
+    'UNAUTHORIZED': 'You are not authorized to perform this action.',
+    'FORBIDDEN': 'You do not have permission to access this resource.',
+    'NOT_FOUND': 'The requested resource was not found.',
+    'BAD_REQUEST': 'The request was invalid. Please check your input.',
+    'CONFLICT': 'There was a conflict with the request. Please try again.',
+    'TIMEOUT': 'The request timed out. Please try again.',
+    'INVALID_CREDENTIALS': 'Invalid email or password. Please try again.',
+    'USER_NOT_FOUND': 'User not found. Please check your email.',
+    'EMAIL_ALREADY_EXISTS': 'Email already exists. Please use a different email.',
+    'UNPROCESSABLE_ENTITY': 'The request was well-formed but was unable to be followed due to semantic errors.',
+    'TOO_MANY_REQUESTS': 'You have made too many requests in a short period. Please try again later.',
+    'INTERNAL_SERVER_ERROR': 'An internal server error occurred. Please try again later.',
+    'SERVICE_UNAVAILABLE': 'The service is currently unavailable. Please try again later.',
+    'GATEWAY_TIMEOUT': 'The server took too long to respond. Please try again later.',
+    'UNSUPPORTED_MEDIA_TYPE': 'The media type is not supported. Please check your input.',
+    'METHOD_NOT_ALLOWED': 'The request method is not allowed for this resource.',
+    'NOT_IMPLEMENTED': 'The requested method is not implemented on the server.',
+    'BAD_GATEWAY': 'The server received an invalid response from the upstream server.',
+    'PAYLOAD_TOO_LARGE': 'The request payload is too large. Please reduce the size and try again.',
+    'REQUEST_TIMEOUT': 'The request timed out. Please try again.',
+    'UNAUTHORIZED_ACCESS': 'Unauthorized access. Please log in to continue.',
+    'FORBIDDEN_ACCESS': 'Access to this resource is forbidden.',
+    'RESOURCE_NOT_FOUND': 'The requested resource was not found.',
+    'INVALID_REQUEST': 'The request was invalid. Please check your input.',
+    'MISSING_REQUIRED_FIELDS': 'Some required fields are missing. Please check your input.',
+    'INVALID_EMAIL': 'The email address is not valid. Please check your input.',
+    'PASSWORD_TOO_WEAK': 'The password is too weak. Please choose a stronger password.',
+    'PASSWORD_MISMATCH': 'The passwords do not match. Please try again.',
+    'ACCOUNT_LOCKED': 'Your account is locked. Please contact support.',
+    'ACCOUNT_DISABLED': 'Your account is disabled. Please contact support.',
+    'ERR_FAILED': 'An error occurred. Please try again.',
+    'ERR_NETWORK': 'Network error. Please check your internet connection.',
+    'ERR_CONNECTION_REFUSED': 'Connection refused. Please check your internet connection.',
+    'INVALID_TOKEN': 'Your session is invalid. Please log in again.',
+    'SESSION_EXPIRED': 'Your session has expired. Please log in again.',
+    'NETWORK_ERROR': 'Network error. Please check your internet connection.',
+    'SERVER_ERROR': 'Server error. Please try again later.',
+    'DEFAULT': 'An unknown error occurred. Please try again.',
   };
+
+  return messages[error] || messages.DEFAULT;
+};

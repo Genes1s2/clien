@@ -54,13 +54,11 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                 documentId: document.id,
                 isArchived: !document.isArchived
             })).unwrap();
-            
-            showSuccess(document.isArchived 
-                ? 'Document unarchived successfully' 
+            dispatch(getDocumentById(document.id)).unwrap();
+
+            showSuccess(document.isArchived
+                ? 'Document unarchived successfully'
                 : 'Document archived successfully');
-            
-            // Refresh document data
-            await dispatch(getDocumentById(document.id)).unwrap();
         } catch (error) {
             showError('Failed to update archive status');
         }
@@ -72,31 +70,15 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                 documentId: document.id,
                 isSensitive: !document.isSensitive
             })).unwrap();
-            
-            showSuccess(document.isSensitive 
-                ? 'Document marked as normal' 
+            dispatch(getDocumentById(document.id)).unwrap();
+
+            showSuccess(document.isSensitive
+                ? 'Document marked as normal'
                 : 'Document marked as sensitive');
-            
-            // Refresh document data
-            await dispatch(getDocumentById(document.id)).unwrap();
         } catch (error) {
             showError('Failed to update sensitivity status');
         }
     };
-
-    const handleUploadVersion = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      try {
-        // await dispatch(uploadNewVersionDocument({ document.id, formData })).unwrap();
-        // Refresh versions after upload
-      } catch (error) {
-        console.error('Version upload failed:', error);
-      }
-    }
-  };
 
     return (
         <div>
@@ -108,7 +90,7 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                         <span className="text-3xl">{getFileIcon(document.filePath)}</span>
                         <div className="flex-1">
                             <h3 className="font-medium truncate">{document.title}</h3>
-                           <p className="text-xs text-gray-500 truncate">
+                            <p className="text-xs text-gray-500 truncate">
                                 {new Date(document.createdAt).toLocaleDateString()}
                                 {document.isArchived && ' (Archived)'}
                                 {document.isSensitive && ' (Sensitive)'}
@@ -126,18 +108,16 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                             <button
                                 onClick={handleArchive}
                                 disabled={status === LoadingType.PENDING}
-                                className={`text-yellow-600 hover:text-yellow-800 text-sm ${
-                                    status === LoadingType.PENDING ? 'opacity-50' : ''
-                                }`}
+                                className={`text-yellow-600 hover:text-yellow-800 text-sm ${status === LoadingType.PENDING ? 'opacity-50' : ''
+                                    }`}
                             >
                                 {document.isArchived ? 'Unarchive' : 'Archive'}
                             </button>
                             <button
                                 onClick={handleSensitivity}
                                 disabled={status === LoadingType.PENDING}
-                                className={`text-purple-600 hover:text-purple-800 text-sm ${
-                                    status === LoadingType.PENDING ? 'opacity-50' : ''
-                                }`}
+                                className={`text-purple-600 hover:text-purple-800 text-sm ${status === LoadingType.PENDING ? 'opacity-50' : ''
+                                    }`}
                             >
                                 {document.isSensitive ? 'Mark Normal' : 'Mark Sensitive'}
                             </button>

@@ -1,105 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import { useDispatch, useSelector } from 'react-redux';
-// import { useParams } from 'react-router';
-// import { AppDispatch, RootState } from '../../../store';
-// import { LoadingType } from '../../../models/store';
-// import { getDocumentById } from '../../../store/document/actions';
-// import DocumentDetail from '../../../components/document/DocumentDetails';
-// import Modal from '../../../components/modal/Modal';
-// import DocumentFormVersions from '../../../components/document/DocumentFormVersion';
-// import DocumentFormComments from '../../../components/document/DocumentFormComment';
-// import DocumentFormAccess from '../../../components/document/DocumentFormAccess';
-
-// const DocumentDetailPage = () => {
-
-//     const [showModal, setShowModal] = useState(false);
-//     const [editingDoc, setEditingDoc] = useState<Document | null>(null);
-//     const { documentId } = useParams<{ documentId: string }>();
-//     const dispatch = useDispatch<AppDispatch>();
-//     const { currentDocument, status, error } = useSelector((state: RootState) => state.documents);
-
-//     // console.log("currentDocument: ", currentDocument);
-
-//     useEffect(() => {
-//         if (documentId && currentDocument?.id !== documentId && status !== LoadingType.PENDING) {
-//             dispatch(getDocumentById(documentId)).unwrap();
-//         }
-
-//     }, [dispatch, documentId, currentDocument?.id, status]);
-
-//     if (status === LoadingType.PENDING) {
-//         return <div className="text-center p-8">Loading document details...</div>;
-//     }
-
-//     if (error) {
-//         return <div className="text-red-500 w-full text-center h-screen p-8">{error}</div>;
-//     }
-
-//     if (!currentDocument) {
-//         return <div className="p-8">Document not found</div>;
-//     }
-
-
-//     return (
-//         <div className="max-w-4xl mx-auto p-6">
-//             <div className="flex justify-between mb-6">
-//                 <h1>Document Management</h1>
-//                 <button
-//                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-//                     onClick={() => {
-//                         setShowModal(true);
-//                     }}>
-//                     Upload New Version
-//                 </button>
-//                 <button
-//                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-//                     onClick={() => {
-//                         setShowModal(true);
-//                     }}>
-//                     Comment
-//                 </button>
-//                 <button
-//                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-//                     onClick={() => {
-//                         setShowModal(true);
-//                     }}>
-//                     Give access
-//                 </button>
-//             </div>
-//             <DocumentDetail
-//                 onEdit={(doc) => {
-//                     setEditingDoc(doc);
-//                     setShowModal(true);
-//                 }}
-//                 document={currentDocument}
-//             />
-
-//             <div>
-//                 <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-//                     <div className="p-4">
-
-//                         <DocumentFormVersions
-//                             documentId={currentDocument.id}
-//                             onSuccess={() => {dispatch(getDocumentById(currentDocument.id)); setShowModal(false)}}
-//                         />
-//                         <DocumentFormComments
-//                             documentId={currentDocument.id}
-//                             onSuccess={() => { dispatch(getDocumentById(currentDocument.id)); setShowModal(false) }}
-//                         />
-//                         <DocumentFormAccess
-//                             documentId={currentDocument.id}
-//                             onSuccess={() => {dispatch(getDocumentById(currentDocument.id)); setShowModal(false)}}
-//                         />
-
-//                     </div>
-//                 </Modal>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default DocumentDetailPage
-
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -112,8 +10,9 @@ import DocumentFormVersions from '../../../components/document/DocumentFormVersi
 import DocumentFormComments from '../../../components/document/DocumentFormComment';
 import DocumentFormAccess from '../../../components/document/DocumentFormAccess';
 import DocumentForm from '../../../components/document/DocumentForm';
+import DocumentViewer from '../../../components/DocumentViewer';
 
-type ActiveForm = 'version' | 'comment' | 'access' | null;
+type ActiveForm = 'version' | 'comment' | 'access' | 'view' | null;
 
 const DocumentDetailPage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -138,6 +37,7 @@ const DocumentDetailPage = () => {
         dispatch(getDocumentById(currentDocument?.id || ''));
         closeModal();
     };
+    // console.log("currentDocument: ", currentDocument);
 
     if (status === LoadingType.PENDING) {
         return <div className="text-center p-8">Loading document details...</div>;
@@ -172,15 +72,13 @@ const DocumentDetailPage = () => {
                 >
                     Manage Access
                 </button>
+                <button
+                    className="bg-orange-600 hover:bg-orange-700 text-sm text-white font-semibold py-1 px-3 rounded-lg"
+                    onClick={() => setActiveForm('view')}
+                >
+                    Preview
+                </button>
             </div>
-
-            {/* <DocumentDetail
-                onEdit={(doc) => {
-                    setEditingDoc(doc);
-                    setActiveForm('edit');
-                }}
-                document={currentDocument}
-            /> */}
 
             <DocumentDetail
                 onEdit={(doc) => {
@@ -229,6 +127,48 @@ const DocumentDetailPage = () => {
                     />
                 </div>
             </Modal>
+
+            {/* View Modal */}
+            {/* <Modal isOpen={activeForm === 'view'} onClose={closeModal}>
+                <div className="p-4">
+                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                        You are previewing {currentDocument.title}
+                    </3>
+                    <DocumentViewer fileUrl={currentDocument.filePath} />
+                </div>
+            </Modal> */}
+            <Modal isOpen={activeForm === 'view'} onClose={closeModal}>
+                <div className="p-4">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h3 className="text-lg font-medium text-gray-900">
+                            Previewing {currentDocument.title}
+                        </h3>
+                        {/* <button
+                            onClick={closeModal}
+                            className="text-gray-400 hover:text-gray-500"
+                        >
+                            <span className="sr-only">Close</span>
+                            <svg
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button> */}
+                    </div>
+                    <div className="max-h-[80vh] overflow-hidden rounded-lg">
+                        <DocumentViewer fileUrl={currentDocument.filePath} />
+                    </div>
+                </div>
+            </Modal>
+
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
                 <div className="p-4">
                     <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">

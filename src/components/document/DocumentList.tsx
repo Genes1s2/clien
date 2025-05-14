@@ -191,6 +191,7 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
     dispatch(fetchDocuments())
   }, [dispatch])
 
+  // const fileUrl = `http://127.0.0.1:4000${currentDocument.filePath}`;
   const handleDownload = async (filePath: string, fileName: string) => {
     try {
       const response = await fetch(filePath);
@@ -250,7 +251,7 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
     }
   };
 
-  
+
   if (status === LoadingType.PENDING) return <div>Loading documents...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
   if (!Array.isArray(items)) return <div className="text-red-500">Invalid documents data</div>;
@@ -265,6 +266,13 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
               key={doc.id}
               className="border rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
             >
+              <div>
+                <iframe
+                  src={`http://127.0.0.1:4000/${doc.filePath}`}
+                  width="100%"
+                  height="200px"
+                />
+              </div>
               <div className="flex items-start gap-3">
                 <span className="text-3xl">{getFileIcon(doc.filePath)}</span>
                 <div className="flex-1">
@@ -280,28 +288,29 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-2 mt-2">
-                {/* <a
-                href={doc.filePath}
-                download
-                className="text-blue-600 hover:text-blue-800"
-              >
-                Download File
-              </a> */}
-              <button
+              <div className="flex justify-end gap-2 mt-2 text-sm">
+                <a
+                  // href={doc.filePath}
+                  href={`http://127.0.0.1:4000/${doc.filePath}`}
+                  download
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  Download
+                </a>
+                <button
                   // onClick={() => handleDownload(doc)}
                   onClick={() => navigate(`${doc.id}`)}
                   className="text-blue-600 hover:text-blue-800 text-sm"
                 >
                   Details
                 </button>
-                <button
+                {/* <button
                   // onClick={() => handleDownload(doc)}
                   onClick={() => handleDownload(doc.filePath, doc.title)}
                   className="text-blue-600 hover:text-blue-800 text-sm"
                 >
                   Download
-                </button>
+                </button> */}
                 <button
                   onClick={() => onEdit(doc)}
                   className="text-green-600 hover:text-green-800 text-sm"

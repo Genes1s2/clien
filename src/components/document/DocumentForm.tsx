@@ -88,7 +88,8 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           onSuccess?.();
         } catch (error: any) {
           await dispatch(fetchDocuments()).unwrap()
-          showError('Failed to process document');
+          console.error('Error creating/updating document:', error);
+          showError( 'Failed to process document');
         } 
       }}
     >
