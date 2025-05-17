@@ -1,22 +1,3 @@
-// import React from 'react'
-// import AllUser from '../../../components/user/AllUsers'
-// import AllActiveUser from '../../../components/user/AllActiveUsers'
-// import AllInactiveUser from '../../../components/user/AllInactiveUsers'
-
-// const UserList = () => {
-//   return (
-//     <div>
-//         <div>
-//             <AllUser />
-//             <AllActiveUser />
-//             <AllInactiveUser />
-//         </div>
-//     </div>
-//   )
-// }
-
-// export default UserList
-
 import React from "react";
 import { Tab } from "@headlessui/react";
 import AllUser from "../../../components/user/AllUsers";

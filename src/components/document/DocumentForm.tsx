@@ -37,7 +37,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-
+  
   return (
     <Formik
       initialValues={{
@@ -47,6 +47,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
         tags: existingDocument?.tags || [],
         filePath: null
       }}
+
       validationSchema={documentSchema}
       onSubmit={async (values, { setSubmitting }) => {
 
@@ -57,7 +58,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           formData.append('categoryId', values.categoryId);
 
           // Only append tags if they exist
-          if (values.tags.length > 0) {
+          if (values.tags.length > 1) {
             // formData.append('tags', JSON.stringify(values.tags));
             values.tags.forEach((tag: string) => {
               formData.append('tags', tag);
@@ -67,18 +68,16 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           if (values.filePath) {
             formData.append('filePath', values.filePath);
           }
-          console.log('formData 1: ', formData);
 
           if (existingDocument) {
-            console.log('existingDocument: ', existingDocument.id);
             formData.append('id', existingDocument.id);
+            
             await dispatch(updateDocument({documentId: existingDocument.id, formData})).unwrap();
             
             // await dispatch(updateDocument({})).unwrap();
             await dispatch(fetchDocuments()).unwrap()
             showSuccess('Document updated successfully');
           } else {
-            console.log('formData: ', formData);
             await dispatch(createDocument(formData)).unwrap();
             await dispatch(fetchDocuments()).unwrap()
             showSuccess('Document created successfully');

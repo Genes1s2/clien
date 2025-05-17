@@ -12,7 +12,6 @@ const FileViewerWrapper: React.FC<FileViewerWrapperProps> = ({ filePath }) => {
     return parts[parts.length - 1].toLowerCase();
   };
 
-  console.log("filePath: ", filePath);
   const fileUrl = `http://127.0.0.1:4000${filePath}`;
   const fileType = getFileType(fileUrl);
 

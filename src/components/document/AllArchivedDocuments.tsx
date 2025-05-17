@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Document } from '../../models/documents';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import { showError, showSuccess } from '../../utils/Notifications';
-import Modal, { ModalPreview } from '../modal/Modal';
-import { fetchDocuments, softDeleteDocument } from '../../store/document/actions';
+import { showError } from '../../utils/Notifications';
+import { ModalPreview } from '../modal/Modal';
+import { fetchArchivedDocuments } from '../../store/document/actions';
 import { LoadingType } from '../../models/store';
 import { useNavigate } from 'react-router';
 import excellLogo from '../../assets/images/excellogo.jpeg';
@@ -14,23 +14,18 @@ import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import DocumentViewer from '../DocumentViewer';
 import { Download } from 'lucide-react';
 import Pagination from '../Pagination';
-import ConfirmationModal from '../modal/ConfirmationModal';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
 
 const ITEMS_PER_PAGE = 24;
 
-const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
+const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [previewDoc, setPreviewdDoc] = useState<Document | null>(null);
   const { items, status, error } = useSelector((state: RootState) => state.documents);
   const navigate = useNavigate()
   const [filterTag, setFilterTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-
 
   const getFileIcon = (fileName: string) => {
     const ext = fileName.split('.').pop()?.toLowerCase();
@@ -44,7 +39,7 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchDocuments())
+    dispatch(fetchArchivedDocuments())
   }, [dispatch])
 
   const handleDownload = async (filePath: string, fileName: string) => {
@@ -63,21 +58,6 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
       document.body.removeChild(a);
     } catch (error) {
       showError('Failed to download file');
-    }
-  };
-
-  const handleDelete = async () => {
-    if (selectedDoc) {
-      try {
-        await dispatch(softDeleteDocument(selectedDoc.id)).unwrap();
-        await dispatch(fetchDocuments()).unwrap();
-        setShowDeleteModal(false);
-        showSuccess('Document deleted successfully');
-      } catch (error: any) {
-        setShowDeleteModal(false);
-        await dispatch(fetchDocuments()).unwrap();
-        showError(error || 'Failed to delete document');
-      }
     }
   };
 
@@ -154,9 +134,6 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
               <div className='w-full flex justify-between items-center rounded-lg'>
                 <div className=' flex gap-2'>
                   <p>
-                    {doc.isArchived && <span title='Archieved' className=' cursor-pointer text-purple-600 inline-flex'>🗂️</span>}
-                  </p>
-                  <p>
                     {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 inline-flex'>🗃️</span>}
                   </p>
                 </div>
@@ -225,15 +202,6 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => {
-                    setSelectedDoc(doc);
-                    setShowDeleteModal(true);
-                  }}
-                  className=" border-red-600 hover:border-l-2 pl-1 text-red-600 hover:text-red-800 text-sm transition-all"
-                >
-                  Delete
-                </button>
               </div>
             </div>
           ))}
@@ -276,18 +244,8 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
           </div>
         )}
       </ModalPreview>
-
-      <ConfirmationModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onConfirm={handleDelete}
-        title="Confirm User Deletion"
-        message={`Are you sure you want to delete ${selectedDoc?.title}?`}
-        bgColor="bg-red-600"
-        hoverbgColor="hover:bg-red-700"
-      />
     </div>
   );
 };
 
-export default DocumentList;
+export default AllArchivedDocuments;

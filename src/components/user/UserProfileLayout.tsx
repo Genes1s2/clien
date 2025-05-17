@@ -122,25 +122,25 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="flex space-x-4 mb-6 border-b border-gray-200">
-        <button
-          onClick={() => setActiveTab('activity')}
-          className={`pb-4 px-1 ${activeTab === 'activity'
-            ? 'border-b-2 border-purple-500 text-purple-600'
-            : 'text-gray-500 hover:text-gray-700'
-            }`}
-        >
-          Activity Log
-        </button>
-        <button
-          onClick={() => setActiveTab('access')}
-          className={`pb-4 px-1 ${activeTab === 'access'
-            ? 'border-b-2 border-purple-500 text-purple-600'
-            : 'text-gray-500 hover:text-gray-700'
-            }`}
-        >
-          Access Rights
-        </button>
+      <nav className="flex overflow-x-auto my-4 sm:my-6 bg-white shadow-md rounded-lg 
+               scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="flex flex-nowrap min-w-max">
+          {['activity', 'access'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-medium transition-colors
+                   duration-200 whitespace-nowrap ${activeTab === tab
+                  ? 'text-white bg-purple-600 border-b-4 border-purple-400'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+            >
+              {tab
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, (str) => str.toUpperCase())}
+            </button>
+          ))}
+        </div>
       </nav>
 
       {/* Tab Content */}

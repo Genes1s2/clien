@@ -1,6 +1,6 @@
 import { AuthUser } from "./auth";
+import { Category } from "./category";
 import { AccessRight, AuditLog } from "./logActions";
-
 
 export interface Document {
     id: string;
@@ -8,6 +8,7 @@ export interface Document {
     description?: string;
     filePath: string;
     categoryId: string;
+    category: Category;
     userId: string;
     tags: string[];
     user: AuthUser;

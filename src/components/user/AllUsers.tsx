@@ -196,7 +196,6 @@ const AllUser = () => {
                     totalItems={filteredUsers.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     onPageChange={setCurrentPage}
-                //   className="mt-4"
                 />
             </div>
 

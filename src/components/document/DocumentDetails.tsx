@@ -25,7 +25,7 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
     const { status } = useSelector((state: RootState) => state.documents);
 
     const getFileIcon = (fileName: string) => {
-        const ext = fileName.split('.').pop()?.toLowerCase();
+        const ext = fileName && fileName?.split('.').pop()?.toLowerCase();
         switch (ext) {
             case 'pdf': return '📄';
             case 'doc': case 'docx': return '📝';
@@ -138,43 +138,25 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                 </div>
 
                 {/* Navigation Tabs */}
-                <nav className="flex space-x-4 my-6 border-b border-gray-200">
-                    <button
-                        onClick={() => setActiveTab('activity')}
-                        className={`pb-4 px-1 ${activeTab === 'activity'
-                            ? 'border-b-2 border-purple-500 text-purple-600'
-                            : 'text-gray-500 hover:text-gray-700'
-                            }`}
-                    >
-                        Activity Log
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('access')}
-                        className={`pb-4 px-1 ${activeTab === 'access'
-                            ? 'border-b-2 border-purple-500 text-purple-600'
-                            : 'text-gray-500 hover:text-gray-700'
-                            }`}
-                    >
-                        Access Rights
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('comments')}
-                        className={`pb-4 px-1 ${activeTab === 'comments'
-                            ? 'border-b-2 border-purple-500 text-purple-600'
-                            : 'text-gray-500 hover:text-gray-700'
-                            }`}
-                    >
-                        Comments
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('versions')}
-                        className={`pb-4 px-1 ${activeTab === 'versions'
-                            ? 'border-b-2 border-purple-500 text-purple-600'
-                            : 'text-gray-500 hover:text-gray-700'
-                            }`}
-                    >
-                        Version
-                    </button>
+                <nav className="flex overflow-x-auto my-4 sm:my-6 bg-white shadow-md rounded-lg 
+               scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <div className="flex flex-nowrap min-w-max">
+                        {['activity', 'access', 'comments', 'versions'].map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-medium transition-colors
+                   duration-200 whitespace-nowrap ${activeTab === tab
+                                        ? 'text-white bg-purple-600 border-b-4 border-purple-400'
+                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    }`}
+                            >
+                                {tab
+                                    .replace(/([A-Z])/g, ' $1')
+                                    .replace(/^./, (str) => str.toUpperCase())}
+                            </button>
+                        ))}
+                    </div>
                 </nav>
 
                 {/* Tab Content */}

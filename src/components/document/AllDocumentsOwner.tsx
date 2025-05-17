@@ -4,36 +4,53 @@ import { Document } from '../../models/documents';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
-import Modal from '../modal/Modal';
+import Modal, { ModalPreview } from '../modal/Modal';
 import { allDocumentsByOwner, softDeleteDocument } from '../../store/document/actions';
 import { LoadingType } from '../../models/store';
+import { useNavigate } from 'react-router';
+import excellLogo from '../../assets/images/excellogo.jpeg';
+import pdfLogo from '../../assets/images/pdflogo.png';
+import wordLogo from '../../assets/images/wordlogo.jpeg';
+import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
+import DocumentViewer from '../DocumentViewer';
+import { Download } from 'lucide-react';
+import Pagination from '../Pagination';
+import ConfirmationModal from '../modal/ConfirmationModal';
+import { DocumentsSkeletonLoader } from '../SkeletonLoader';
+
+const ITEMS_PER_PAGE = 24;
 
 const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
-    // const user = useSelector<RootState, AuthUser | null>((state) => state.session.currentUser.entities);
+    const [previewDoc, setPreviewdDoc] = useState<Document | null>(null);
     const { items, status, error } = useSelector((state: RootState) => state.documents);
+    const navigate = useNavigate()
+    const [filterTag, setFilterTag] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const getFileIcon = (fileName: string) => {
         const ext = fileName.split('.').pop()?.toLowerCase();
         switch (ext) {
-            case 'pdf': return '📄';
-            case 'doc': case 'docx': return '📝';
-            case 'xls': case 'xlsx': return '📊';
-            case 'jpg': case 'jpeg': case 'png': return '🖼️';
+            case 'pdf': return pdfLogo;
+            case 'doc': case 'docx': return wordLogo;
+            case 'xls': case 'xlsx': return excellLogo;
+            case 'pptx': case 'ppt': return powerpointLogo;
             default: return '📁';
         }
     };
-
-    // const allDocumentsByOwner = {}
 
     useEffect(() => {
         dispatch(allDocumentsByOwner())
     }, [dispatch])
 
     const handleDownload = async (filePath: string, fileName: string) => {
+
+        const viewerUrl = `http://127.0.0.1:4000${filePath}`;
         try {
-            const response = await fetch(filePath);
+            const response = await fetch(viewerUrl);
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -47,99 +64,173 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
             showError('Failed to download file');
         }
     };
-    // const handleDownload = async (doc: Document) => {
-    //   try {
-    //     // Use proper download endpoint
-    //     const response = await fetch(`/api/documents/download/${encodeURIComponent(doc.filePath)}`, {
-    //       headers: {
-    //         'Authorization': `Bearer ${localStorage.getItem('token')}`
-    //       }
-    //     });
 
-    //     if (!response.ok) throw new Error('Download failed');
-
-    //     const blob = await response.blob();
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement('a');
-    //     a.href = url;
-
-    //     // Get filename from Content-Disposition header
-    //     const contentDisposition = response.headers.get('Content-Disposition');
-    //     const fileNameMatch = contentDisposition?.match(/filename="?(.+?)"?$/);
-    //     const fileName = fileNameMatch ? fileNameMatch[1] : doc.title;
-
-    //     a.download = fileName;
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     window.URL.revokeObjectURL(url);
-    //     document.body.removeChild(a);
-    //   } catch (error) {
-    //     showError('Failed to download document');
-    //   }
-    // };
-
-    const handleDelete = async (docId: string) => {
-        if (window.confirm('Are you sure you want to delete this document?')) {
+    const handleDelete = async () => {
+        if (selectedDoc) {
             try {
-                await dispatch(softDeleteDocument(docId)).unwrap();
+                await dispatch(softDeleteDocument(selectedDoc.id)).unwrap();
                 await dispatch(allDocumentsByOwner()).unwrap();
+                setShowDeleteModal(false);
                 showSuccess('Document deleted successfully');
             } catch (error: any) {
+                setShowDeleteModal(false);
                 await dispatch(allDocumentsByOwner()).unwrap();
                 showError(error || 'Failed to delete document');
             }
         }
     };
 
-    if (status === LoadingType.PENDING) return <div>Loading documents...</div>;
+    const getColorByTag = (tag: string) => {
+        const colors = [
+            'bg-blue-100 text-blue-800 border-blue-300',
+            'bg-green-100 text-green-800 border-green-300',
+            'bg-yellow-100 text-yellow-800 border-yellow-300',
+            'bg-purple-100 text-purple-800 border-purple-300',
+            'bg-pink-100 text-pink-800 border-pink-300',
+        ];
+        const index = tag.charCodeAt(0) % colors.length;
+        return colors[index];
+    };
+
+    const handleTagClick = (tag: string) => {
+        setFilterTag(prev => (prev === tag ? null : tag));
+    };
+
+    // Pagination and filter logic
+    const safeItems = Array.isArray(items) ? items : [];
+    const filteredDocs = safeItems.filter((doc: Document) =>
+        `${doc.title}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.category.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const tagFilteredDocs = filterTag
+        ? filteredDocs.filter(doc => doc?.tags?.includes(filterTag))
+        : filteredDocs;
+
+    const paginatedItems = tagFilteredDocs.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+
+    const filteredItems = paginatedItems;
+
+    if (status === LoadingType.PENDING) return <div className="w-full"><DocumentsSkeletonLoader count={filteredItems.length} /></div>;
     if (error) return <div className="text-red-500">{error}</div>;
     if (!Array.isArray(items)) return <div className="text-red-500">Invalid documents data</div>;
 
     return (
-        <div className="p-4">
-            {/* WhatsApp-style Grid */}
+        <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className='flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-3'>
+                {/* Stats Container */}
+                <div className='w-full py-2 px-3 bg-white rounded-md shadow-md md:w-auto'>
+                    <div className='flex flex-col gap-1 sm:flex-row sm:gap-4'>
+                        <h2 className='text-gray-400'>Total documents: <span className='text-gray-800'>{items.length}</span></h2>
+                        <h2 className='text-gray-400'>Display documents: <span className='text-gray-800'>{filteredItems.length}</span></h2>
+                    </div>
+                </div>
+
+                {/* Search Input */}
+                <div className="w-full sm:max-w-lg md:w-96 lg:w-[500px] shadow-md">
+                    <input
+                        type="text"
+                        placeholder="Search document by title and category..."
+                        className="w-full rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2 text-sm sm:text-base"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+            </div>
+            {/* style Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {Array.isArray(items) &&
-                    items.map((doc: Document) => (
+                {Array.isArray(filteredItems) &&
+                    filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="border rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
+                            className="bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
                         >
-                            <div className="flex items-start gap-3">
-                                <span className="text-3xl">{getFileIcon(doc.filePath)}</span>
-                                <div className="flex-1">
-                                    <h3 className="font-medium truncate">{doc.title}</h3>
-                                    <p className="text-xs text-gray-500 truncate">
-                                        {new Date(doc.createdAt).toLocaleDateString()}
+                            <div className='w-full flex justify-between items-center rounded-lg'>
+                                <div className=' flex gap-2'>
+                                    <p>
+                                        {doc.isArchived && <span title='Archieved' className=' cursor-pointer text-purple-600 inline-flex'>🗂️</span>}
                                     </p>
+                                    <p>
+                                        {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 inline-flex'>🗃️</span>}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setPreviewdDoc(doc)}
+                                    className="text-blue-600 hover:text-blue-800 bg-slate-100 p-2 rounded-lg"
+                                >
+                                    Preview
+                                </button>
+                            </div>
+                            <div className='flex justify-center mb-2 border-slate-100 border-b-2'>
+                                {doc.filePath && (
+                                    <img
+                                        src={getFileIcon(doc.filePath)}
+                                        className='w-52 rounded-lg'
+                                        alt=""
+                                    />
+                                )}
+                            </div>
+
+                            <div className="flex items-start w-full gap-3 ">
+                                <div className="flex-1">
+                                    <h3 className="font-medium text-purple-700 uppercase truncate">{doc.title}</h3>
+                                    <p className="text-sm text-gray-600 truncate">
+                                        <span className=' font-medium capitalize'>Category</span>: {doc.category?.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600 truncate capitalize">
+                                        <span className=' font-medium'>Uploaded by</span> : {doc.user?.firstName} {doc.user?.lastName}
+                                    </p>
+                                    <p className="text-sm text-gray-500 truncate capitalize">
+                                        <span className=' font-medium'>On</span>: {new Date(doc.createdAt).toLocaleDateString()}
+                                    </p>
+                                    <div className="flex flex-wrap gap-1">
+                                        <i className="text-sm text-gray-500 truncate">Tags (clickable):</i>{' '}
+                                        {doc.tags.map((tag, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handleTagClick(tag)}
+                                                className={`px-2 py-0.5 text-xs font-medium rounded border ${getColorByTag(tag)} hover:brightness-105 transition`}
+                                            // className={`inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded mr-1`}
+                                            >
+                                                🔖 {tag}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
+
                             {/* Action Buttons */}
-                            <div className="flex justify-end gap-2 mt-2">
-                                {/* <a
-                href={doc.filePath}
-                download
-                className="text-blue-600 hover:text-blue-800"
-              >
-                Download File
-              </a> */}
+                            <div className="flex justify-between items-center gap-2 mt-2 text-sm bg-slate-100 w-full p-2 rounded-lg">
+
                                 <button
-                                    // onClick={() => handleDownload(doc)}
                                     onClick={() => handleDownload(doc.filePath, doc.title)}
-                                    className="text-blue-600 hover:text-blue-800 text-sm"
+                                    className="border-purple-600 hover:border-l-2 pl-1 text-purple-600 hover:text-purple-800 text-sm transition-all"
                                 >
                                     Download
                                 </button>
                                 <button
+                                    onClick={() => navigate(`${doc.id}`)}
+                                    className=" border-blue-600 hover:border-l-2 pl-1 text-blue-600 hover:text-blue-800 text-sm transition-all"
+                                >
+                                    Details
+                                </button>
+                                <button
                                     onClick={() => onEdit(doc)}
-                                    className="text-green-600 hover:text-green-800 text-sm"
+                                    className=" border-green-600 hover:border-l-2 pl-1 text-green-600 hover:text-green-800 text-sm transition-all"
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(doc.id)}
-                                    className="text-red-600 hover:text-red-800 text-sm"
+                                    onClick={() => {
+                                        setSelectedDoc(doc);
+                                        setShowDeleteModal(true);
+                                    }}
+                                    className=" border-red-600 hover:border-l-2 pl-1 text-red-600 hover:text-red-800 text-sm transition-all"
                                 >
                                     Delete
                                 </button>
@@ -147,44 +238,54 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                         </div>
                     ))}
             </div>
+            {filterTag && (
+                <div className="p-2 text-sm text-gray-600">
+                    Filtering by tag: <strong>{filterTag}</strong>{' '}
+                    <button className="ml-2 text-blue-500" onClick={() => setFilterTag(null)}>
+                        Clear
+                    </button>
+                </div>
+            )}
+
+            <Pagination
+                currentPage={currentPage}
+                totalItems={tagFilteredDocs.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+            />
 
             {/* Preview Modal */}
-            <Modal isOpen={!!selectedDoc} onClose={() => setSelectedDoc(null)}>
-                {selectedDoc && (
-                    <div className="p-4 h-full flex flex-col">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">{selectedDoc.title}</h2>
-                            <button
-                                onClick={() => setSelectedDoc(null)}
-                                className="text-gray-500 hover:text-gray-700"
-                            >
-                                ✕
-                            </button>
+
+            <ModalPreview isOpen={!!previewDoc} onClose={() => setPreviewdDoc(null)}>
+                {previewDoc && (
+                    <div>
+                        <div className="mb-4 flex items-center justify-between">
+                            <h3 className="text-lg font-medium text-gray-900">
+                                <span className='text-2xl text-purple-600 capitalize'>{previewDoc?.title}</span>
+                            </h3>
                         </div>
-                        <div className="flex-1">
-                            {selectedDoc.filePath.endsWith('.pdf') ? (
-                                <iframe
-                                    src={selectedDoc.filePath}
-                                    className="w-full h-full border-none"
-                                    title={selectedDoc.title}
-                                />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center h-full">
-                                    <span className="text-4xl mb-4">
-                                        {getFileIcon(selectedDoc.filePath)}
-                                    </span>
-                                    <button
-                                        onClick={() => handleDownload(selectedDoc.filePath, selectedDoc.title)}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                                    >
-                                        Download File
-                                    </button>
-                                </div>
-                            )}
+                        <div className="max-h-[80vh] overflow-hidden rounded-lg">
+                            <DocumentViewer fileUrl={previewDoc?.filePath} />
                         </div>
+                        <button
+                            onClick={() => handleDownload(previewDoc.filePath, previewDoc.title)}
+                            className="flex gap-2 bg-purple-600 text-white mt-2 px-4 py-2 rounded hover:bg-purple-700"
+                        >
+                            <Download size={22} /> Download File
+                        </button>
                     </div>
                 )}
-            </Modal>
+            </ModalPreview>
+
+            <ConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDelete}
+                title="Confirm User Deletion"
+                message={`Are you sure you want to delete ${selectedDoc?.title}?`}
+                bgColor="bg-red-600"
+                hoverbgColor="hover:bg-red-700"
+            />
         </div>
     );
 };

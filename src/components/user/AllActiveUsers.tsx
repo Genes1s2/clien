@@ -54,7 +54,6 @@ const AllActiveUser = () => {
             }
 
         } catch (error: any) {
-            console.log("desactivate error: ", error);
 
             setShowDeleteModal(false);
             showError(error || 'Failed to desactivate user');

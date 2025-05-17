@@ -1,164 +1,50 @@
-// import { useState } from 'react';
-
-// const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   // Encode URL for Google Docs Viewer
-//   const encodedUrl = encodeURIComponent(fileUrl);
-//   const viewerUrl = `https://docs.google.com/gview?url=${encodedUrl}&embedded=true`;
-
-//   return (
-//     <div className="mt-4 border rounded shadow p-2">
-//       {isLoading && <div>Loading document...</div>}
-//       <iframe
-//         src={viewerUrl}
-//         style={{ width: '100%', height: '500px', border: 'none' }}
-//         onLoad={() => setIsLoading(false)}
-//         title="Document Viewer"
-//       />
-//     </div>
-//   );
-// };
-
-// export default DocumentViewer;
-
-// import { useState } from 'react';
-// import FileViewerWrapper from './FileViewerWrapper';
-// import OfficeViewer from "react-office-viewer"
-// import { showError } from '../utils/Notifications';
-
-// const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
-//     const [isLoading, setIsLoading] = useState(true);
-//     const [numPages, setNumPages] = useState<number | null>(null);
-//     const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
-
-
-//     const encodedUrl = encodeURIComponent(fileUrl);
-//     const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
-
-//     // Handle PDF files
-//     if (fileExtension === 'pdf') {
-//         return (
-//             <div className="mt-4 border rounded shadow p-2">
-//                 <iframe
-//                     src={`http://127.0.0.1:4000${fileUrl}`}
-//                     width="100%"
-//                     height="500px"
-//                     className=' bg-white border rounded-lg shadow-md'
-//                     title="Document Viewer"
-//                 />
-//             </div>
-//         );
-//     } else {
-//         // Handle other files
-//         return (
-//             // <div className="mt-4 border rounded shadow p-2">
-//             //     <FileViewerWrapper
-//             //         filePath={fileUrl}
-//             //     />
-//             // </div>
-//             <div className="mt-4 border rounded shadow p-2">
-//                 {isLoading && <div>Loading document...</div>}
-//                 {/* <iframe
-//                     src={viewerUrl}
-//                     style={{ width: '100%', height: '500px', border: 'none' }}
-//                     onLoad={() => setIsLoading(false)}
-//                     title="Document Viewer"
-//                     /> */}
-//                 <OfficeViewer
-//                     url={fileUrl}
-//                     onError={(error: any) => showError("Office Viewer Error:" + error)}
-//                 />
-//             </div>
-//             // <div className="App">
-//             //     <file-viewer
-//             //         filename={fileUrl}
-//             //         url={`http://127.0.0.1:4000${fileUrl}`}
-//             //     />
-//             // </div>
-//         );
-//     }
-
-
-//     return <div>Unsupported file type.</div>;
-// };
-
-// export default DocumentViewer;
-
-// import React from 'react';
-// import OfficeViewer from "react-office-viewer"
-// import { showError } from '../utils/Notifications';
-
-// const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
-
-//     return (
-//         <div className="mt-4 border rounded shadow p-2">
-//                 <OfficeViewer
-//                     url={fileUrl}
-//                     onError={(error: any) => showError("Office Viewer Error:" + error)}
-//                 />
-//             </div>
-//     )
-// };
-
-// export default DocumentViewer;
-
-// import React from 'react';
-// import OfficeViewer from "react-office-viewer";
-// import { showError } from '../utils/Notifications';
-
-// const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
-//   try {
-//     return (
-//       <div className="mt-4 border rounded shadow p-2">
-//         <OfficeViewer
-//           url={fileUrl}
-//           onError={(error: any) => showError("Office Viewer Error:" + error)}
-//         />
-//       </div>
-//     );
-//   } catch (error) {
-//     console.error("Component Error:", error);
-//     return <div>Failed to load document.</div>;
-//   }
-// };
-
-// export default DocumentViewer;
-
-import { Document, Page, pdfjs } from 'react-pdf';
 import { useEffect, useRef, useState } from 'react';
 import { showError } from '../utils/Notifications';
 import * as ExcelJS from 'exceljs';
 import { renderAsync } from 'docx-preview';
+import { Presentation , Slide, Text, Image } from 'react-pptx';
 
-// Configure PDF worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
-type SupportedExtensions = 'pdf' | 'docx' | 'xlsx' | 'xls' | 'pptx' | 'ppt';
+type SupportedExtensions = 'pdf' | 'docx' | 'xlsx' | 'xls' | 'pptx' | 'ppt' | 'xls';
 
 const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
   const docxContainerRef = useRef<HTMLDivElement>(null);
   const [excelData, setExcelData] = useState<string[][]>([]);
-  const [numPages, setNumPages] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
   const fileExtension = fileUrl.split('.').pop()?.toLowerCase() as SupportedExtensions;
+  const [pptxContent, setPptxContent] = useState<React.ReactNode>(null);
+  
+  // Common error handler
+  const handleError = (error: Error, context: string) => {
+    showError(`${context}: ${error.message}`);
+    setIsLoading(false);
+  };
 
-  // DOCX handler
+  const viewerUrl = `http://127.0.0.1:4000${fileUrl}`;
+
+  // Handle DOCX files
   useEffect(() => {
     if (fileExtension === 'docx' && docxContainerRef.current) {
-      fetch(fileUrl)
-        .then(response => response.blob())
-        .then(blob => {
-          renderAsync(blob, docxContainerRef.current!)
-            .catch(error => showError('DOCX rendering failed: ' + error));
-        });
+      setIsLoading(true);
+      fetch(viewerUrl)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.blob();
+        })
+        .then(blob => renderAsync(blob, docxContainerRef.current!))
+        .catch(error => handleError(error, 'DOCX rendering'))
+        .finally(() => setIsLoading(false));
     }
   }, [fileUrl, fileExtension]);
 
-  // Excel handler
+  // Handle Excel files
   useEffect(() => {
-    if (['xlsx', 'xls'].includes(fileExtension)) {
-      fetch(fileUrl)
-        .then(response => response.arrayBuffer())
+    if (['xlsx', 'xls'].includes(fileExtension) && fileUrl) {
+      setIsLoading(true);
+      fetch(viewerUrl)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.arrayBuffer();
+        })
         .then(buffer => {
           const workbook = new ExcelJS.Workbook();
           return workbook.xlsx.load(buffer);
@@ -168,47 +54,69 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
           const data = worksheet.getSheetValues().slice(1) as string[][];
           setExcelData(data);
         })
-        .catch((error: any) => showError('Excel processing failed: ' + error));
+        .catch(error => handleError(error, 'Excel processing'))
+        .finally(() => setIsLoading(false));
     }
   }, [fileUrl, fileExtension]);
+
+ // Handle PowerPoint files
+  useEffect(() => {
+    if (['pptx', 'ppt'].includes(fileExtension) ) {
+      setIsLoading(true);
+      setPptxContent(
+        <Presentation>
+          <Slide>
+            <Text style={{ x: 1, y: 1, fontSize: 24 }}>
+              Loading PowerPoint content...
+            </Text>
+          </Slide>
+        </Presentation>
+      );
+      
+      // Add proper PPTX parsing logic here
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  }, [fileUrl, fileExtension]);
+
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex h-64 items-center justify-center">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="h-full w-full">
       {fileExtension === 'pdf' ? (
-        <div className="h-[80vh] overflow-auto rounded-lg border">
-          <Document
-            file={fileUrl}
-            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-            onLoadError={(error) => showError('PDF Error: ' + error.message)}
-            className="!w-full"
-          >
-            {Array.from({ length: numPages }, (_, index) => (
-              <Page 
-                key={`page_${index + 1}`} 
-                pageNumber={index + 1}
-                className="!w-full"
-                width={undefined} // Let container width determine size
-              />
-            ))}
-          </Document>
+        <div className="h-[75vh] overflow-auto">
+          <iframe
+            src={viewerUrl}
+            className='h-[80vh] w-full '
+            onLoad={() => setIsLoading(false)}
+            title="Document Viewer"
+          />
         </div>
       ) : fileExtension === 'docx' ? (
         <div 
           ref={docxContainerRef}
-          className="h-[70vh] overflow-auto rounded-lg border p-4"
+          className="h-[75vh] overflow-auto p-4 bg-white rounded-lg border"
         />
-      ) : ['xlsx', 'xls'].includes(fileExtension) ? (
-        <div className="h-[70vh] overflow-x-auto rounded-lg border">
+      ) :  ['xlsx', 'xls'].includes(fileExtension) ? (
+        <div className="h-[75vh] overflow-auto rounded-lg border bg-white">
           <table className="min-w-full divide-y divide-gray-200">
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-gray-200">
               {excelData.map((row, i) => (
                 <tr key={i} className="hover:bg-gray-50">
-                  {row.map((cell, j) => (
+                  {row?.map((cell, j) => (
                     <td 
                       key={j}
-                      className="whitespace-nowrap px-4 py-2 text-sm text-gray-900"
+                      className="px-4 py-2 text-sm text-gray-900 border-r last:border-r-0"
                     >
-                      {cell}
+                      {cell || '-'}
                     </td>
                   ))}
                 </tr>
@@ -217,26 +125,40 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
           </table>
         </div>
       ) : ['pptx', 'ppt'].includes(fileExtension) ? (
-        <div className="h-[70vh] overflow-auto rounded-lg border bg-gray-50 p-4">
-          <div className="flex h-full items-center justify-center text-gray-500">
-            PowerPoint preview not available - download to view
+        <div className="h-[75vh] flex justify-center items-center overflow-auto rounded-lg border bg-white p-4">
+          <div className="text-center">
+            {pptxContent}
+          <div className="mt-4 text-sm text-gray-500">
+            For full presentation features, please download the file
+          </div>
+          <a
+            href={viewerUrl}
+            download
+            className="mt-2 inline-block text-blue-600 hover:text-blue-800 underline text-sm"
+          >
+            Download PowerPoint
+          </a>
           </div>
         </div>
-      ) : (
-        <div className="flex h-48 items-center justify-center rounded-lg border bg-gray-50">
-          <p className="text-gray-500">Preview not available for this file type</p>
+      ) :  (
+        <div className="flex h-64 items-center justify-center bg-gray-50 rounded-lg">
+          <div className="text-center">
+            <p className="text-gray-500 mb-2">
+              Preview not available for this file type
+            </p>
+            <a 
+              href={viewerUrl}
+              download
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              Download file
+            </a>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default DocumentViewer;
 
-{/* <iframe
-                        src={`http://127.0.0.1:4000${currentDocument.filePath}`}
-                        width="100%"
-                        height="500px"
-                        className=' bg-white border rounded-lg shadow-md'
-                        title="Document Viewer"
-                    /> */}
+export default DocumentViewer;
