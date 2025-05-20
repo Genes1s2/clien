@@ -5,6 +5,7 @@ import sessionReducer from "./auth/restoreUser/slice";
 import rolePermissionreducer from "./rolePermissions/slice";
 import categoryreducer from "./categories/slice";
 import documentreducer from "./document/slice";
+import searchReducer from "./search/slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   user: usereducer,
   rolePermissions: rolePermissionreducer,
   categories: categoryreducer,
-  documents: documentreducer
+  documents: documentreducer,
+  search: searchReducer
 });
 
 export const store = configureStore({

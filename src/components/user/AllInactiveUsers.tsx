@@ -61,7 +61,7 @@ const AllInactiveUser = () => {
 
     const handleRoleUpdate = async (roleId: string) => {
         if (selectedUser) {
-            await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId }  })).unwrap();
+            await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId } })).unwrap();
             setShowRoleModal(false);
         }
     };
@@ -89,7 +89,7 @@ const AllInactiveUser = () => {
                 </div>
             </div>
 
-            <div className=" overflow-x-scroll shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+            <div className=" overflow-x-auto shadow ring-1 ring-black ring-opacity-5 rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
                         <tr>
@@ -195,14 +195,14 @@ const AllInactiveUser = () => {
                     </tbody>
                 </table>
 
-                <Pagination
-                    currentPage={currentPage}
-                    totalItems={filteredUsers.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    onPageChange={setCurrentPage}
-                //   className="mt-4"
-                />
             </div>
+
+            <Pagination
+                currentPage={currentPage}
+                totalItems={filteredUsers.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+            />
 
 
             <ConfirmationModal

@@ -19,7 +19,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange } : IP
           Previous
         </button>
         <span className="text-sm text-gray-700">
-          Page {currentPage} of {totalPages}
+          Page {currentPage} / {totalPages}
         </span>
         <button
           disabled={currentPage === totalPages}

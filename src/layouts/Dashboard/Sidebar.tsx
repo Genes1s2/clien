@@ -80,7 +80,7 @@ const Sidebar = () => {
   const handleCloseMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-blue-600 text-white fixed w-full z-50 shadow-lg">
+    <nav className="bg-blue-600 text-white z-50 shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

@@ -135,7 +135,7 @@ const AllDeletedDocumentsByOwner = () => {
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="border rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
+                            className="border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>

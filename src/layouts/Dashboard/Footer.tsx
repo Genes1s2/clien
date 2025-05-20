@@ -1,11 +1,11 @@
-import React from 'react'
-
 const Footer = () => {
   return (
-    <div className='bg-gray-300 sticky bottom-0 left-0 right-0'>
-      Footer
-    </div>
-  )
-}
+    <footer className="bg-white border-t p-4 mt-auto">
+      <div className="container mx-auto text-center text-gray-600">
+        © 2025 Localizeur Gedoc. All rights reserved.
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

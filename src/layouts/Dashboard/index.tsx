@@ -16,7 +16,7 @@
 //     //     <Footer />
 //     //   </div>
 //     // </div>
-    
+
 //     <div className=" bg-gray-200">
 //       <Sidebar />
 //       <div className="h-screen overflow-hidden">
@@ -31,21 +31,43 @@
 // };
 
 // export default DashboardLayout;
+// import React from "react";
+// import Sidebar from "./Sidebar";
+// import Footer from "./Footer";
+// import { Outlet } from "react-router";
+// import Header from "./Header";
+
+// const DashboardLayout = () => {
+//   return (
+//     <div className="bg-gray-200 min-h-screen">
+//       {/* Updated Sidebar (now acting as top navigation) */}
+//       <Header />
+
+//       {/* Main Content Area */}
+//       <div className="pt-16"> {/* Add padding-top equal to navbar height */}
+//         <main className="min-h-[calc(100vh-8rem)] p-4 md:p-6 lg:p-8"> {/* Adjust padding */}
+//           <Outlet />
+//         </main>
+//         <Footer />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DashboardLayout;
+
+// DashboardLayout.tsx
 import React from "react";
-import Sidebar from "./Sidebar";
+import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router";
-import Header from "./Header";
 
 const DashboardLayout = () => {
   return (
-    <div className="bg-gray-200 min-h-screen">
-      {/* Updated Sidebar (now acting as top navigation) */}
-      <Sidebar /><Header />
-      
-      {/* Main Content Area */}
-      <div className="pt-16"> {/* Add padding-top equal to navbar height */}
-        <main className="min-h-[calc(100vh-8rem)] p-4 md:p-6 lg:p-8"> {/* Adjust padding */}
+    <div className="bg-gray-200">
+      <Header />
+      <div> 
+        <main className="min-h-[calc(100vh-8rem)] p-4 md:p-6 lg:p-8">
           <Outlet />
         </main>
         <Footer />

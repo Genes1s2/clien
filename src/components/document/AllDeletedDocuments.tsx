@@ -49,7 +49,7 @@ const AllDeletedDocuments = () => {
                 await dispatch(allDeletedDocuments()).unwrap();
                 showSuccess('Document deleted successfully');
             } catch (error: any) {
-                showError(error || 'Failed to delete document');
+                showError('Failed to delete document');
                 await dispatch(allDeletedDocuments()).unwrap();
             }
         }
@@ -61,7 +61,7 @@ const AllDeletedDocuments = () => {
                 await dispatch(allDeletedDocuments()).unwrap();
                 showSuccess('Document restored successfully');
             } catch (error: any) {
-                showError(error || 'Failed to restore document');
+                showError('Failed to restore document');
                 await dispatch(allDeletedDocuments()).unwrap();
             }
     };
@@ -134,7 +134,7 @@ const AllDeletedDocuments = () => {
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="border rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
+                            className="border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>

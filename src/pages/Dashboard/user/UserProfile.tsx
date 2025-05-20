@@ -58,7 +58,7 @@ const UserProfilePage = () => {
       </nav>
 
       {/* Tab Content */}
-      {activeTab === 'Infos et mis à Jours' && <div className=' grid grid-cols-2 gap-1 my-6'>
+      {activeTab === 'Infos et mis à Jours' && <div className=' grid lg:grid-cols-2 gap-1 my-6'>
         <UserProfileForm />
         <PasswordChangeForm />
       </div>}{activeTab === 'activity' && <UserActivity auditLogs={user.auditLogs} />}
