@@ -20,13 +20,13 @@ const UserHeadProfile = ({ user }: UserHeadProfiletProps) => {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <div className={`h-16 w-16 rounded-full ${avatarBgColor} flex items-center justify-center`}>
-              <span className="text-white text-2xl font-medium">
+              <span className="text-white text-2xl font-medium uppercase">
                 {user.firstName[0]}
                 {user.lastName[0]}
               </span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 capitalize">
                 {user.firstName} {user.lastName}
               </h1>
               <p className="text-gray-600">{user.email}</p>
@@ -57,20 +57,9 @@ const UserHeadProfile = ({ user }: UserHeadProfiletProps) => {
                 {new Date(user.updatedAt).toLocaleDateString()}
               </p>
             </div>
-            {/* {user.deletedAt && (
-              <div>
-                <label className="text-sm font-medium text-gray-500">Account Status</label>
-                <p className="mt-1 text-red-500">Deactivated</p>
-              </div>
-            )} */}
           </div>
         </div>
       </div>
-
-      <div>
-        {/* <UserProfileLayout user={user} /> */}
-      </div>
-
 
     </div>
   );

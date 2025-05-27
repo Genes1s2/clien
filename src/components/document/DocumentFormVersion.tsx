@@ -52,7 +52,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                                 name="description"
                                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.description && touched.description
                                     ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-blue-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
                                     }`}
                             />
                             <ErrorMessage name="description" component="div" className="text-red-500 text-sm mb-2" />
@@ -67,7 +67,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                                 onChange={(e) => setFieldValue("filePath", e.target.files?.[0])}
                                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.filePath && touched.filePath
                                     ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-blue-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
                                     }`}
                             />
                             <ErrorMessage name="filePath" component="div" className="text-red-500 text-sm mb-2" />
@@ -76,7 +76,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {isSubmitting ? 'Submitting...' : 'Upload version'}
                         </button>

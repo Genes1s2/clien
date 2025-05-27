@@ -1,24 +1,20 @@
-import { useEffect, useState } from 'react';
-// import DocumentViewer from '../components/DocumentViewer';
-import { e } from 'react-router/dist/development/route-data-Cq_b5feC';
-import Modal from '../../../components/modal/Modal';
-import DocumentList from '../../../components/document/DocumentList';
-import DocumentForm from '../../../components/document/DocumentForm';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { Document } from '../../../models/documents';
-import { LoadingType } from '../../../models/store';
-import { Link } from 'react-router';
-import { Delete, Trash, Trash2, Trash2Icon, TrashIcon } from 'lucide-react';
 import AllDeletedDocuments from '../../../components/document/AllDeletedDocuments';
-import AllDocumentsOwner from '../../../components/document/AllDocumentsOwner';
 import AllDeletedDocumentsByOwner from '../../../components/document/AllDeletedtOwnerDoc';
+import { AuthUser } from '../../../models/auth';
 
 const DeletedDocumentsPage = () => {
   const [activeTab, setActiveTab] = useState('myDeletedDocuments');
+    const user = useSelector<RootState, AuthUser | null>(
+      (state) => state.session.currentUser.entities
+    );
+  
+    const isAdmin = user?.role.name === "admin";
 
   return (
-    <div className="p-6 relative">
+    <div className="w-full max-w-[100rem] px-2 py-6 sm:px-3 mx-auto relative">
 
        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-6">
         {/* Title */}
@@ -29,8 +25,8 @@ const DeletedDocumentsPage = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="flex overflow-x-auto my-4 sm:my-6 bg-white shadow-md rounded-lg 
-               scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <nav className={`${isAdmin? '': 'hidden'} flex overflow-x-auto my-4 sm:my-6 bg-white shadow-md rounded-lg 
+               scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100`}>
         <div className="flex flex-nowrap min-w-max">
           {['myDeletedDocuments', 'allDletedDocuments'].map((tab) => (
             <button

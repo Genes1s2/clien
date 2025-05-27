@@ -14,14 +14,6 @@ export const showSuccess = (message: string) => {
   });
 };
 
-// export const showPromise = (promise: Promise<any>, messages: {
-//   loading: string;
-//   success: string;
-//   error: string;
-// }) => {
-//   return toast.promise(promise, messages);
-// };
-
 export const showPromise = <T,>(
   promise: Promise<T>,
   messages: {

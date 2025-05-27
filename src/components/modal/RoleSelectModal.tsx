@@ -20,11 +20,6 @@ const RoleSelectModal = ({
   currentRole
 }: RoleSelectModalProps) => {
   const [selectedRole, setSelectedRole] = useState(currentRole);
-  // const roles = [
-  //   { id: 'admin', name: 'Administrator' },
-  //   { id: 'editor', name: 'Editor' },
-  //   { id: 'viewer', name: 'Viewer' }
-  // ];
 
   const dispatch = useDispatch<AppDispatch>();
   const { roles, status, error } = useSelector((state: RootState) => state.rolePermissions);
@@ -58,7 +53,7 @@ const RoleSelectModal = ({
                   value={role.id}
                   checked={selectedRole === role.id}
                   onChange={() => setSelectedRole(role.id)}
-                  className="form-radio h-4 w-4 text-blue-600"
+                  className="form-radio h-4 w-4 text-purple-600"
                 />
                 <span className="text-gray-700">{role.name}</span>
               </label>
@@ -74,7 +69,7 @@ const RoleSelectModal = ({
             </button>
             <button
               onClick={() => onConfirm(selectedRole)}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
             >
               Update Role
             </button>

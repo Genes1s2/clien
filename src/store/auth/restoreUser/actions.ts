@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../index";
 import { AuthError, AuthUser } from "../../../models/auth";
-import fetchWithRetry from "../../../utils/FetchWithRetry";
 
 export const restoreUser = createAsyncThunk<
   AuthUser,
@@ -15,7 +14,7 @@ export const restoreUser = createAsyncThunk<
   }
 
   try {
-    const response = await fetchWithRetry("http://127.0.0.1:4000/api/auth/me", {
+    const response = await fetch("http://127.0.0.1:4000/api/auth/me", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -42,7 +41,6 @@ export const restoreUser = createAsyncThunk<
     }
     
     return rejectWithValue(errorMessage || "Failed to restore user");
-    // return rejectWithValue(error.message || "Failed to restore user");
   }
 });
 

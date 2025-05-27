@@ -12,6 +12,7 @@ import RoleSelectModal from '../modal/RoleSelectModal';
 import { AuthUser, UserListEntry } from '../../models/auth';
 import { AppDispatch, RootState } from '../../store';
 import { useNavigate } from 'react-router';
+import TableSkeleton from '../SkeletonLoader';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -67,7 +68,7 @@ const AllActiveUser = () => {
         }
     };
 
-    if (status === LoadingType.PENDING) return <div className="text-center py-4">Loading users...</div>;
+    if (status === LoadingType.PENDING) return <div><TableSkeleton rows={paginatedUsers.length} cols={6} /></div>;
     if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
 
     return (
@@ -83,7 +84,7 @@ const AllActiveUser = () => {
                     <input
                         type="text"
                         placeholder="Search users name and email..."
-                        className="block w-64 rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2"
+                        className="block w-64 rounded-md border-gray-300 outline-purple-600 focus:ring-purple-500 shadow-sm px-4 py-2"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -156,7 +157,7 @@ const AllActiveUser = () => {
                                                             </button>
                                                         )}
                                                     </Menu.Item>
-                                                    <Menu.Item>
+                                                    {/* <Menu.Item>
                                                         {({ active }) => (
                                                             <button
                                                                 onClick={() => {
@@ -185,7 +186,7 @@ const AllActiveUser = () => {
                                                                 Desactivate User
                                                             </button>
                                                         )}
-                                                    </Menu.Item>
+                                                    </Menu.Item> */}
                                                 </div>
                                             </Menu.Items>
                                         </Transition>

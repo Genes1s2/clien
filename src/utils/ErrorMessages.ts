@@ -2,6 +2,7 @@ import { AuthError } from "../models/auth";
 
 export const getAuthError = (error: AuthError): string => {
   const messages: Record<AuthError, string> = {
+    'DEFAULT': 'An unknown error occurred. Please try again.',
     'UNAUTHORIZED': 'You are not authorized to perform this action.',
     'FORBIDDEN': 'You do not have permission to access this resource.',
     'NOT_FOUND': 'The requested resource was not found.',
@@ -39,7 +40,6 @@ export const getAuthError = (error: AuthError): string => {
     'SESSION_EXPIRED': 'Your session has expired. Please log in again.',
     'NETWORK_ERROR': 'Network error. Please check your internet connection.',
     'SERVER_ERROR': 'Server error. Please try again later.',
-    'DEFAULT': 'An unknown error occurred. Please try again.',
   };
 
   return messages[error] || messages.DEFAULT;

@@ -62,7 +62,7 @@ const PasswordChangeForm = () => {
                                 type="password"
                                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.currentPassword && touched.currentPassword
                                     ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-blue-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
                                     }`}
                             />
                             {errors.currentPassword && touched.currentPassword && (
@@ -77,7 +77,7 @@ const PasswordChangeForm = () => {
                                 type="password"
                                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.newPassword && touched.newPassword
                                     ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-blue-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
                                     }`}
                             />
                             {errors.newPassword && touched.newPassword && (
@@ -88,7 +88,7 @@ const PasswordChangeForm = () => {
                         <button
                             type="submit"
                             disabled={status === LoadingType.PENDING}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:opacity-50"
                         >
                             {status === LoadingType.PENDING ? 'Changing...' : 'Change Password'}
                         </button>

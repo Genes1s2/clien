@@ -7,7 +7,7 @@ export const showAuthError = (message: string, navigate: any) => {
         <button
           className="text-sm underline hover:text-blue-600"
           onClick={() => {
-            navigate('/login');
+            navigate('/authentification');
             toast.dismiss(t.id);
           }}
         >
@@ -19,14 +19,3 @@ export const showAuthError = (message: string, navigate: any) => {
       duration: 6000,
     });
   };
-  
-  // Usage in components
-//   const MyComponent = () => {
-//     const navigate = useNavigate();
-    
-//     const handleError = () => {
-//       showAuthError('Session expired', navigate);
-//     };
-    
-//     return (...);
-//   };

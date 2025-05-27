@@ -49,7 +49,7 @@ const CategoryForm = ({ existingCategory, onSuccess }: CategoryForm) => {
                             name="name"
                             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.name && touched.name
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-gray-300 focus:ring-blue-500'
+                                : 'border-gray-300 focus:ring-purple-500'
                                 }`}
                         />
                         <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
@@ -58,7 +58,7 @@ const CategoryForm = ({ existingCategory, onSuccess }: CategoryForm) => {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {isSubmitting ? 'Submitting...' : existingCategory ? 'Update Category' : 'Create Category'}
                     </button>

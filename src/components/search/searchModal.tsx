@@ -2,11 +2,8 @@ import React from "react";
 import { setSearchModalOpen } from "../../store/search/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import excellLogo from '../../assets/images/excellogo.jpeg';
-import pdfLogo from '../../assets/images/pdflogo.png';
-import wordLogo from '../../assets/images/wordlogo.jpeg';
-import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import { useNavigate } from "react-router";
+import { Document } from "../../models/documents";
 
 const SearchModal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +15,7 @@ const SearchModal = () => {
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center pt-20 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-2 z-50">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[70vh] overflow-y-auto">
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
@@ -33,7 +30,7 @@ const SearchModal = () => {
 
           {isLoading && (
             <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
             </div>
           )}
 
@@ -48,18 +45,18 @@ const SearchModal = () => {
                   No documents found
                 </p>
               ) : (
-                results.map((document) => (
+                results.map((document: Document) => (
                   <div
                     key={document.id}
-                    onClick={() => navigate(`documents/${document.id}`)}
-                    className="p-4 border rounded-lg hover:bg-gray-50"
+                    onClick={() => {handleClose(); navigate(`documents/${document.id}`)}}
+                    className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
                   >
                     <h3 className="font-semibold text-purple-600">{document.title}</h3>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {document.tags?.map((tag: string) => (
                         <span
                           key={tag}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                          className="px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-full"
                         >
                           {tag}
                         </span>

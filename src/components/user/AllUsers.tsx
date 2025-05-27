@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Menu, Transition } from '@headlessui/react';
-import { Activity, ActivityIcon, ChevronDown, Edit, Trash, User, UserLock } from 'lucide-react';
+import { Activity, ActivityIcon, ChevronDown, Edit, Plus, Trash, User, UserLock } from 'lucide-react';
 import { showError, showSuccess } from '../../utils/Notifications';
 import { desactivateUser, getAllUsers, updateUserRole } from '../../store/user/actions';
 import { getRandomColor } from '../../utils/RandomColor';
@@ -12,6 +12,7 @@ import RoleSelectModal from '../modal/RoleSelectModal';
 import { AuthUser, UserListEntry } from '../../models/auth';
 import { AppDispatch, RootState } from '../../store';
 import { useNavigate } from 'react-router';
+import TableSkeleton from '../SkeletonLoader';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -50,33 +51,33 @@ const AllUser = () => {
                 await dispatch(desactivateUser(selectedUser.id)).unwrap();
                 // await dispatch(getAllUsers()).unwrap();
                 setShowDeleteModal(false);
-                
+
                 showSuccess('User desactivated successfully');
             }
-            
+
         } catch (error: any) {
-            
+
             showError(error || 'Failed to desactivate user');
         }
     };
 
     const handleRoleUpdate = async (roleId: string) => {
         try {
-            
+
             if (selectedUser) {
-                await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId }  })).unwrap();
+                await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId } })).unwrap();
                 // await dispatch(getAllUsers()).unwrap();
                 setShowRoleModal(false);
                 showSuccess('User role changed successfully');
             }
 
         } catch (error: any) {
-            
+
             showError(error || 'Failed to change role');
         }
     };
 
-    if (status === LoadingType.PENDING) return <div className="text-center py-4">Loading users...</div>;
+    if (status === LoadingType.PENDING) return <div><TableSkeleton rows={paginatedUsers.length} cols={6} /></div>;
     if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
 
     return (
@@ -92,7 +93,7 @@ const AllUser = () => {
                     <input
                         type="text"
                         placeholder="Search users name and email..."
-                        className="block w-64 rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2"
+                        className="block w-64 rounded-md border-gray-300 outline-purple-600 focus:ring-purple-500 shadow-sm px-4 py-2"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -112,7 +113,41 @@ const AllUser = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                        {paginatedUsers.map((user: UserListEntry) => (
+                        {paginatedUsers.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className=" py-12 text-center">
+                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                        <svg
+                                            className="h-24 w-24 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={1.5}
+                                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                                            />
+                                        </svg>
+                                        <div className="space-y-1">
+                                            <h3 className="text-xl font-medium text-gray-900">No users found</h3>
+                                            <p className="text-gray-500 max-w-md">
+                                                Start by creating a new user or adjust your search filters.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => navigate("/dashboard/admin/users/new")}
+                                            className="mt-4 inline-flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+                                        >
+                                            <Plus className="h-5 w-5 mr-2" />
+                                            Add New User
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                        paginatedUsers.map((user: UserListEntry) => (
                             <tr key={user.id}>
                                 <td className="whitespace-nowrap px-3 py-4">
                                     <div className="flex items-center">
@@ -132,7 +167,6 @@ const AllUser = () => {
                                     {new Date(user.createdAt).toLocaleDateString()}
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4 text-gray-500">
-                                    {/* {new Date(user.createdAt).toLocaleDateString()} */}
                                     {user.deletedAt ? new Date(user.deletedAt).toLocaleDateString() : 'Active'}
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4">
@@ -165,7 +199,7 @@ const AllUser = () => {
                                                             </button>
                                                         )}
                                                     </Menu.Item>
-                                                    <Menu.Item>
+                                                    {/* <Menu.Item>
                                                         {({ active }) => (
                                                             <button
                                                                 onClick={() => {
@@ -179,26 +213,26 @@ const AllUser = () => {
                                                                 Edit Role
                                                             </button>
                                                         )}
-                                                    </Menu.Item>
-                                                    
+                                                    </Menu.Item> */}
+
                                                 </div>
                                             </Menu.Items>
                                         </Transition>
                                     </Menu>
                                 </td>
                             </tr>
-                        ))}
+                    )))}
                     </tbody>
                 </table>
 
             </div>
-            
-                <Pagination
-                    currentPage={currentPage}
-                    totalItems={filteredUsers.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    onPageChange={setCurrentPage}
-                />
+
+            <Pagination
+                currentPage={currentPage}
+                totalItems={filteredUsers.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={setCurrentPage}
+            />
 
 
             <ConfirmationModal

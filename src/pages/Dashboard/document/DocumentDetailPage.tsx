@@ -11,6 +11,8 @@ import DocumentFormComments from '../../../components/document/DocumentFormComme
 import DocumentFormAccess from '../../../components/document/DocumentFormAccess';
 import DocumentForm from '../../../components/document/DocumentForm';
 import DocumentViewer from '../../../components/DocumentViewer';
+import { Download, EyeIcon, LockOpenIcon, Text, UploadIcon } from 'lucide-react';
+import { showError } from '../../../utils/Notifications';
 
 type ActiveForm = 'version' | 'comment' | 'access' | 'view' | null;
 
@@ -37,7 +39,6 @@ const DocumentDetailPage = () => {
         dispatch(getDocumentById(currentDocument?.id || ''));
         closeModal();
     };
-    // console.log("currentDocument: ", currentDocument);
 
     if (status === LoadingType.PENDING) {
         return <div className="text-center p-8">Loading document details...</div>;
@@ -51,31 +52,57 @@ const DocumentDetailPage = () => {
         return <div className="p-8">Document not found</div>;
     }
 
+     const handleDownload = async (filePath: string, fileName: string) => {
+    
+            const viewerUrl = `http://127.0.0.1:4000${currentDocument?.filePath}`;
+            try {
+                const response = await fetch(viewerUrl);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                showError('Failed to download file');
+            }
+        };
+
     return (
         <div className="max-w-4xl mx-auto p-6">
-            <div className="flex gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 bg-white p-3 rounded-lg ">
                 <button
-                    className="bg-blue-600 hover:bg-blue-700 text-sm text-white font-semibold py-1 px-3 rounded-lg"
+                    className="bg-purple-200 hover:bg-purple-300 text-purple-700 font-semibold p-2 rounded-lg transition-colors flex justify-center items-center flex-shrink-0"
                     onClick={() => setActiveForm('version')}
                 >
-                    Upload New Version
+                    <UploadIcon className="w-4 h-4 mr-1 md:mr-2" />
+                    <span>New Version</span>
                 </button>
+
                 <button
-                    className="bg-green-600 hover:bg-green-700 text-sm text-white font-semibold py-1 px-3 rounded-lg"
+                    className="bg-green-200 hover:bg-green-300 text-green-700 font-semibold p-2 rounded-lg transition-colors flex justify-center items-center flex-shrink-0"
                     onClick={() => setActiveForm('comment')}
                 >
-                    Add Comment
+                    <Text className="w-4 h-4 mr-1 md:mr-2" />
+                    <span>Add Comment</span>
                 </button>
+
                 <button
-                    className="bg-purple-600 hover:bg-purple-700 text-sm text-white font-semibold py-1 px-3 rounded-lg"
+                    className="bg-purple-200 hover:bg-purple-300 text-purple-700 font-semibold p-2 rounded-lg transition-colors flex justify-center items-center flex-shrink-0"
                     onClick={() => setActiveForm('access')}
                 >
-                    Manage Access
+                    <LockOpenIcon className="w-4 h-4 mr-1 md:mr-2" />
+                    <span className="hidden xs:inline">Manage</span> Access
                 </button>
+
                 <button
-                    className="bg-orange-600 hover:bg-orange-700 text-sm text-white font-semibold py-1 px-3 rounded-lg"
+                    className="bg-orange-200 hover:bg-orange-300 text-orange-700 font-semibold p-2 rounded-lg transition-colors flex justify-center items-center flex-shrink-0"
                     onClick={() => setActiveForm('view')}
                 >
+                    <EyeIcon className="w-4 h-4 mr-1 md:mr-2" />
                     Preview
                 </button>
             </div>
@@ -132,13 +159,19 @@ const DocumentDetailPage = () => {
             <ModalPreview isOpen={activeForm === 'view'} onClose={closeModal}>
                 <div className="p-4">
                     <div className="mb-4 flex items-center justify-between">
-                            <h3 className="text-lg font-medium text-gray-900">
-                                 <span className='text-2xl text-purple-600 capitalize'>{currentDocument?.title}</span>
-                            </h3>
+                        <h3 className="text-lg font-medium text-gray-900">
+                            <span className='text-2xl text-purple-600 capitalize'>{currentDocument?.title}</span>
+                        </h3>
                     </div>
                     <div className="max-h-[80vh] overflow-hidden rounded-lg">
                         <DocumentViewer fileUrl={currentDocument.filePath} />
                     </div>
+                        <button
+                            onClick={() => handleDownload(currentDocument.filePath, currentDocument.title)}
+                            className="flex gap-2 bg-purple-600 text-white mt-2 px-4 py-2 rounded hover:bg-purple-700"
+                        >
+                            <Download size={22} /> Download File
+                        </button>
                 </div>
             </ModalPreview>
 

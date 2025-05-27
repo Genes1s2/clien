@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import { createDocument, fetchDocuments, updateDocument } from '../../store/document/actions';
+import { allDocumentsByOwner, createDocument, fetchDocuments, updateDocument } from '../../store/document/actions';
 import { useEffect } from 'react';
 import { showError, showSuccess } from '../../utils/Notifications';
 import Select from 'react-select';
@@ -37,7 +37,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-  
+
   return (
     <Formik
       initialValues={{
@@ -71,25 +71,25 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
 
           if (existingDocument) {
             formData.append('id', existingDocument.id);
-            
-            await dispatch(updateDocument({documentId: existingDocument.id, formData})).unwrap();
-            
-            // await dispatch(updateDocument({})).unwrap();
-            await dispatch(fetchDocuments()).unwrap()
+
+            await dispatch(updateDocument({ documentId: existingDocument.id, formData })).unwrap();
+            await dispatch(allDocumentsByOwner()).unwrap();
             showSuccess('Document updated successfully');
           } else {
             await dispatch(createDocument(formData)).unwrap();
-            await dispatch(fetchDocuments()).unwrap()
+
+            await dispatch(fetchCategories());
+            await dispatch(allDocumentsByOwner()).unwrap();
             showSuccess('Document created successfully');
           }
-          
+
           setSubmitting(false);
           onSuccess?.();
         } catch (error: any) {
-          await dispatch(fetchDocuments()).unwrap()
+          // await dispatch(fetchDocuments()).unwrap()
           console.error('Error creating/updating document:', error);
-          showError( 'Failed to process document');
-        } 
+          showError('Failed to process document');
+        }
       }}
     >
       {({ setFieldValue, values, isSubmitting, errors, touched }) => (
@@ -100,8 +100,8 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
             <Field
               name="title"
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.title && touched.title
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-purple-500'
                 }`}
             />
             <ErrorMessage name="title" component="div" className="text-red-500 text-sm mb-2" />
@@ -115,8 +115,8 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
               onChange={(selected: any) => setFieldValue('categoryId', selected?.value)}
               classNamePrefix="react-select"
               className={`${errors.categoryId && touched.categoryId
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-purple-500'
                 }`}
             />
             <ErrorMessage name="categoryId" component="div" className="text-red-500 text-sm mb-2" />
@@ -138,9 +138,9 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
                 setFieldValue('tags', selected.map((s: any) => s.value))
               }
               classNamePrefix="react-select"
-              className="border-gray-300 focus:ring-blue-500"
+              className="border-gray-300 focus:ring-purple-500"
             />
-            <ErrorMessage name="tags" component="div" className="text-red-500 text-sm mb-2" />         
+            <ErrorMessage name="tags" component="div" className="text-red-500 text-sm mb-2" />
           </div>
 
           {/* File Upload */}
@@ -151,8 +151,8 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
               name="filePath"
               onChange={(e) => setFieldValue("filePath", e.target.files?.[0])}
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.filePath && touched.filePath
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500'
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-purple-500'
                 }`}
             />
             <ErrorMessage name="filePath" component="div" className="text-red-500 text-sm mb-2" />
@@ -161,13 +161,13 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isSubmitting ? 'Submitting...' : existingDocument ? 'Update Category' : 'Create Category'}
           </button>
         </Form>
       )}
-       
+
     </Formik>
   );
 };

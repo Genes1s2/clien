@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { UserActivity } from './UserActivity';
 import { AuthUser } from '../../models/auth';
 import { Menu, Transition } from '@headlessui/react';
-import { ChevronDown, Edit, Trash } from 'lucide-react';
+import { ChevronDown, Edit, Trash, UserCheck, UserLock } from 'lucide-react';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import RoleSelectModal from '../modal/RoleSelectModal';
-import { deleteUser, fetchUserProfile, updateUserRole } from '../../store/user/actions';
+import { activateUser, deleteUser, desactivateUser, fetchUserProfile, updateUserRole } from '../../store/user/actions';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
@@ -18,6 +18,7 @@ interface UserProfileLayoutProps {
 
 export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showStateModal, setShowStateModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -51,15 +52,52 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
     }
   };
 
+  const handleDesactivation = async () => {
+
+    try {
+      if (user) {
+        await dispatch(desactivateUser(user.id)).unwrap();
+        await dispatch(fetchUserProfile(user.id));
+        setShowStateModal(false);
+
+        showSuccess('User desactivated successfully');
+      }
+
+    } catch (error: any) {
+      setShowStateModal(false);
+      await dispatch(fetchUserProfile(user.id));
+      showError(error || 'Failed to desactivate user');
+    }
+  };
+
+  const handleActivation = async () => {
+
+    try {
+      if (user) {
+        await dispatch(activateUser(user.id)).unwrap();
+        await dispatch(fetchUserProfile(user.id));
+        setShowStateModal(false);
+
+        showSuccess('User activated successfully');
+      }
+
+    } catch (error: any) {
+      setShowStateModal(false);
+      await dispatch(fetchUserProfile(user.id));
+      showError(error || 'Failed to activate user');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
       {/* Profile Header */}
       <div className="bg-white rounded-lg shadow p-6 mb-8 flex justify-between">
         <div className="flex items-center gap-6">
           <div className="bg-purple-100 rounded-full h-16 w-16 flex items-center justify-center">
             <span className="text-2xl font-bold capitalize text-purple-600">
-              {user.firstName[0]}
-              {user.lastName[0]}
+              {user?.firstName?.[0] ?? ''}
+              {user?.lastName?.[0] ?? ''}
             </span>
           </div>
           <div>
@@ -105,8 +143,32 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        onClick={() => {
+                          // setSelectedUser(user);
+                          setShowStateModal(true);
+                        }}
+                        className={`${active ? 'bg-gray-100 text-green-600' : 'text-green-500'
+                          } ${user.deletedAt === null ? 'text-red-600' : 'text-green-600'} flex w-full px-4 py-2 text-sm`}
+                      >
+                        {user.deletedAt === null ?
+                          <>
+                            <UserLock className="h-4 w-4 mr-2" />
+                            Desactivate User
+                          </> :
+                          <>
+                            <UserCheck className="h-4 w-4 mr-2" />
+                            Activate User
+                          </>
+                        }
+
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
                         onClick={() => setShowDeleteModal(true)}
-                        className={`${active ? 'bg-gray-100 text-red-600' : 'text-red-500'
+                        className={`${active ? 'bg-red-100 text-red-600' : 'text-red-500'
                           } flex items-center px-4 py-2 text-sm w-full`}
                       >
                         <Trash className="h-4 w-4 mr-2" />
@@ -156,6 +218,16 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
         message={`Are you sure you want to delete completely ${user.firstName} ${user.lastName}? This action cannot be undone.`}
         bgColor="bg-red-600"
         hoverbgColor="hover:bg-red-700"
+      />
+
+      <ConfirmationModal
+        isOpen={showStateModal}
+        onClose={() => setShowStateModal(false)}
+        onConfirm={user.deletedAt === null ? handleDesactivation : handleActivation}
+        title="Confirm User Deletion"
+        message={`Are you sure you want to ${user.deletedAt === null ? 'desactivate' : 'activate'} the user ${user.firstName} ${user.lastName}?`}
+        bgColor={user.deletedAt === null ? 'bg-red-600' : 'bg-green-600'}
+        hoverbgColor={user.deletedAt === null ? 'hover:bg-red-700' : 'hover:bg-green-700'}
       />
 
       <RoleSelectModal

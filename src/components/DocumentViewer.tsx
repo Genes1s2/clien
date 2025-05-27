@@ -134,7 +134,7 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
           <a
             href={viewerUrl}
             download
-            className="mt-2 inline-block text-blue-600 hover:text-blue-800 underline text-sm"
+            className="mt-2 inline-block text-purple-600 hover:text-purple-800 underline text-sm"
           >
             Download PowerPoint
           </a>
@@ -149,7 +149,7 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
             <a 
               href={viewerUrl}
               download
-              className="text-blue-600 hover:text-blue-800 underline"
+              className="text-purple-600 hover:text-purple-800 underline"
             >
               Download file
             </a>

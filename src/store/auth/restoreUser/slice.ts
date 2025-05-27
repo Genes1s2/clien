@@ -23,6 +23,7 @@ const authSlice = createSlice({
   reducers: {
     clearRestoreError: (state) => {
       state.currentUser.error = null;
+      state.currentUser.status = LoadingType.IDLE;
     },
   },
   extraReducers: (builder) => {

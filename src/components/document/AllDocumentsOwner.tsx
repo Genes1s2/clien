@@ -13,10 +13,11 @@ import pdfLogo from '../../assets/images/pdflogo.png';
 import wordLogo from '../../assets/images/wordlogo.jpeg';
 import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import DocumentViewer from '../DocumentViewer';
-import { Download } from 'lucide-react';
+import { ArchiveIcon, Download, DownloadIcon, EyeIcon, Files, MoreVerticalIcon, PencilIcon, Plus, ShieldIcon, TrashIcon } from 'lucide-react';
 import Pagination from '../Pagination';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
+import DocumentForm from './DocumentForm';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -24,6 +25,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
     const [previewDoc, setPreviewdDoc] = useState<Document | null>(null);
+    const [showModal, setShowModal] = useState(false);
     const { items, status, error } = useSelector((state: RootState) => state.documents);
     const navigate = useNavigate()
     const [filterTag, setFilterTag] = useState<string | null>(null);
@@ -120,7 +122,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
     if (!Array.isArray(items)) return <div className="text-red-500">Invalid documents data</div>;
 
     return (
-        <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[150rem] mx-auto px-4 sm:px-6 lg:px-8">
             <div className='flex flex-col gap-4 md:flex-row md:justify-between md:items-center mb-3'>
                 {/* Stats Container */}
                 <div className='w-full py-2 px-3 bg-white rounded-md shadow-md md:w-auto'>
@@ -135,15 +137,34 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                     <input
                         type="text"
                         placeholder="Search document by title and category..."
-                        className="w-full rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2 text-sm sm:text-base"
+                        className="w-full rounded-md border-gray-300 outline-purple-600 focus:ring-purple-500 shadow-sm px-4 py-2 text-sm sm:text-base"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
             {/* style Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {Array.isArray(filteredItems) &&
+            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 gap-2"} `}>
+                {filteredItems.length === 0 ? (
+                    <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
+
+                        <Files className="h-24 w-24 text-gray-400" />
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-medium text-gray-900">No Document found</h3>
+                            <p className="text-gray-500 max-w-md">
+                                Start by creating a new document or adjust your search filters. Your uploaded documents would be display here.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="mt-4 inline-flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+                        >
+                            <Plus className="h-5 w-5 mr-2" />
+                            Create a document
+                        </button>
+                    </div>
+                ) : (
+                    Array.isArray(filteredItems) &&
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
@@ -151,17 +172,16 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>
+
                                     <p>
-                                        {doc.isArchived && <span title='Archieved' className=' cursor-pointer text-purple-600 inline-flex'>🗂️</span>}
-                                    </p>
-                                    <p>
-                                        {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 inline-flex'>🗃️</span>}
+                                        {doc.isArchived && <span title='Archived' className=' cursor-pointer text-yellow-600 hover:text-yellow-800 inline-flex'><ArchiveIcon className="w-4 h-4 mr-1" /></span>}
                                     </p>
                                 </div>
                                 <button
+                                    className="bg-orange-100 hover:bg-orange-200 md:text-sm text-orange-600 hover:text-orange-700 font-semibold p-2 rounded transition-colors flex items-center"
                                     onClick={() => setPreviewdDoc(doc)}
-                                    className="text-blue-600 hover:text-blue-800 bg-slate-100 p-2 rounded-lg"
                                 >
+                                    <EyeIcon className="w-4 h-4 mr-1 md:mr-2" />
                                     Preview
                                 </button>
                             </div>
@@ -174,8 +194,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                                     />
                                 )}
                             </div>
-
-                            <div className="flex items-start w-full gap-3 ">
+                            <div className="flex items-start w-full gap-3 mb-2">
                                 <div className="flex-1">
                                     <h3 className="font-medium text-purple-700 uppercase truncate">{doc.title}</h3>
                                     <p className="text-sm text-gray-600 truncate">
@@ -194,7 +213,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                                                 key={index}
                                                 onClick={() => handleTagClick(tag)}
                                                 className={`px-2 py-0.5 text-xs font-medium rounded border ${getColorByTag(tag)} hover:brightness-105 transition`}
-                                            // className={`inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded mr-1`}
+                                            // className={`inline-block bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5 rounded mr-1`}
                                             >
                                                 🔖 {tag}
                                             </button>
@@ -203,41 +222,45 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                                 </div>
                             </div>
 
-
                             {/* Action Buttons */}
-                            <div className="flex justify-between items-center gap-2 mt-2 text-sm bg-slate-100 w-full p-2 rounded-lg">
+                            <div className=" overflow-x-auto grid grid-cols-2 gap-2 text-sm w-full pt-2 rounded-lg">
 
                                 <button
                                     onClick={() => handleDownload(doc.filePath, doc.title)}
-                                    className="border-purple-600 hover:border-l-2 pl-1 text-purple-600 hover:text-purple-800 text-sm transition-all"
+                                    className="flex gap-1 justify-center items-center rounded hover:bg-purple-100 bg-slate-100 p-2 text-purple-600 hover:text-purple-800 text-sm transition-all w-full"
                                 >
-                                    Download
+                                    <DownloadIcon className="w-4 h-4" />
+                                    <span className=" items-center">Download</span>
                                 </button>
                                 <button
                                     onClick={() => navigate(`${doc.id}`)}
-                                    className=" border-blue-600 hover:border-l-2 pl-1 text-blue-600 hover:text-blue-800 text-sm transition-all"
+                                    className="  flex gap-1 justify-center items-center rounded hover:bg-blue-100 bg-slate-100 p-2 text-blue-600 hover:text-blue-800 text-sm transition-all w-full"
                                 >
-                                    Details
+                                    <MoreVerticalIcon className="w-4 h-4" />
+                                    <span className=" items-center">Details</span>
                                 </button>
                                 <button
                                     onClick={() => onEdit(doc)}
-                                    className=" border-green-600 hover:border-l-2 pl-1 text-green-600 hover:text-green-800 text-sm transition-all"
+                                    className="  flex gap-1 justify-center items-center rounded hover:bg-green-100 bg-slate-100 p-2 text-green-600 hover:text-green-800 text-sm transition-all w-full"
                                 >
-                                    Edit
+                                    <PencilIcon className="w-4 h-4" />
+                                    <span className=" items-center">Edit</span>
                                 </button>
                                 <button
                                     onClick={() => {
                                         setSelectedDoc(doc);
                                         setShowDeleteModal(true);
                                     }}
-                                    className=" border-red-600 hover:border-l-2 pl-1 text-red-600 hover:text-red-800 text-sm transition-all"
+                                    className="  flex gap-1 justify-center items-center rounded hover:bg-red-100 bg-slate-100 p-2 text-red-600 hover:text-red-800 text-sm transition-all w-full"
                                 >
-                                    Delete
+                                    <TrashIcon className="w-4 h-4" />
+                                    <span className=" items-center">Delete</span>
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )))}
             </div>
+
             {filterTag && (
                 <div className="p-2 text-sm text-gray-600">
                     Filtering by tag: <strong>{filterTag}</strong>{' '}
@@ -277,6 +300,17 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                 )}
             </ModalPreview>
 
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                <div className="p-4">
+                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                        {selectedDoc ? 'Edit Category' : 'Create New Category'}
+                    </h3>
+                    <DocumentForm
+                        existingDocument={selectedDoc}
+                        onSuccess={() => setShowModal(false)}
+                    />
+                </div>
+            </Modal>
             <ConfirmationModal
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}

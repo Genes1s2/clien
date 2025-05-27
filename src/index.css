@@ -3,12 +3,46 @@
 @tailwind utilities;
 
 @layer base {
-    /* Start Custom styles for the modal scrollbar */
-    .sidebar-scrollbar {
-      scrollbar-width: none;
-    }
-  
-    .sidebar-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
+
+  /* Start Custom styles for the modal scrollbar */
+  .sidebar-scrollbar {
+    scrollbar-width: none;
   }
+
+  .sidebar-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+/* 
+.custom-bg-auth {
+  background-image: url('./assets//images/bgauth.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-blend-mode: overlay;
+  background-color: rgba(0, 0, 0, 0.5);
+  min-height: 100vh;
+} */
+
+.custom-bg-auth {
+  background-image: url('./assets/images/bgauth.jpg');
+  background-size: cover;  
+  background-position: center; 
+  background-repeat: no-repeat;
+  min-height: 100vh;   
+  width: 100%;    
+  position: relative; 
+  
+  /* Overlay */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    mix-blend-mode: overlay;
+  }
+}

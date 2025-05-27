@@ -74,7 +74,7 @@ const DocumentFormAccess = ({ documentId, onSuccess }: DocumentFormAcces) => {
                                 as="select"
                                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.userId && touched.userId
                                     ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-blue-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
                                     }`}
                             >
                                 <option value="">Select a user</option>
@@ -89,17 +89,17 @@ const DocumentFormAccess = ({ documentId, onSuccess }: DocumentFormAcces) => {
 
                         <div className="space-y-2">
                             <label className="flex items-center gap-2">
-                                <Field type="checkbox" name="canRead" className="rounded text-blue-600" />
+                                <Field type="checkbox" name="canRead" className="rounded text-purple-600" />
                                 Read Access
                             </label>
 
                             <label className="flex items-center gap-2">
-                                <Field type="checkbox" name="canWrite" className="rounded text-blue-600" />
+                                <Field type="checkbox" name="canWrite" className="rounded text-purple-600" />
                                 Write Access
                             </label>
 
                             <label className="flex items-center gap-2">
-                                <Field type="checkbox" name="canDelete" className="rounded text-blue-600" />
+                                <Field type="checkbox" name="canDelete" className="rounded text-purple-600" />
                                 Delete Access
                             </label>
                         </div>

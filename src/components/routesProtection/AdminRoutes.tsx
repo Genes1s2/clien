@@ -15,13 +15,8 @@ const user = useSelector<RootState, AuthUser | null>(
     );
 
     if (status === LoadingType.PENDING) {
-    return <div className="text-center p-8">Loading user profile...</div>;
+    return <div className="text-center p-8">Loading</div>;
   }
-
-  // if (error) {
-  //   return <div className="text-red-500 p-8">Error: {error}</div>;
-  // }
-
   if (!user) {
     return <div className="p-8">User not found</div>;
   }

@@ -1,51 +1,3 @@
-// import { useState } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { createRole, updateRole } from '../../store/rolePermissions/action';
-// import { AppDispatch } from '../../store';
-
-// const RoleForm = ({ existingRole }: { existingRole?: any }) => {
-//   const dispatch = useDispatch<AppDispatch>();
-//   const [name, setName] = useState(existingRole?.name || '');
-//   const [permissions, setPermissions] = useState<string[]>(existingRole?.permissions?.map((p: any) => p.id) || []);
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const roleData = { name, permissionIds: permissions };
-
-//     if (existingRole) {
-//       dispatch(updateRole({ id: existingRole.id, data: roleData }));
-//     } else {
-//       dispatch(createRole(roleData));
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit} className="space-y-4">
-//       <div>
-//         <label className="block text-sm font-medium text-gray-700">Role Name</label>
-//         <input
-//           type="text"
-//           value={name}
-//           onChange={(e) => setName(e.target.value)}
-//           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-//           required
-//         />
-//       </div>
-
-//       {/* Add permission selection (you'll need to fetch permissions) */}
-
-//       <button
-//         type="submit"
-//         className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-//       >
-//         {existingRole ? 'Update Role' : 'Create Role'}
-//       </button>
-//     </form>
-//   );
-// };
-
-// export default RoleForm;
-
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -114,7 +66,7 @@ const RoleForm = ({ existingRole, onSuccess }: { existingRole?: any; onSuccess?:
               type="text"
               className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.name && touched.name
                 ? 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:ring-blue-500'
+                : 'border-gray-300 focus:ring-purple-500'
                 }`}
             />
             <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />

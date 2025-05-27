@@ -15,6 +15,7 @@ import Pagination from '../Pagination';
 import DocumentViewer from '../DocumentViewer';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
+import { ArchiveRestoreIcon, EyeIcon, Files, TrashIcon } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -123,33 +124,41 @@ const AllDeletedDocumentsByOwner = () => {
                     <input
                         type="text"
                         placeholder="Search document by title and category..."
-                        className="w-full rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2 text-sm sm:text-base"
+                        className="w-full rounded-md border-gray-300 outline-purple-600 focus:ring-purple-500 shadow-sm px-4 py-2 text-sm sm:text-base"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
-            {/* WhatsApp-style Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {Array.isArray(filteredItems) &&
+
+            {/* style Grid */}
+            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 gap-2"} `}>
+                {filteredItems.length === 0 ? (
+                    <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
+
+                        <Files className="h-24 w-24 text-gray-400" />
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-medium text-gray-900">No deleted document found</h3>
+                            <p className="text-gray-500 max-w-md">
+                                These are your deleted documents. You've the possibility to restore.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    Array.isArray(filteredItems) &&
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow bg-white"
+                            className="bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>
-                                    <p>
-                                        {doc.isArchived && <span title='Archieved' className=' cursor-pointer text-purple-600 inline-flex'>🗂️</span>}
-                                    </p>
-                                    <p>
-                                        {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 inline-flex'>🗃️</span>}
-                                    </p>
                                 </div>
                                 <button
+                                    className="bg-orange-100 hover:bg-orange-200 md:text-sm text-orange-600 hover:text-orange-700 font-semibold p-2 rounded transition-colors flex items-center"
                                     onClick={() => setPreviewdDoc(doc)}
-                                    className="text-blue-600 hover:text-blue-800 bg-slate-100 p-2 rounded-lg"
                                 >
+                                    <EyeIcon className="w-4 h-4 mr-1 md:mr-2" />
                                     Preview
                                 </button>
                             </div>
@@ -162,7 +171,7 @@ const AllDeletedDocumentsByOwner = () => {
                                     />
                                 )}
                             </div>
-                            <div className="flex items-start w-full gap-3">
+                            <div className="flex items-start w-full gap-3 mb-2">
                                 <div className="flex-1">
                                     <h3 className="font-medium text-purple-700 uppercase truncate">{doc.title}</h3>
                                     <p className="text-sm text-gray-600 truncate">
@@ -173,9 +182,6 @@ const AllDeletedDocumentsByOwner = () => {
                                     </p>
                                     <p className="text-sm text-gray-500 truncate capitalize">
                                         <span className=' font-medium'>On</span>: {new Date(doc.createdAt).toLocaleDateString()}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate capitalize">
-                                        <span className=' font-medium'>Deleted On</span>: {new Date(doc.deletedAt).toLocaleDateString()}
                                     </p>
                                     <div className="flex flex-wrap gap-1">
                                         <i className="text-sm text-gray-500 truncate">Tags (clickable):</i>{' '}
@@ -194,26 +200,28 @@ const AllDeletedDocumentsByOwner = () => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex justify-between items-center gap-2 mt-2 text-sm bg-slate-100 w-full p-2 rounded-lg">
-
+                            <div className=" overflow-x-auto grid grid-cols-2 gap-2 text-sm w-full pt-2 rounded-lg">
                                 <button
                                     onClick={() => handleRestore(doc.id)}
-                                    className="border-purple-600 hover:border-l-2 pl-1 text-purple-600 hover:text-purple-800 text-sm transition-all"
+                                    className="flex gap-1 justify-center items-center rounded hover:bg-purple-100 bg-slate-100 p-2 text-purple-600 hover:text-purple-800 text-sm transition-all w-full"
                                 >
-                                    Restore
+                                    <ArchiveRestoreIcon className="w-4 h-4" />
+                                    <span className=" items-center">Restore</span>
+
                                 </button>
                                 <button
                                     onClick={() => {
                                         setSelectedDoc(doc);
                                         setShowDeleteModal(true);
                                     }}
-                                    className=" border-red-600 hover:border-l-2 pl-1 text-red-600 hover:text-red-800 text-sm transition-all"
+                                    className="  flex gap-1 justify-center items-center rounded hover:bg-red-100 bg-slate-100 p-2 text-red-600 hover:text-red-800 text-sm transition-all w-full"
                                 >
-                                    Delete
+                                    <TrashIcon className="w-4 h-4" />
+                                    <span className=" items-center">Delete</span>
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )))}
             </div>
 
             {filterTag && (

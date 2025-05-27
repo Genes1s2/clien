@@ -24,6 +24,7 @@ export interface AuthUser {
   roleId: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt: string;
   role: UserRole;
   token: string;
   accessRights: AccessRight[];

@@ -67,7 +67,7 @@ const DashboardLayout = () => {
     <div className="bg-gray-200">
       <Header />
       <div> 
-        <main className="min-h-[calc(100vh-8rem)] p-4 md:p-6 lg:p-8">
+        <main className="min-h-[calc(100vh-8rem)]">
           <Outlet />
         </main>
         <Footer />

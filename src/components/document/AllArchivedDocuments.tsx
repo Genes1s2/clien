@@ -12,7 +12,7 @@ import pdfLogo from '../../assets/images/pdflogo.png';
 import wordLogo from '../../assets/images/wordlogo.jpeg';
 import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import DocumentViewer from '../DocumentViewer';
-import { Download } from 'lucide-react';
+import { Download, DownloadIcon, EyeIcon, Files, MoreVerticalIcon, PencilIcon, Plus, ShieldIcon } from 'lucide-react';
 import Pagination from '../Pagination';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
 
@@ -116,16 +116,28 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
           <input
             type="text"
             placeholder="Search document by title and category..."
-            className="w-full rounded-md border-gray-300 outline-blue-600 focus:ring-blue-500 shadow-sm px-4 py-2 text-sm sm:text-base"
+            className="w-full rounded-md border-gray-300 outline-purple-600 focus:ring-purple-500 shadow-sm px-4 py-2 text-sm sm:text-base"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
-      {/* style Grid */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4 gap-2">
-        {Array.isArray(filteredItems) &&
+      {/* style Grid */}
+      <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 gap-2"} `}>
+        {filteredItems.length === 0 ? (
+          <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
+
+            <Files className="h-24 w-24 text-gray-400" />
+            <div className="space-y-1">
+              <h3 className="text-xl font-medium text-gray-900">No archived document found</h3>
+              <p className="text-gray-500 max-w-md">
+                Archived documents can't be view by other users, you can archive documents in the document details.
+              </p>
+            </div>
+          </div>
+        ) : (
+          Array.isArray(filteredItems) &&
           filteredItems.map((doc: Document) => (
             <div
               key={doc.id}
@@ -134,13 +146,14 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
               <div className='w-full flex justify-between items-center rounded-lg'>
                 <div className=' flex gap-2'>
                   <p>
-                    {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 inline-flex'>🗃️</span>}
+                    {doc.isSensitive && <span title='Sensitive' className=' cursor-pointer text-purple-600 hover:text-purple-800 inline-flex'><ShieldIcon className="w-4 h-4 mr-1" /></span>}
                   </p>
                 </div>
                 <button
+                  className="bg-orange-100 hover:bg-orange-200 md:text-sm text-orange-600 hover:text-orange-700 font-semibold p-2 rounded transition-colors flex items-center"
                   onClick={() => setPreviewdDoc(doc)}
-                  className="text-blue-600 hover:text-blue-800 bg-slate-100 p-2 rounded-lg"
                 >
+                  <EyeIcon className="w-4 h-4 mr-1 md:mr-2" />
                   Preview
                 </button>
               </div>
@@ -153,7 +166,7 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
                   />
                 )}
               </div>
-              <div className="flex items-start w-full gap-3">
+              <div className="flex items-start w-full gap-3 mb-2">
                 <div className="flex-1">
                   <h3 className="font-medium text-purple-700 uppercase truncate">{doc.title}</h3>
                   <p className="text-sm text-gray-600 truncate">
@@ -172,7 +185,6 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
                         key={index}
                         onClick={() => handleTagClick(tag)}
                         className={`px-2 py-0.5 text-xs font-medium rounded border ${getColorByTag(tag)} hover:brightness-105 transition`}
-                      // className={`inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded mr-1`}
                       >
                         🔖 {tag}
                       </button>
@@ -182,30 +194,33 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-between items-center gap-2 mt-2 text-sm bg-slate-100 w-full p-2 rounded-lg">
-
+              <div className=" overflow-x-auto flex justify-evenly gap-2 text-sm w-full pt-2 rounded-lg">
                 <button
                   onClick={() => handleDownload(doc.filePath, doc.title)}
-                  className="border-purple-600 hover:border-l-2 pl-1 text-purple-600 hover:text-purple-800 text-sm transition-all"
+                  className="flex gap-1 justify-center items-center rounded hover:bg-purple-100 bg-slate-100 p-2 text-purple-600 hover:text-purple-800 text-sm transition-all w-full"
                 >
-                  Download
+                  <DownloadIcon className="w-4 h-4" />
+                  <span className=" items-center">Download</span>
                 </button>
                 <button
                   onClick={() => navigate(`${doc.id}`)}
-                  className=" border-blue-600 hover:border-l-2 pl-1 text-blue-600 hover:text-blue-800 text-sm transition-all"
+                  className="  flex gap-1 justify-center items-center rounded hover:bg-blue-100 bg-slate-100 p-2 text-blue-600 hover:text-blue-800 text-sm transition-all w-full"
                 >
-                  Details
+                  <MoreVerticalIcon className="w-4 h-4" />
+                  <span className=" items-center">Details</span>
                 </button>
                 <button
                   onClick={() => onEdit(doc)}
-                  className=" border-green-600 hover:border-l-2 pl-1 text-green-600 hover:text-green-800 text-sm transition-all"
+                  className="  flex gap-1 justify-center items-center rounded hover:bg-green-100 bg-slate-100 p-2 text-green-600 hover:text-green-800 text-sm transition-all w-full"
                 >
-                  Edit
+                  <PencilIcon className="w-4 h-4" />
+                  <span className=" items-center">Edit</span>
                 </button>
               </div>
             </div>
-          ))}
+          )))}
       </div>
+
       {filterTag && (
         <div className="p-2 text-sm text-gray-600">
           Filtering by tag: <strong>{filterTag}</strong>{' '}

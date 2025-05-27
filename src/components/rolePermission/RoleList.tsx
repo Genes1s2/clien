@@ -7,6 +7,7 @@ import { showError, showSuccess } from '../../utils/Notifications';
 import { UserRole } from '../../models/rolePermissions';
 import { RoleType } from '../../pages/Dashboard/rolePermissions/RolesPage';
 import ConfirmationModal from '../modal/ConfirmationModal';
+import TableSkeleton from '../SkeletonLoader';
 
 interface RoleListProps {
   onEdit: (role: RoleType) => void;
@@ -38,7 +39,7 @@ const RoleList = ({ onEdit }: RoleListProps) => {
     }
   };
 
-  if (!roles || status === LoadingType.PENDING) return <div>Loading...</div>;
+  if (status === LoadingType.PENDING) return <div><TableSkeleton rows={roles.length} cols={3} /></div>;
   if (error) return <div className="text-red-500">{error}</div>;
   if (!Array.isArray(roles)) {
     return <div className="text-red-500">Roles data is corrupted</div>;
@@ -57,10 +58,10 @@ const RoleList = ({ onEdit }: RoleListProps) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {roles && roles.map((role: UserRole) => (
             <tr key={role.id}>
-              <td className="px-6 py-4 whitespace-nowrap">{role.name}</td>
+              <td className="px-6 py-4 whitespace-nowrap capitalize">{role.name}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {role.permissions?.map((p: any) => (
-                  <span key={p.id} className="mr-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                  <span key={p.id} className="mr-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
                     {p.name.replace(/_/g, ' ')}
                   </span>
                 ))}
