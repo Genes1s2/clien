@@ -1,72 +1,17 @@
-// import React from "react";
-// import Sidebar from "./Sidebar";
-// import Footer from "./Footer";
-// import Header from "./Header";
-// import { Outlet } from "react-router";
-
-// const DashboardLayout = () => {
-//   return (
-//     // <div className="grid grid-cols-[160px_1fr] bg-gray-200">
-//     //   <Sidebar />
-//     //   <div className="h-screen overflow-hidden">
-//     //     <Header />
-//     //     <main className="h-[calc(100vh-72px)] overflow-y-auto">
-//     //       <Outlet />
-//     //     </main>
-//     //     <Footer />
-//     //   </div>
-//     // </div>
-
-//     <div className=" bg-gray-200">
-//       <Sidebar />
-//       <div className="h-screen overflow-hidden">
-//         <Header />
-//         <main className=" overflow-y-auto">
-//           <Outlet />
-//         </main>
-//         <Footer />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
-// import React from "react";
-// import Sidebar from "./Sidebar";
-// import Footer from "./Footer";
-// import { Outlet } from "react-router";
-// import Header from "./Header";
-
-// const DashboardLayout = () => {
-//   return (
-//     <div className="bg-gray-200 min-h-screen">
-//       {/* Updated Sidebar (now acting as top navigation) */}
-//       <Header />
-
-//       {/* Main Content Area */}
-//       <div className="pt-16"> {/* Add padding-top equal to navbar height */}
-//         <main className="min-h-[calc(100vh-8rem)] p-4 md:p-6 lg:p-8"> {/* Adjust padding */}
-//           <Outlet />
-//         </main>
-//         <Footer />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DashboardLayout;
-
-// DashboardLayout.tsx
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router";
+import { FolderArchive, FolderClosed, FolderOpen } from "lucide-react";
 
 const DashboardLayout = () => {
   return (
-    <div className="bg-gray-200">
+    <div className="overflow-hidden relative z-0 bg-gray-200 scroll h-screen overflow-y-auto">
+      <div><FolderClosed size={200} className=" animate-pulse -z-10 opacity-30 fixed text-purple-700 top-28 left-6" /></div>
+      <div><FolderOpen className=" animate-pulse -z-10 opacity-30 w-64 h-64 lg:w-96 lg:h-96 fixed text-purple-700 top-[19rem] left-0 md:top-[20rem] md:left-[16rem] lg:top-[20rem] lg:left-[35rem]" /></div>
+      <div><FolderArchive size={200} className=" animate-pulse -z-10 opacity-30 fixed text-purple-700 bottom-0 md:bottom-10 right-2" /></div>
       <Header />
-      <div> 
+      <div className="z-50">
         <main className="min-h-[calc(100vh-8rem)]">
           <Outlet />
         </main>

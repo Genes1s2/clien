@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accessibility, CheckCircle, PercentDiamond, XCircle } from 'lucide-react';
+import { Accessibility, CheckCircle, LockOpenIcon, PercentDiamond, XCircle } from 'lucide-react';
 import { AccessRight } from '../../models/logActions';
 
 interface AccessRightsPanelProps {
@@ -9,12 +9,14 @@ interface AccessRightsPanelProps {
 export const AccessRightsPanel = ({ accessRights }: AccessRightsPanelProps) => {
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="relative overflow-hidden bg-white rounded-lg shadow p-6">
+      
+            <div><LockOpenIcon className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <PercentDiamond className="h-6 w-6 text-purple-500" />
+        <LockOpenIcon className="h-6 w-6 text-purple-500" />
         Document Access Rights
       </h3>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 scroll ${accessRights.length > 9 ? 'h-[50vh]':'' } overflow-y-auto pr-1`}>
         {accessRights.map((right, index) => (
           <div key={index} className="border rounded-lg p-4">
             <div className="flex justify-between items-start mb-2">

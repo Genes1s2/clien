@@ -4,6 +4,11 @@ import { AppDispatch } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
+import { Upload } from 'lucide-react';
+import excellLogo from '../../assets/images/excellogo.jpeg';
+import pdfLogo from '../../assets/images/pdflogo.png';
+import wordLogo from '../../assets/images/wordlogo.jpeg';
+import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 
 interface DocumentFormVersion {
     documentId: string;
@@ -39,6 +44,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                         setSubmitting(false);
                         onSuccess?.();
                     } catch (error: any) {
+                        
                         showError('Failed to process upload');
                     }
                 }}
@@ -46,6 +52,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                 {({ setFieldValue, values, isSubmitting, errors, touched }) => (
                     <Form className="space-y-4">
                         {/* Description Field */}
+                        <div><Upload className=" animate-pulse -z-10 opacity-30 w-96 h-96 absolute text-purple-500 top-0 -right-32 " /></div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                             <Field
@@ -72,6 +79,16 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
                             />
                             <ErrorMessage name="filePath" component="div" className="text-red-500 text-sm mb-2" />
                         </div>
+                        
+                                  <div>
+                                    <h2 className='text-gray-500 text-sm'>Supported files</h2>
+                                    <div className='flex gap-2'>
+                                      <img src={wordLogo} className='w-7 lg:w-10' alt="" />
+                                      <img src={excellLogo} className='w-7 lg:w-10' alt="" />
+                                      <img src={powerpointLogo} className='w-7 lg:w-10' alt="" />
+                                      <img src={pdfLogo} className='w-7 lg:w-10' alt="" />
+                                    </div>
+                                  </div>
 
                         <button
                             type="submit"

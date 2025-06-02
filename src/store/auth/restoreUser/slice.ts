@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AsyncState, LoadingType } from "../../../models/store";
 import { restoreUser } from "./actions";
-import { RootState } from "../..";
 
 type AuthState = {
   currentUser: AsyncState<any>;

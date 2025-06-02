@@ -27,15 +27,16 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
   const handleDelete = async () => {
     try {
       if (user) {
-        navigate('/dashboard/admin/users');
         await dispatch(deleteUser(user.id)).unwrap();
       }
       setShowDeleteModal(false);
+      navigate('/dashboard/admin/users');
       showSuccess('User deleted successfully');
 
     } catch (error: any) {
 
-      showError(error || 'Failed to delete user');
+      showError('Failed to delete user');
+      await dispatch(fetchUserProfile(user.id)).unwrap();
     }
   };
 
@@ -224,7 +225,7 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
         isOpen={showStateModal}
         onClose={() => setShowStateModal(false)}
         onConfirm={user.deletedAt === null ? handleDesactivation : handleActivation}
-        title="Confirm User Deletion"
+        title={`Confirm User ${user.deletedAt === null ? 'Desactivation' : 'Activation'}`}
         message={`Are you sure you want to ${user.deletedAt === null ? 'desactivate' : 'activate'} the user ${user.firstName} ${user.lastName}?`}
         bgColor={user.deletedAt === null ? 'bg-red-600' : 'bg-green-600'}
         hoverbgColor={user.deletedAt === null ? 'hover:bg-red-700' : 'hover:bg-green-700'}

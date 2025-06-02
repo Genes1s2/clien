@@ -8,9 +8,8 @@ import { logout } from "../../store/auth/slice";
 import { Link, NavLink, useNavigate } from "react-router";
 import SearchModal from "../../components/search/searchModal";
 import { searchDocuments } from "../../store/search/action";
-import { FileSearch, SearchCheck } from "lucide-react";
-import { clearRestoreError } from "../../store/auth/restoreUser/slice";
-import { log } from "console";
+import { FileSearch, FolderOpen, LogOut, User } from "lucide-react";
+import ConfirmationModal from "../../components/modal/ConfirmationModal";
 
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +19,7 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const avatarBgColor = useMemo(() => getRandomColor(), []);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const user = useSelector<RootState, AuthUser | null>(
     (state) => state.session.currentUser.entities
@@ -31,9 +31,9 @@ const Header = () => {
   const links = [
     // { path: "/dashboard", label: "Dashboard", requireAdmin: false },
     { path: "/dashboard/documents", label: "Documents", requireAdmin: false },
-    { path: "/dashboard/admin/users", label: "Users", requireAdmin: true },
-    { path: "/dashboard/admin/roles", label: "Roles", requireAdmin: true },
+    // { path: "/dashboard/admin/roles", label: "Roles", requireAdmin: true },
     { path: "/dashboard/admin/categories", label: "Categories", requireAdmin: true },
+    { path: "/dashboard/admin/users", label: "Users", requireAdmin: true },
   ];
 
   const handleLogout = () => {
@@ -204,15 +204,29 @@ const Header = () => {
         </div>
 
         {isOpen && (
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
+          <div className="absolute right-0 top-full mt-4 w-56 bg-white rounded-md shadow-lg pb-2 z-50 transition-all">
+            <div className="relative overflow-hidden flex justify-between px-4 py-2 text-gray-800 hover:bg-purple-100 border-b-2">
+              <div className={`h-10 w-10 rounded-full ${avatarBgColor} flex items-center justify-center`}>
+                <span className="font-medium uppercase text-white ">
+                  {user.firstName[0]}
+                  {user.lastName[0]}
+                </span>
+              </div>
+              <div><FolderOpen className=" animate-pulse -z-10 opacity-30 w-20 h-20 absolute text-purple-500 top-0 left-36 " /></div>
+              <div className="text-right">
+                <p className="font-medium uppercase text-[14px]  ">{`${user.firstName} ${user.lastName}`}</p>
+                <p className="text-sm opacity-90  ">{user.email}</p>
+              </div>
+            </div>
             <Link
               to="/dashboard/profile"
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+              className="flex gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100"
               onClick={() => setIsOpen(false)}
             >
-              Profile
+              <User size={22} className="text-green-600" /> Profile
             </Link>
-            <Link
+
+            {/* <Link
               to="/dashboard/settings"
               className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
               onClick={() => setIsOpen(false)}
@@ -232,16 +246,26 @@ const Header = () => {
               onClick={() => setIsOpen(false)}
             >
               Support
-            </Link>
+            </Link> */}
             <button
-              onClick={handleLogout}
-              className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+              onClick={() => setShowDeleteModal(true)}
+              className="flex gap-2 w-full text-left px-4 py-2 text-gray-800 hover:bg-red-100"
             >
-              Logout
+              <LogOut size={22} className="text-red-500" /> Disconnect
             </button>
           </div>
         )}
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Disconnection"
+        message={`Are you sure you want to Disconnect?`}
+        bgColor="bg-red-600"
+        hoverbgColor="hover:bg-red-700"
+      />
     </header>
   );
 };

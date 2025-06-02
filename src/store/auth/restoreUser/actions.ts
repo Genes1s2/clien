@@ -10,7 +10,7 @@ export const restoreUser = createAsyncThunk<
   const token = localStorage.getItem("token");
 
   if (!token) {
-    return rejectWithValue("No authentication token found");
+    return rejectWithValue("No authenticate session found, please log in.");
   }
 
   try {
@@ -35,9 +35,9 @@ export const restoreUser = createAsyncThunk<
     let errorMessage: AuthError = 'SESSION_RESTORE_FAILED';
     
     if (error.message.includes("401")) {
-      errorMessage = 'SESSION_EXPIRED';
+      return errorMessage = 'SESSION_EXPIRED';
     } else if (error.message.includes("Network Error")) {
-      errorMessage = 'NETWORK_ERROR';
+      return errorMessage = 'NETWORK_ERROR';
     }
     
     return rejectWithValue(errorMessage || "Failed to restore user");

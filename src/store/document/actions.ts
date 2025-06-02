@@ -57,8 +57,6 @@ export const allDeletedDocumentsByOwner = createAsyncThunk(
       });
 
       const data = await response.json();
-
-      console.log("allDeletedDocumentsByOwner: ", data);
       
       if (!response.ok) throw new Error(data.error || 'Failed to fetch deleted documents');
       return data;

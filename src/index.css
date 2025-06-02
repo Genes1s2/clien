@@ -4,27 +4,26 @@
 
 @layer base {
 
-  /* Start Custom styles for the modal scrollbar */
-  .sidebar-scrollbar {
-    scrollbar-width: none;
-  }
+   /* width */
+    .scroll::-webkit-scrollbar {
+        @apply w-1;
+    }
 
-  .sidebar-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+    /* Track */
+    .scroll::-webkit-scrollbar-track {
+        @apply bg-gray-100 rounded-[10px];
+    }
+
+    /* Handle */
+    .scroll::-webkit-scrollbar-thumb {
+        @apply rounded-[10px] bg-purple-600
+    }
+
+    /* Handle on hover */
+    .scroll::-webkit-scrollbar-thumb:hover {
+        @apply bg-purple-700 cursor-pointer
+    }
 }
-/* 
-.custom-bg-auth {
-  background-image: url('./assets//images/bgauth.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-blend-mode: overlay;
-  background-color: rgba(0, 0, 0, 0.5);
-  min-height: 100vh;
-} */
-
 .custom-bg-auth {
   background-image: url('./assets/images/bgauth.jpg');
   background-size: cover;  

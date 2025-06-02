@@ -144,7 +144,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                 </div>
             </div>
             {/* style Grid */}
-            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 gap-2"} `}>
+            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 my-4 gap-2"} `}>
                 {filteredItems.length === 0 ? (
                     <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
 
@@ -168,7 +168,7 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
+                            className="group bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>
@@ -185,11 +185,11 @@ const AllDocumentsOwner = ({ onEdit }: { onEdit: (category: any) => void }) => {
                                     Preview
                                 </button>
                             </div>
-                            <div className='flex justify-center mb-2 border-slate-100 border-b-2'>
+                            <div className='overflow-hidden flex justify-center mb-2 border-slate-100 border-b-2'>
                                 {doc.filePath && (
                                     <img
                                         src={getFileIcon(doc.filePath)}
-                                        className='w-52 rounded-lg'
+                                        className='w-52 rounded-lg group-hover:scale-150 group-hover:rotate-12 transition-all'
                                         alt=""
                                     />
                                 )}

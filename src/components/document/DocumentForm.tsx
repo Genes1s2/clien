@@ -2,13 +2,19 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import { allDocumentsByOwner, createDocument, fetchDocuments, updateDocument } from '../../store/document/actions';
+import { allDocumentsByOwner, createDocument, getDocumentById, updateDocument } from '../../store/document/actions';
 import { useEffect } from 'react';
 import { showError, showSuccess } from '../../utils/Notifications';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { fetchCategories } from '../../store/categories/actions';
 import CreatableSelect from 'react-select/creatable';
+import { Category } from '../../models/category';
+import { FolderOpen } from 'lucide-react';
+import excellLogo from '../../assets/images/excellogo.jpeg';
+import pdfLogo from '../../assets/images/pdflogo.png';
+import wordLogo from '../../assets/images/wordlogo.jpeg';
+import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 
 const animatedComponents = makeAnimated();
 
@@ -21,7 +27,6 @@ const documentSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   //   description: Yup.string().required('Description is required'),
   categoryId: Yup.string().required('Category is required'),
-  // tags: Yup.array().of(Yup.string()).nullable(),
   tags: Yup.array()
     .of(Yup.string().required('Required'))
     .min(2, 'At least two tags are required')
@@ -59,7 +64,6 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
 
           // Only append tags if they exist
           if (values.tags.length > 1) {
-            // formData.append('tags', JSON.stringify(values.tags));
             values.tags.forEach((tag: string) => {
               formData.append('tags', tag);
             });
@@ -70,15 +74,14 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           }
 
           if (existingDocument) {
-            formData.append('id', existingDocument.id);
+            // formData.append('id', existingDocument.id);
 
             await dispatch(updateDocument({ documentId: existingDocument.id, formData })).unwrap();
             await dispatch(allDocumentsByOwner()).unwrap();
+            await dispatch(getDocumentById(existingDocument.id));
             showSuccess('Document updated successfully');
           } else {
             await dispatch(createDocument(formData)).unwrap();
-
-            await dispatch(fetchCategories());
             await dispatch(allDocumentsByOwner()).unwrap();
             showSuccess('Document created successfully');
           }
@@ -86,14 +89,14 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           setSubmitting(false);
           onSuccess?.();
         } catch (error: any) {
-          // await dispatch(fetchDocuments()).unwrap()
-          console.error('Error creating/updating document:', error);
-          showError('Failed to process document');
+          // await dispatch(allDocumentsByOwner()).unwrap();
+          showError( 'Failed to process document');
         }
       }}
     >
       {({ setFieldValue, values, isSubmitting, errors, touched }) => (
-        <Form className="space-y-4">
+        <Form className=" space-y-4">
+          <div><FolderOpen className=" animate-pulse -z-10 opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-32 " /></div>
           {/* Title Field */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -111,7 +114,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
             <Select
-              options={categories.map(c => ({ value: c.id, label: c.name }))}
+              options={categories.map((c: Category) => ({ value: c.id, label: c.name }))}
               onChange={(selected: any) => setFieldValue('categoryId', selected?.value)}
               classNamePrefix="react-select"
               className={`${errors.categoryId && touched.categoryId
@@ -124,7 +127,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
 
           {/* Optional Tags Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tags (optional)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
             <CreatableSelect
               isMulti
               components={animatedComponents}
@@ -156,6 +159,16 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
                 }`}
             />
             <ErrorMessage name="filePath" component="div" className="text-red-500 text-sm mb-2" />
+          </div>
+
+          <div>
+            <h2 className='text-gray-500 text-sm'>Supported files</h2>
+            <div className='flex gap-2'>
+              <img src={wordLogo} className='w-10' alt="" />
+              <img src={excellLogo} className='w-10' alt="" />
+              <img src={powerpointLogo} className='w-10' alt="" />
+              <img src={pdfLogo} className='w-10' alt="" />
+            </div>
           </div>
 
           <button

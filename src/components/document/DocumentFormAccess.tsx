@@ -4,10 +4,12 @@ import { AppDispatch, RootState } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
+import Select from 'react-select';
 import { useEffect } from 'react';
 import { getAllActiveUsers } from '../../store/user/actions';
-import { UserListEntry } from '../../models/auth';
+import { AuthUser, UserListEntry } from '../../models/auth';
 import { AccessRight } from '../../models/logActions';
+import { LockOpenIcon } from 'lucide-react';
 
 interface DocumentFormAcces {
     documentId: string;
@@ -63,8 +65,9 @@ const DocumentFormAccess = ({ documentId, onSuccess }: DocumentFormAcces) => {
                     }
                 }}
             >
-                {({ isSubmitting, errors, touched }) => (
+                {({setFieldValue, isSubmitting, errors, touched }) => (
                     <Form className="space-y-4">
+                        <div><LockOpenIcon className=" animate-pulse -z-10 opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-32 " /></div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Select User
@@ -84,6 +87,15 @@ const DocumentFormAccess = ({ documentId, onSuccess }: DocumentFormAcces) => {
                                     </option>
                                 ))}
                             </Field>
+                            {/* <Select
+                                options={users.map((u: AuthUser) => ({ value: u.id, label: u.firstName }))}
+                                onChange={(selected: any) => setFieldValue('userId', selected?.value)}
+                                classNamePrefix="react-select"
+                                className={`${errors.userId && touched.userId
+                                    ? 'border-red-500 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-purple-500'
+                                    }`}
+                            /> */}
                             <ErrorMessage name="userId" component="div" className="text-red-500 text-sm mb-2" />
                         </div>
 

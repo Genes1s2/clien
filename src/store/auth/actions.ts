@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ApiResponse } from "../../models/store";
 import { RootState } from "../index";
-import { AuthError, AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
+import { AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
 import { logError } from "../../utils/ErrorLogging";
 
 export const loginAction = createAsyncThunk<

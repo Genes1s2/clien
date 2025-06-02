@@ -1,9 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
 import { AuthUser } from '../../models/auth';
 import { getRandomColor } from '../../utils/RandomColor';
-import { LoadingType } from '../../models/store';
-import { RootState } from '../../store';
 
 interface UserHeadProfiletProps {
   user: AuthUser;

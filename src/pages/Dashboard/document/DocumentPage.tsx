@@ -116,7 +116,7 @@ const DocumentsPage = () => {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <div className="p-4">
           <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-            {editingDoc ? 'Edit Category' : 'Create New Category'}
+            {editingDoc ? 'Edit Document' : 'Create New Document'}
           </h3>
           <DocumentForm
             existingDocument={editingDoc}

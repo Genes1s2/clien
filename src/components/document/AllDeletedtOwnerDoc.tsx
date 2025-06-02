@@ -16,6 +16,7 @@ import DocumentViewer from '../DocumentViewer';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
 import { ArchiveRestoreIcon, EyeIcon, Files, TrashIcon } from 'lucide-react';
+import { AuthUser } from '../../models/auth';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -28,6 +29,11 @@ const AllDeletedDocumentsByOwner = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const user = useSelector<RootState, AuthUser | null>(
+        (state) => state.session.currentUser.entities
+    );
+
+    const isAdmin = user?.role.name === "admin";
 
     const getFileIcon = (fileName: string) => {
         const ext = fileName.split('.').pop()?.toLowerCase();
@@ -132,7 +138,7 @@ const AllDeletedDocumentsByOwner = () => {
             </div>
 
             {/* style Grid */}
-            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 gap-2"} `}>
+            <div className={`${filteredItems.length === 0 ? "" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 my-4 gap-2"} `}>
                 {filteredItems.length === 0 ? (
                     <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
 
@@ -140,7 +146,7 @@ const AllDeletedDocumentsByOwner = () => {
                         <div className="space-y-1">
                             <h3 className="text-xl font-medium text-gray-900">No deleted document found</h3>
                             <p className="text-gray-500 max-w-md">
-                                These are your deleted documents. You've the possibility to restore.
+                                These are your deleted documents. You've the possibility to restore them. These files will be deleted authomatically after 30 days if not restored.
                             </p>
                         </div>
                     </div>
@@ -149,7 +155,7 @@ const AllDeletedDocumentsByOwner = () => {
                     filteredItems.map((doc: Document) => (
                         <div
                             key={doc.id}
-                            className="bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
+                            className="group bg-white border flex flex-col justify-between rounded-lg p-3 hover:shadow-lg transition-shadow"
                         >
                             <div className='w-full flex justify-between items-center rounded-lg'>
                                 <div className=' flex gap-2'>
@@ -162,11 +168,11 @@ const AllDeletedDocumentsByOwner = () => {
                                     Preview
                                 </button>
                             </div>
-                            <div className='flex justify-center mb-2 border-slate-100 border-b-2'>
+                            <div className='overflow-hidden flex justify-center mb-2 border-slate-100 border-b-2'>
                                 {doc.filePath && (
                                     <img
                                         src={getFileIcon(doc.filePath)}
-                                        className='w-52 rounded-lg'
+                                        className='w-52 rounded-lg group-hover:scale-150 group-hover:rotate-12 transition-all'
                                         alt=""
                                     />
                                 )}
@@ -200,7 +206,7 @@ const AllDeletedDocumentsByOwner = () => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className=" overflow-x-auto grid grid-cols-2 gap-2 text-sm w-full pt-2 rounded-lg">
+                            <div className={` ${isAdmin? ' grid grid-cols-2 gap-2': ''} overflow-x-auto text-sm w-full pt-2 rounded-lg`}>
                                 <button
                                     onClick={() => handleRestore(doc.id)}
                                     className="flex gap-1 justify-center items-center rounded hover:bg-purple-100 bg-slate-100 p-2 text-purple-600 hover:text-purple-800 text-sm transition-all w-full"
@@ -214,7 +220,7 @@ const AllDeletedDocumentsByOwner = () => {
                                         setSelectedDoc(doc);
                                         setShowDeleteModal(true);
                                     }}
-                                    className="  flex gap-1 justify-center items-center rounded hover:bg-red-100 bg-slate-100 p-2 text-red-600 hover:text-red-800 text-sm transition-all w-full"
+                                    className={`${isAdmin? '': 'hidden'} flex gap-1 justify-center items-center rounded hover:bg-red-100 bg-slate-100 p-2 text-red-600 hover:text-red-800 text-sm transition-all w-full`}
                                 >
                                     <TrashIcon className="w-4 h-4" />
                                     <span className=" items-center">Delete</span>

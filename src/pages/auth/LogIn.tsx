@@ -34,7 +34,7 @@ const AuthForms = () => {
   // Redirect when authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard/documents');
+      // navigate('/dashboard/documents');
     }
   }, [isAuthenticated, navigate]);
 

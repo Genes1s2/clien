@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
 import { useState } from 'react';
+import { Group } from 'lucide-react';
 
 interface CategoryForm {
     existingCategory?: any;
@@ -42,6 +43,7 @@ const CategoryForm = ({ existingCategory, onSuccess }: CategoryForm) => {
         >
             {({ isSubmitting, errors, touched }) => (
                 <Form className="space-y-4">
+                    <div><Group className=" animate-pulse -z-10 opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-32 " /></div>
                     <div>
 
                         <label className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>

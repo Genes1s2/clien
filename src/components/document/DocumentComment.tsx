@@ -9,13 +9,15 @@ interface DocumentCommentProps {
 export const DocumentComments = ({ comment }: DocumentCommentProps) => {
   
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="relative overflow-hidden bg-white rounded-lg shadow p-6">
+      
+      <div><Text className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         <Text className="h-6 w-6 text-purple-500" />
         Comments
       </h3>
       
-      <div className="space-y-4">
+      <div className={`space-y-4 scroll ${comment.length > 6 ? 'h-[50vh]':'' } overflow-y-auto pr-1`}>
         {comment.length > 0
         ? (comment && comment.map((com, index) => (
           <div key={index} className="border-l-4 border-purple-200 pl-4">

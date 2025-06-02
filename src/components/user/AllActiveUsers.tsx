@@ -43,24 +43,6 @@ const AllActiveUser = () => {
         dispatch(getAllActiveUsers());
     }, [dispatch]);
 
-    const handleDesactivation = async () => {
-
-        try {
-            if (selectedUser) {
-                await dispatch(desactivateUser(selectedUser.id)).unwrap();
-                await dispatch(getAllActiveUsers());
-                setShowDeleteModal(false);
-
-                showSuccess('User desactivated successfully');
-            }
-
-        } catch (error: any) {
-
-            setShowDeleteModal(false);
-            showError(error || 'Failed to desactivate user');
-        }
-    };
-
     const handleRoleUpdate = async (roleId: string) => {
         if (selectedUser) {
             await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId } })).unwrap();
@@ -157,36 +139,6 @@ const AllActiveUser = () => {
                                                             </button>
                                                         )}
                                                     </Menu.Item>
-                                                    {/* <Menu.Item>
-                                                        {({ active }) => (
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSelectedUser(user);
-                                                                    setShowRoleModal(true);
-                                                                }}
-                                                                className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                                    } flex w-full px-4 py-2 text-sm`}
-                                                            >
-                                                                <Edit className="h-5 w-5 mr-2" />
-                                                                Edit Role
-                                                            </button>
-                                                        )}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSelectedUser(user);
-                                                                    setShowDeleteModal(true);
-                                                                }}
-                                                                className={`${active ? 'bg-gray-100 text-red-600' : 'text-red-500'
-                                                                    } flex w-full px-4 py-2 text-sm`}
-                                                            >
-                                                                <UserLock className="h-5 w-5 mr-2" />
-                                                                Desactivate User
-                                                            </button>
-                                                        )}
-                                                    </Menu.Item> */}
                                                 </div>
                                             </Menu.Items>
                                         </Transition>
@@ -203,16 +155,6 @@ const AllActiveUser = () => {
                 totalItems={filteredUsers.length}
                 itemsPerPage={ITEMS_PER_PAGE}
                 onPageChange={setCurrentPage}
-            />
-
-            <ConfirmationModal
-                isOpen={showDeleteModal}
-                onClose={() => setShowDeleteModal(false)}
-                onConfirm={handleDesactivation}
-                title="Confirm User Deletion"
-                message={`Are you sure you want to desactivate ${selectedUser?.firstName} ${selectedUser?.lastName}?`}
-                bgColor="bg-red-600"
-                hoverbgColor="hover:bg-red-700"
             />
 
             <RoleSelectModal

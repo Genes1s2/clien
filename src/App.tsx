@@ -41,7 +41,7 @@ const App = () => {
         <Route path="admin" element={<AdminRoute />}>
           <Route path="users" index element={<UserList />} />
           <Route path="users/:userId" element={<UserAdminProfile />} />
-          <Route path="roles" element={<RolesPage />} />
+          {/* <Route path="roles" element={<RolesPage />} /> */}
           <Route path="categories" element={<CategoriesPage />} />
         </Route>
         <Route path="*" element={<NotfoundDashboard />} />

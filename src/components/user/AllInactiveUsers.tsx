@@ -43,23 +43,6 @@ const AllInactiveUser = () => {
         dispatch(getAllInactiveUsers());
     }, [dispatch]);
 
-    const handleActivation = async () => {
-
-        try {
-            if (selectedUser) {
-                await dispatch(activateUser(selectedUser.id)).unwrap();
-                await dispatch(getAllInactiveUsers());
-                setShowDeleteModal(false);
-
-                showSuccess('User activated successfully');
-            }
-
-        } catch (error: any) {
-            setShowDeleteModal(false);
-            showError(error || 'Failed to activate user');
-        }
-    };
-
     const handleRoleUpdate = async (roleId: string) => {
         if (selectedUser) {
             await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId } })).unwrap();
@@ -183,36 +166,6 @@ const AllInactiveUser = () => {
                                                                 </button>
                                                             )}
                                                         </Menu.Item>
-                                                        {/* <Menu.Item>
-                                                            {({ active }) => (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSelectedUser(user);
-                                                                        setShowRoleModal(true);
-                                                                    }}
-                                                                    className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                                        } flex w-full px-4 py-2 text-sm`}
-                                                                >
-                                                                    <Edit className="h-5 w-5 mr-2" />
-                                                                    Edit Role
-                                                                </button>
-                                                            )}
-                                                        </Menu.Item> */}
-                                                        {/* <Menu.Item>
-                                                            {({ active }) => (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSelectedUser(user);
-                                                                        setShowDeleteModal(true);
-                                                                    }}
-                                                                    className={`${active ? 'bg-gray-100 text-green-600' : 'text-green-500'
-                                                                        } flex w-full px-4 py-2 text-sm`}
-                                                                >
-                                                                    <UserCheck className="h-5 w-5 mr-2" />
-                                                                    Activate User
-                                                                </button>
-                                                            )}
-                                                        </Menu.Item> */}
                                                     </div>
                                                 </Menu.Items>
                                             </Transition>
@@ -230,17 +183,6 @@ const AllInactiveUser = () => {
                 totalItems={filteredUsers.length}
                 itemsPerPage={ITEMS_PER_PAGE}
                 onPageChange={setCurrentPage}
-            />
-
-
-            <ConfirmationModal
-                isOpen={showDeleteModal}
-                onClose={() => setShowDeleteModal(false)}
-                onConfirm={handleActivation}
-                title="Confirm User Activation"
-                message={`Are you sure you want to activate ${selectedUser?.firstName} ${selectedUser?.lastName}?`}
-                bgColor="bg-green-600"
-                hoverbgColor="hover:bg-green-700"
             />
 
             <RoleSelectModal

@@ -15,7 +15,7 @@ export const AccessRightProfile = ({ accessRights }: AccessRightsPanelProps) => 
         Document Access Rights
       </h3>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 scroll ${accessRights.length > 9 ? 'h-[50vh]':'' } overflow-y-auto pr-1`}>
         {accessRights.map((right, index) => (
           <div key={index} className="border rounded-lg p-4">
             <div className="flex justify-between items-start mb-2">

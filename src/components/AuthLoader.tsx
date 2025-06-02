@@ -21,16 +21,6 @@ const AuthLoader = ({ children }: { children: React.ReactNode }) => {
   }, [dispatch, entities]);
 
   useEffect(() => {
-    // if (status === LoadingType.SUCCESS && entities) {
-    //   navigate("/dashboard/documents");
-    //   dispatch(clearError());
-    // }
-
-    // if (status === LoadingType.REJECTED) {
-    //   dispatch(clearRestoreError());
-    //   navigate("/authentification");
-    // }
-    
     if (status !== LoadingType.PENDING) {
       if (authStatus === LoadingType.SUCCESS && entities) {
         navigate("/dashboard/documents");
@@ -48,8 +38,8 @@ const AuthLoader = ({ children }: { children: React.ReactNode }) => {
     if (error) {
       console.error("AuthLoader error:", error);
       const friendlyMessage = getAuthError(error);
-      showError(friendlyMessage);
-      
+      showError(error);
+      navigate('/authentification');
       dispatch(clearError());
       dispatch(clearRestoreError());
 

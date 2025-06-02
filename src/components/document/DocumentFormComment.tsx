@@ -4,6 +4,7 @@ import { AppDispatch } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
+import { Text } from 'lucide-react';
 
 interface DocumentFormComment {
     documentId: string;
@@ -33,9 +34,8 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
                         showSuccess('Comment added successfully');
                         resetForm();
                         onSuccess?.();
-                    } catch (error) {
-                        console.log('eroor comment: ', error);
-                        showError('Failed to add comment');
+                    } catch (error: any) {
+                        showError(error || 'Failed to add comment');
                     } finally {
                         setSubmitting(false);
                     }
@@ -43,6 +43,7 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
             >
                 {({ isSubmitting, errors, touched }) => (
                     <Form className="space-y-4">
+                        <div><Text className=" animate-pulse -z-10 opacity-30 w-96 h-96 absolute text-purple-500 top-0 -right-32 " /></div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Add Comment

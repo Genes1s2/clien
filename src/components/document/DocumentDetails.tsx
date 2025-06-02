@@ -108,7 +108,7 @@ const DocumentDetail = ({ onEdit, document }: DocumentDetailProps) => {
                             {document.filePath && (
                                 <img
                                     src={getFileIcon(document.filePath)}
-                                    className='w-full h-auto rounded-lg mx-auto'
+                                    className='w-52 h-auto rounded-lg mx-auto'
                                     alt="Document thumbnail"
                                 />
                             )}

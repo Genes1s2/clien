@@ -10,7 +10,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange } : IP
 
   return (
     <div className="flex items-center justify-between rounded my-4 px-4 py-3 bg-gray-50">
-      <div className="flex-1 flex justify-between">
+      <div className="flex-1 flex justify-between items-center">
         <button
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}

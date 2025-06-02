@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, EyeIcon } from 'lucide-react';
+import { ActivityIcon, Download, EyeIcon } from 'lucide-react';
 import { Document, DocumentVersion } from '../../models/documents';
 import excellLogo from '../../assets/images/excellogo.jpeg';
 import pdfLogo from '../../assets/images/pdflogo.png';
@@ -52,12 +52,15 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className=" relative overflow-hidden bg-white rounded-lg shadow p-6">
+            
+      <div><ActivityIcon className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <ActivityIcon className="h-6 w-6 text-purple-500" />
                 Versions
             </h3>
 
-            <div className="space-y-4">
+            <div className={`space-y-4 ${versions.length > 3 ? 'h-[50vh]' : ''} scroll overflow-y-auto pr-1`}>
                 {versions.length > 0 ? (
                     versions.map((version, index) => (
                         <div key={version.id} className="border-l-4 border-purple-200 pl-4">
@@ -78,6 +81,7 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
                                     </div>
                                     <div className=''>
                                         <p className="text-sm font-medium text-gray-600">{version.description || 'No Description.'}</p>
+                                        <p className="text-xs text-gray-500">Uploaded by: {version.uploadedBy || 'Unknown user.'}</p>
                                         <time className="text-xs text-gray-500 mt-1 block">
                                             {new Date(version.createdAt).toLocaleDateString('en-US', {
                                                 year: 'numeric',
@@ -90,14 +94,14 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
                                         <div className="flex gap-2 mt-2">
                                             <button
                                                 onClick={() => setPreviewDoc(version)}
-                                                 className="bg-orange-100 hover:bg-orange-200 text-orange-700 font-semibold p-2 rounded transition-colors flex items-center flex-shrink-0"
+                                                className="  flex gap-1 justify-center items-center rounded hover:bg-orange-100 bg-slate-100 p-2 text-orange-600 hover:text-orange-800 text-sm transition-all w-full"
                                             >
                                                 <EyeIcon className="w-4 h-4 mr-1" />
                                                 Preview
                                             </button>
                                             <button
                                                 onClick={() => handleDownload(version.filePath, documentVersion.title)}
-                                               className="  flex gap-1 justify-center items-center rounded hover:bg-blue-100 bg-slate-100 p-2 text-blue-600 hover:text-blue-800 text-sm transition-all w-full"
+                                                className="  flex gap-1 justify-center items-center rounded hover:bg-blue-100 bg-slate-100 p-2 text-blue-600 hover:text-blue-800 text-sm transition-all w-full"
                                             >
                                                 <Download className="w-4 h-4 mr-1" />
                                                 Download
@@ -114,7 +118,7 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
                     </div>
                 )}
             </div>
-            
+
 
             <ModalPreview isOpen={!!previewDoc} onClose={() => setPreviewDoc(null)}>
                 {previewDoc && (
