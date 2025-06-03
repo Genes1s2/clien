@@ -8,10 +8,8 @@ import { LoadingType } from '../../models/store';
 import { AuthUser } from '../../models/auth';
 import { useNavigate } from 'react-router';
 import { logout } from '../../store/auth/slice';
-
-interface UserPasswordChangeForm {
-    user: AuthUser;
-}
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const passwordSchema = Yup.object().shape({
     currentPassword: Yup.string().required('Current password is required'),
@@ -27,8 +25,9 @@ const PasswordChangeForm = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const user = useSelector<RootState, AuthUser | null>((state) => state.session.currentUser.entities);
-
     const { status } = useSelector((state: RootState) => state.user.currentProfile);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
 
     return (
         <div className=" bg-white p-8 rounded-lg shadow-lg">
@@ -57,14 +56,23 @@ const PasswordChangeForm = () => {
                     <Form className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                            <Field
-                                name="currentPassword"
-                                type="password"
-                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.currentPassword && touched.currentPassword
-                                    ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-purple-500'
-                                    }`}
-                            />
+                            <div className="relative">
+                                <Field
+                                    name="currentPassword"
+                                    type={showPassword ? 'text' : 'password'}
+                                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.currentPassword && touched.currentPassword
+                                        ? 'border-red-500 focus:ring-red-500'
+                                        : 'border-gray-300 focus:ring-purple-500'
+                                        }`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                                </button>
+                            </div>
                             {errors.currentPassword && touched.currentPassword && (
                                 <div className="text-red-500 text-sm mt-1">{errors.currentPassword}</div>
                             )}
@@ -72,14 +80,23 @@ const PasswordChangeForm = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                            <Field
-                                name="newPassword"
-                                type="password"
-                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.newPassword && touched.newPassword
-                                    ? 'border-red-500 focus:ring-red-500'
-                                    : 'border-gray-300 focus:ring-purple-500'
-                                    }`}
-                            />
+                            <div className="relative">
+                                <Field
+                                    name="newPassword"
+                                    type={showNewPassword ? 'text' : 'password'}
+                                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.currentPassword && touched.currentPassword
+                                        ? 'border-red-500 focus:ring-red-500'
+                                        : 'border-gray-300 focus:ring-purple-500'
+                                        }`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNewPassword(!showNewPassword)}
+                                    className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showNewPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                                </button>
+                            </div>
                             {errors.newPassword && touched.newPassword && (
                                 <div className="text-red-500 text-sm mt-1">{errors.newPassword}</div>
                             )}

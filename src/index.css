@@ -24,6 +24,11 @@
         @apply bg-purple-700 cursor-pointer
     }
 }
+
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
 .custom-bg-auth {
   background-image: url('./assets/images/bgauth.jpg');
   background-size: cover;  

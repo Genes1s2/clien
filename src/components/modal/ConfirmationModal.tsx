@@ -5,7 +5,7 @@ interface ConfirmationModalProps {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
-  message: string;
+  message: React.ReactNode;
   bgColor: string;
   hoverbgColor: string;
 }
@@ -26,7 +26,7 @@ const ConfirmationModal = ({
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="w-full max-w-md rounded bg-white p-6">
           <Dialog.Title className="text-lg font-medium mb-4">{title}</Dialog.Title>
-          <Dialog.Description className="mb-6">
+          <Dialog.Description className="mb-6  text-gray-700 whitespace-pre-line">
             {message}
           </Dialog.Description>
 

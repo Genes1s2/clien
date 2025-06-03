@@ -31,7 +31,7 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
       }
       setShowDeleteModal(false);
       navigate('/dashboard/admin/users');
-      showSuccess('User deleted successfully');
+      showSuccess('User and all related data deleted successfully');
 
     } catch (error: any) {
 
@@ -216,7 +216,18 @@ export const UserProfileLayout = ({ user }: UserProfileLayoutProps) => {
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         title="Confirm User Deletion"
-        message={`Are you sure you want to delete completely ${user.firstName} ${user.lastName}? This action cannot be undone.`}
+        message={
+          <>
+            <p>
+              If you delete {user.firstName} {user.lastName} completely,
+              all documents, versions (including versions uploaded by other users),
+              comments and access related to {user.firstName} {user.lastName} even sensitive and archived files will be lost. This action cannot be undone.
+            </p>
+            <p className="mt-3 font-medium">
+              Are you sure you want to proceed?
+            </p>
+          </>
+        }
         bgColor="bg-red-600"
         hoverbgColor="hover:bg-red-700"
       />

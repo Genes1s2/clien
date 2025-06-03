@@ -1,5 +1,5 @@
 import React from 'react';
-import { PercentDiamond, CheckCircle, XCircle } from 'lucide-react';
+import { PercentDiamond, CheckCircle, XCircle, LockOpenIcon } from 'lucide-react';
 import { AccessRight } from '../../models/logActions';
 
 interface AccessRightsPanelProps {
@@ -9,9 +9,10 @@ interface AccessRightsPanelProps {
 export const AccessRightProfile = ({ accessRights }: AccessRightsPanelProps) => {
   
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="relative overflow-hidden bg-white rounded-lg shadow p-6">
+      <div><LockOpenIcon className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <PercentDiamond className="h-6 w-6 text-purple-500" />
+        <LockOpenIcon className="h-6 w-6 text-purple-500" />
         Document Access Rights
       </h3>
       

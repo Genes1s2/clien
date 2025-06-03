@@ -72,11 +72,10 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
     if (selectedDoc) {
       try {
         await dispatch(softDeleteDocument(selectedDoc.id)).unwrap();
-        await dispatch(fetchDocuments()).unwrap();
-        setShowDeleteModal(false);
         showSuccess('Document deleted successfully');
-      } catch (error: any) {
         setShowDeleteModal(false);
+        await dispatch(fetchDocuments()).unwrap();
+      } catch (error: any) {
         await dispatch(fetchDocuments()).unwrap();
         showError(error || 'Failed to delete document');
       }

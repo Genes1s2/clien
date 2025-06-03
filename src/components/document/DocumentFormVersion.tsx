@@ -40,7 +40,7 @@ const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) =>
 
                         await dispatch(uploadNewVersionDocument({ documentId, formData })).unwrap();
                         await dispatch(getDocumentById(documentId)).unwrap();
-                        showSuccess('Document updated successfully');
+                        showSuccess('New version uploaded successfully');
                         setSubmitting(false);
                         onSuccess?.();
                     } catch (error: any) {

@@ -48,7 +48,8 @@ const AllDeletedDocuments = () => {
             try {
                 await dispatch(hardeleteDocument(selectedDoc.id)).unwrap();
                 await dispatch(allDeletedDocuments()).unwrap();
-                showSuccess('Document deleted successfully');
+                showSuccess('Document and all related data deleted successfully');
+                setShowDeleteModal(false);
             } catch (error: any) {
                 showError('Failed to delete document');
                 await dispatch(allDeletedDocuments()).unwrap();
@@ -258,7 +259,7 @@ const AllDeletedDocuments = () => {
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={handleDelete}
                 title="Confirm User Deletion"
-                message={`Are you sure you want to permanently delete ${selectedDoc?.title}? This action can't be un done`}
+                message={`Are you sure you want to completely delete ${selectedDoc?.title}? This includes with all datas \n\nrelated to it (versions, comments, and access).  This action cannot be undone`}
                 bgColor="bg-red-600"
                 hoverbgColor="hover:bg-red-700"
             />
