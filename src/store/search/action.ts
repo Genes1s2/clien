@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { HTTPFILE } from "../../utils/Http";
 
 export const searchDocuments = createAsyncThunk(
   "search/documents",
   async (query: string, { rejectWithValue }) => {
     try {
-      const url = new URL("/api/find/search", "http://127.0.0.1:4000");
+      const url = new URL("/api/find/search", HTTPFILE);
       url.searchParams.append("q", query);
       url.searchParams.append("page", "1");
       url.searchParams.append("pageSize", "10");

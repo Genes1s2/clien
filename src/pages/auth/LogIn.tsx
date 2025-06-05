@@ -8,8 +8,9 @@ import { useNavigate } from 'react-router';
 import { LoadingType } from '../../models/store';
 import { ILoginInput, IRegisterInput } from '../../models/auth';
 import { loginAction, registerAction, resetPasswordAction, forgotPasswordAction } from '../../store/auth/actions';
-import { showPromise } from '../../utils/Notifications';
+import { showError, showPromise } from '../../utils/Notifications';
 import { Eye, EyeOff } from 'lucide-react';
+import { restoreUser } from '../../store/auth/restoreUser/actions';
 
 
 type AuthMode = 'login' | 'register' | 'forgot-password' | 'reset-password';
@@ -39,62 +40,62 @@ const AuthForms = () => {
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values: any) => {
-    switch (mode) {
-      case 'login':
-        await showPromise(
+      switch (mode) {
+        case 'login':
+          await showPromise(
 
-          dispatch(loginAction(values as ILoginInput)).unwrap(),
-          {
-            loading: 'Authenticating...',
-            success: 'Welcome back!',
-            error: (err) => {
-              if (err instanceof Error) {
-                return err.message;
+            dispatch(loginAction(values as ILoginInput)).unwrap(),
+            {
+              loading: 'Authenticating...',
+              success: 'Welcome back!',
+              error: (err) => {
+                if (err instanceof Error) {
+                  return err.message;
+                }
+                return 'Login failed. Please try again.';
               }
-              return 'Login failed. Please try again.';
             }
-          }
-        );
-        break;
-      case 'register':
-        await showPromise(
-           dispatch(registerAction(values as IRegisterInput)).unwrap(),
-          {
-            loading: 'Registering...',
-            success: 'Register successfully!',
-            error: (err: any) => err || 'Failed to register'
-          }
-        );
-        setMode('login');
-        break;
-      case 'forgot-password':
-        setEmailForReset(values.email);
-        await showPromise(
-          dispatch(forgotPasswordAction({ email: values.email })).unwrap(),
-          {
-            loading: 'Sending OTP...',
-            success: 'OTP sent successfully!',
-            error: (err: any) => err || 'Failed to send OTP'
-          }
-        );
-        setMode('reset-password');
-        break;
-      case 'reset-password':
-        await showPromise(
-          dispatch(resetPasswordAction({
-            email: emailForReset,
-            otp: values.otp,
-            newPassword: values.newPassword
-          })).unwrap(),
-          {
-            loading: 'Resetting password...',
-            success: 'Password reset successfully!',
-            error: (err: any) => err || 'Password reset failed'
-          }
-        );
-        setMode('login');
-        break;
-    }
+          );
+          break;
+        case 'register':
+          await showPromise(
+            dispatch(registerAction(values as IRegisterInput)).unwrap(),
+            {
+              loading: 'Registering...',
+              success: 'Register successfully!',
+              error: (err: any) => err || 'Failed to register'
+            }
+          );
+          setMode('login');
+          break;
+        case 'forgot-password':
+          setEmailForReset(values.email);
+          await showPromise(
+            dispatch(forgotPasswordAction({ email: values.email })).unwrap(),
+            {
+              loading: 'Sending OTP...',
+              success: 'OTP sent successfully!',
+              error: (err: any) => err || 'Failed to send OTP'
+            }
+          );
+          setMode('reset-password');
+          break;
+        case 'reset-password':
+          await showPromise(
+            dispatch(resetPasswordAction({
+              email: emailForReset,
+              otp: values.otp,
+              newPassword: values.newPassword
+            })).unwrap(),
+            {
+              loading: 'Resetting password...',
+              success: 'Password reset successfully!',
+              error: (err: any) => err || 'Password reset failed'
+            }
+          );
+          setMode('login');
+          break;
+      }
   };
 
   // Update form rendering logic
@@ -330,10 +331,10 @@ const AuthForms = () => {
                 <Field
                   name="email"
                   type="email"
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email && touched.email
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-purple-500'
-              }`}
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email && touched.email
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-purple-500'
+                    }`}
                 />
                 {errors.email && touched.email && (
                   <div className="text-red-500 text-sm mt-1">{errors.email}</div>

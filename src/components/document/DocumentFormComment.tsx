@@ -1,10 +1,11 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { commentDocument } from '../../store/document/actions';
-import { AppDispatch } from '../../store';
+import { AppDispatch, RootState } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
 import { Text } from 'lucide-react';
+import { LoadingType } from '../../models/store';
 
 interface DocumentFormComment {
     documentId: string;
@@ -14,6 +15,7 @@ interface DocumentFormComment {
 const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) => {
     const dispatch = useDispatch<AppDispatch>();
 
+    const { currentDocument, status, error } = useSelector((state: RootState) => state.documents);
     const commentSchema = Yup.object().shape({
         content: Yup.string()
             .required('Comment is required')
@@ -27,13 +29,14 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
                 validationSchema={commentSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     try {
-                        await dispatch(commentDocument({ 
-                            documentId, 
-                            content: values.content 
+                        await dispatch(commentDocument({
+                            documentId,
+                            content: values.content
                         })).unwrap();
                         showSuccess('Comment added successfully');
                         resetForm();
-                        onSuccess?.();
+                        if (status !== LoadingType.PENDING) onSuccess?.();
+                        // onSuccess?.();
                     } catch (error: any) {
                         showError(error || 'Failed to add comment');
                     } finally {
@@ -52,11 +55,10 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
                                 name="content"
                                 as="textarea"
                                 rows={3}
-                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                                    errors.content && touched.content
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.content && touched.content
                                         ? 'border-red-500 focus:ring-red-500'
                                         : 'border-gray-300 focus:ring-purple-500'
-                                }`}
+                                    }`}
                             />
                             <ErrorMessage name="content" component="div" className="text-red-500 text-sm mb-2" />
                         </div>
@@ -64,9 +66,8 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${
-                                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
+                            className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
                         >
                             {isSubmitting ? 'Posting...' : 'Post Comment'}
                         </button>

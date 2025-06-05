@@ -27,8 +27,8 @@ const CategoryList = ({ onEdit }: { onEdit: (category: any) => void }) => {
             if (selectedCategory) {
                 await dispatch(deleteCategory(selectedCategory.id)).unwrap();
                 setShowDeleteModal(false);
-
-                showSuccess('Role deleted successfully!');
+                await dispatch(fetchCategories());
+                showSuccess('Category deleted successfully!');
             }
 
         } catch (error: any) {
@@ -55,7 +55,7 @@ const CategoryList = ({ onEdit }: { onEdit: (category: any) => void }) => {
                         <tr>
                             <td colSpan={2} className="py-12 text-center">
                                 <div className="flex flex-col items-center justify-center space-y-4">
-                              
+
                                     <Group className="h-24 w-24 text-gray-400" />
                                     <div className="space-y-1">
                                         <h3 className="text-xl font-medium text-gray-900">No category found</h3>

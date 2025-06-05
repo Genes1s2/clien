@@ -13,6 +13,7 @@ import DocumentForm from '../../../components/document/DocumentForm';
 import DocumentViewer from '../../../components/DocumentViewer';
 import { Download, EyeIcon, LockOpenIcon, Text, UploadIcon } from 'lucide-react';
 import { showError } from '../../../utils/Notifications';
+import { HTTPFILE } from '../../../utils/Http';
 
 type ActiveForm = 'version' | 'comment' | 'access' | 'view' | null;
 
@@ -35,8 +36,8 @@ const DocumentDetailPage = () => {
         setEditingDoc(null);
     };
 
-    const handleSuccess = () => {
-        dispatch(getDocumentById(currentDocument?.id || ''));
+    const handleSuccess = async () => {
+        // await dispatch(getDocumentById(currentDocument?.id || ''));
         closeModal();
     };
 
@@ -45,16 +46,16 @@ const DocumentDetailPage = () => {
     }
 
     if (error) {
-        return <div className="text-red-500 w-full text-center h-screen p-8">{error}</div>;
+        return <div className=" w-full text-center h-screen p-8 text-red-600 flex justify-center">{error}</div>;
     }
 
     if (!currentDocument) {
-        return <div className="p-8">Document not found</div>;
+        return <div className="p-8 text-red-600 flex justify-center">Document not found</div>;
     }
 
      const handleDownload = async (filePath: string, fileName: string) => {
     
-            const viewerUrl = `http://127.0.0.1:4000${currentDocument?.filePath}`;
+            const viewerUrl = `${HTTPFILE}${currentDocument?.filePath}`;
             try {
                 const response = await fetch(viewerUrl);
                 const blob = await response.blob();

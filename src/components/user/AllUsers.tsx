@@ -78,7 +78,7 @@ const AllUser = () => {
     };
 
     if (status === LoadingType.PENDING) return <div><TableSkeleton rows={paginatedUsers.length} cols={6} /></div>;
-    if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
+    if (error) return <div className="text-red-500 p-4 flex justify-center"> {error}</div>;
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">

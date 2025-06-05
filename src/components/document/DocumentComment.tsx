@@ -9,9 +9,9 @@ interface DocumentCommentProps {
 export const DocumentComments = ({ comment }: DocumentCommentProps) => {
   
   return (
-    <div className="relative overflow-hidden bg-white rounded-lg shadow p-6">
+    <div className="z-10relative overflow-hidden bg-white rounded-lg shadow p-6">
       
-      <div><Text className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
+      <div><Text className="-z-20 animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         <Text className="h-6 w-6 text-purple-500" />
         Comments

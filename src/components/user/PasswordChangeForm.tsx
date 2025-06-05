@@ -46,8 +46,6 @@ const PasswordChangeForm = () => {
                         navigate("/authentification");
                         resetForm();
                     } catch (error: any) {
-                        console.log("error: ", error);
-
                         showError(error || 'Failed to change password');
                     }
                 }}

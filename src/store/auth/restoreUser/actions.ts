@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../index";
 import { AuthError, AuthUser } from "../../../models/auth";
+import { Http } from "../../../utils/Http";
 
 export const restoreUser = createAsyncThunk<
   AuthUser,
@@ -12,35 +13,21 @@ export const restoreUser = createAsyncThunk<
   if (!token) {
     return rejectWithValue("No authenticate session found, please log in.");
   }
-
   try {
-    const response = await fetch("http://127.0.0.1:4000/api/auth/me", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      
-      localStorage.removeItem("token");
-      return rejectWithValue(data.error || "Failed to restore user");
-    }
-
-    return data; 
+        const data = await Http.get(`/auth/me`)
+        return data;
   } catch (error: any) {
-    let errorMessage: AuthError = 'SESSION_RESTORE_FAILED';
+    console.log('error: ', error);
+    
+    let errorMessage: AuthError = 'Session restoration failed';
     
     if (error.message.includes("401")) {
       return errorMessage = 'SESSION_EXPIRED';
     } else if (error.message.includes("Network Error")) {
-      return errorMessage = 'NETWORK_ERROR';
+      return errorMessage = 'Network error';
     }
-    
-    return rejectWithValue(errorMessage || "Failed to restore user");
+    return rejectWithValue(error instanceof Error ? error.message :  "Failed to restore user");
+    // return rejectWithValue(errorMessage || "Failed to restore user");
   }
 });
 

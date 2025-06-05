@@ -28,7 +28,6 @@ export const getRandomColor = (): string => {
         "bg-yellow-700",
         "bg-yellow-800",
         "bg-purple-500",
-        "bg-purple-600",
         "bg-purple-700",
         "bg-purple-800",
         "bg-purple-900",

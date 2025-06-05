@@ -25,7 +25,7 @@ const AuthLoader = ({ children }: { children: React.ReactNode }) => {
       if (authStatus === LoadingType.SUCCESS && entities) {
         navigate("/dashboard/documents");
         dispatch(clearError());
-        // dispatch(clearRestoreError());
+        dispatch(clearRestoreError());
       }
       else if (status === LoadingType.REJECTED && !entities) {
         navigate("/authentification");
@@ -54,7 +54,7 @@ const AuthLoader = ({ children }: { children: React.ReactNode }) => {
 
       const timer = setTimeout(() => {
         setShowDelayMessage(true);
-      }, 3000);
+      }, 10000);
 
       return () => clearTimeout(timer);
     }

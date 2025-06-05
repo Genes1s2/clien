@@ -113,7 +113,7 @@ const DocumentsPage = () => {
         </Link>
       </div>
 
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} closeOnOutsideClick={true}>
         <div className="p-4">
           <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
             {editingDoc ? 'Edit Document' : 'Create New Document'}

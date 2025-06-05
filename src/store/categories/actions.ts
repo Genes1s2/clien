@@ -1,19 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { HTTP, Http } from '../../utils/Http';
 
 export const fetchCategories = createAsyncThunk(
   'categories/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/category/categories', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-      
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch categories');
+
+      const data = await Http.get(`/category/categories`)
       return data.data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch categories');
@@ -26,7 +19,7 @@ export const createCategory = createAsyncThunk(
   async (name: string, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/category/categories', {
+      const response = await fetch(`${HTTP}/category/categories`, {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -49,7 +42,7 @@ export const updateCategory = createAsyncThunk(
   async ({ id, name }: { id: string, name: string }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/category/${id}`, {
+      const response = await fetch(`${HTTP}/category/${id}`, {
         method: 'PUT',
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -71,19 +64,8 @@ export const deleteCategory = createAsyncThunk(
   'categories/delete',
   async (id: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/category/${id}`, {
-        method: 'DELETE',
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to delete category');
-      }
-      return id;
+      const data = await Http.delete(`/category/${id}`)
+      return data.data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete category');
     }

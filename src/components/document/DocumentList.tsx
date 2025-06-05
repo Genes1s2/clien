@@ -17,6 +17,7 @@ import Pagination from '../Pagination';
 import ConfirmationModal from '../modal/ConfirmationModal';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
 import DocumentForm from './DocumentForm';
+import { HTTPFILE } from '../../utils/Http';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -51,7 +52,7 @@ const DocumentList = ({ onEdit }: { onEdit: (doc: any) => void }) => {
 
   const handleDownload = async (filePath: string, fileName: string) => {
 
-    const viewerUrl = `http://127.0.0.1:4000${filePath}`;
+    const viewerUrl = `${HTTPFILE}${filePath}`;
     try {
       const response = await fetch(viewerUrl);
       const blob = await response.blob();

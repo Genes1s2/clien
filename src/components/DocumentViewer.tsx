@@ -3,6 +3,7 @@ import { showError } from '../utils/Notifications';
 import * as ExcelJS from 'exceljs';
 import { renderAsync } from 'docx-preview';
 import { Presentation , Slide, Text, Image } from 'react-pptx';
+import { HTTPFILE } from '../utils/Http';
 
 type SupportedExtensions = 'pdf' | 'docx' | 'xlsx' | 'xls' | 'pptx' | 'ppt' | 'xls';
 
@@ -19,7 +20,7 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
     setIsLoading(false);
   };
 
-  const viewerUrl = `http://127.0.0.1:4000${fileUrl}`;
+  const viewerUrl = `${HTTPFILE}${fileUrl}`;
 
   // Handle DOCX files
   useEffect(() => {

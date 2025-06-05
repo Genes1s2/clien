@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router";
 import { Document } from "../../models/documents";
+import { Files } from "lucide-react";
 
 const SearchModal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,7 +20,7 @@ const SearchModal = () => {
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[70vh] overflow-y-auto">
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Search Results</h2>
+            <h2 className="text-xl text-gray-700 font-medium">Search Results</h2>
             <button
               onClick={handleClose}
               className="text-gray-500 hover:text-gray-700"
@@ -41,9 +42,16 @@ const SearchModal = () => {
           {!isLoading && !error && (
             <div className="space-y-4">
               {results.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
-                  No documents found
+                <div className=" w-full bg-white flex flex-col items-center p-6 text-center rounded-md justify-center space-y-4">
+
+              <Files className="h-24 w-24 text-gray-400" />
+              <div className="space-y-1">
+                <h3 className="text-xl font-medium text-gray-900">No Document found</h3>
+                <p className="text-gray-500 max-w-md">
+                  This can be due to the fact that the document do not exist, you have no access to the document or the document is sensitive.
                 </p>
+              </div>
+            </div>
               ) : (
                 results.map((document: Document) => (
                   <div

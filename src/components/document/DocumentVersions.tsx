@@ -8,6 +8,7 @@ import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import { ModalPreview } from '../modal/Modal';
 import DocumentViewer from '../DocumentViewer';
 import { showError } from '../../utils/Notifications';
+import { HTTPFILE } from '../../utils/Http';
 
 interface DocumentVersionProps {
     documentVersion: Document
@@ -29,8 +30,9 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
     };
 
     const handleDownload = async (filePath: string, fileName: string) => {
+        const viewerUrl = `${HTTPFILE}${filePath}`;
         try {
-            const response = await fetch(`http://127.0.0.1:4000${filePath}`);
+            const response = await fetch(viewerUrl);
             // Check if the response is ok (status 200-299)
             console.log('Download response:', response);
 
@@ -52,15 +54,15 @@ export const DocumentVersions = ({ documentVersion }: DocumentVersionProps) => {
     };
 
     return (
-        <div className=" relative overflow-hidden bg-white rounded-lg shadow p-6">
-            
-      <div><ActivityIcon className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
+        <div className="z-10 relative overflow-hidden bg-white rounded-lg shadow p-6">
+
+            <div><ActivityIcon className="-z-20 animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <ActivityIcon className="h-6 w-6 text-purple-500" />
                 Versions
             </h3>
 
-            <div className={`space-y-4 ${versions.length > 3 ? 'h-[50vh]' : ''} scroll overflow-y-auto pr-1`}>
+            <div className={`relative space-y-4 ${versions.length > 3 ? 'h-[50vh]' : ''} scroll overflow-y-auto pr-1`}>
                 {versions.length > 0 ? (
                     versions.map((version, index) => (
                         <div key={version.id} className="border-l-4 border-purple-200 pl-4">

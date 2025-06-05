@@ -40,8 +40,8 @@ export const UserActivity = ({ auditLogs }: UserActivityProps) => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-white rounded-lg shadow p-6">
-      <div><Clock className=" animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
+    <div className="z-10 relative overflow-hidden bg-white rounded-lg shadow p-6">
+      <div><Clock className="-z-20 animate-pulse opacity-30 w-96 h-96 absolute text-purple-500 bottom-0 -right-24 " /></div>
       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
         <Clock className="h-6 w-6 text-purple-500" />
         Recent Activity

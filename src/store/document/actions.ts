@@ -1,21 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AccessRight } from '../../models/logActions';
+import { HTTP, Http } from '../../utils/Http';
 
 //  get all docs
 export const fetchDocuments = createAsyncThunk(
   'documents/fetchAll',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/documents', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch documents');
+      const data = await Http.get('/doc/documents')
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch documents');
@@ -28,16 +20,9 @@ export const allDeletedDocuments = createAsyncThunk(
   'documents/allDeletedDocuments',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/all-deleted-documents', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch deleted documents');
+      const data = await Http.get('/doc/all-deleted-documents')
       return data;
+
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch deleted documents');
     }
@@ -49,16 +34,7 @@ export const allDeletedDocumentsByOwner = createAsyncThunk(
   'documents/allDeletedDocumentsByOwner',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/all-deleted-documents-owner', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch deleted documents');
+      const data = await Http.get('/doc/all-deleted-documents-owner')
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch deleted documents');
@@ -71,16 +47,8 @@ export const allDocumentsByOwner = createAsyncThunk(
   'documents/allDocumentsByOwner',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/all-documents-owner', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
 
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch owner documents');
+      const data = await Http.get('/doc/all-documents-owner')
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch owner documents');
@@ -93,20 +61,7 @@ export const createDocument = createAsyncThunk(
   'documents/createDocument',
   async (formData: FormData, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/documents', {
-        method: 'POST',
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-        body: formData
-      });
-
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to create document');
-
+      const data = await Http.postdoc('/doc/documents', formData)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to create document');
@@ -119,17 +74,7 @@ export const getDocumentById = createAsyncThunk(
   "Documents/getDocumentById",
   async (documentId: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to get category');
+      const data = await Http.get(`/doc/${documentId}`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to det category');
@@ -142,20 +87,7 @@ export const updateDocument = createAsyncThunk(
   "Documents/updateDocument",
   async ({ documentId, formData }: { documentId: string, formData: FormData }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          // "Content-Type": "application/json"
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to update document');
-
+      const data = await Http.putdoc(`/doc/${documentId}`, formData)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to update document');
@@ -168,18 +100,7 @@ export const softDeleteDocument = createAsyncThunk(
   "Documents/softDeleteDocument",
   async (documentId: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to delete document');
-
+      const data = await Http.delete(`/doc/${documentId}`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete document');
@@ -192,18 +113,7 @@ export const hardeleteDocument = createAsyncThunk(
   "Documents/hardeleteDocument",
   async (documentId: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/admin/${documentId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to delete document');
-
+      const data = await Http.delete(`/doc/admin/${documentId}`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete document');
@@ -216,18 +126,7 @@ export const restoreDocument = createAsyncThunk(
   "documents/restoreDocument",
   async (documentId: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/restore`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to completely delete document');
-
+      const data = await Http.put(`/doc/${documentId}/restore`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to completely delete document');
@@ -240,19 +139,7 @@ export const uploadNewVersionDocument = createAsyncThunk(
   "documents/uploadNewVersionDocument",
   async ({ documentId, formData }: { documentId: string, formData: FormData }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/versions`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-        body: formData
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to upload new document');
-
+      const data = await Http.postdoc(`/doc/${documentId}/versions`, formData)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to upload new document');
@@ -266,7 +153,7 @@ export const commentDocument = createAsyncThunk(
   async ({ documentId, content }: { documentId: string, content: string }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/comments`, {
+      const response = await fetch(`${HTTP}/doc/${documentId}/comments`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -291,20 +178,7 @@ export const controlDocument = createAsyncThunk(
   "documents/controlDocument",
   async ({ documentId, data }: { documentId: string, data: AccessRight }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/access`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      const datas = await response.json();
-
-      if (!response.ok) throw new Error(datas.error || 'Failed to grants access document');
-
+      const datas = await Http.post(`/doc/${documentId}/access`, data)
       return datas;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to grants access document');
@@ -318,7 +192,7 @@ export const archiveDocument = createAsyncThunk(
   async ({ documentId, isArchived }: { documentId: string; isArchived: boolean }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/archive`, {
+      const response = await fetch(`${HTTP}/doc/${documentId}/archive`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -342,7 +216,7 @@ export const sensitiveDocument = createAsyncThunk(
   async ({ documentId, isSensitive }: { documentId: string; isSensitive: boolean }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/doc/${documentId}/sensitive`, {
+      const response = await fetch(`${HTTP}/${documentId}/sensitive`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -365,16 +239,7 @@ export const fetchArchivedDocuments = createAsyncThunk(
   'documents/fetchArchivedDocuments',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/archive', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch documents');
+      const data = await Http.get(`/doc/archive`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch documents');
@@ -387,16 +252,7 @@ export const fetchSensitiveocuments = createAsyncThunk(
   'documents/fetchSensitiveocuments',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch('http://127.0.0.1:4000/api/doc/sensitive', {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch documents');
+      const data = await Http.get(`/doc/sensitive`)
       return data;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch documents');

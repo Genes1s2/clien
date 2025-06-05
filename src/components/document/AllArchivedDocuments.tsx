@@ -15,6 +15,7 @@ import DocumentViewer from '../DocumentViewer';
 import { Download, DownloadIcon, EyeIcon, Files, MoreVerticalIcon, PencilIcon, Plus, ShieldIcon } from 'lucide-react';
 import Pagination from '../Pagination';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
+import { HTTPFILE } from '../../utils/Http';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -44,7 +45,7 @@ const AllArchivedDocuments = ({ onEdit }: { onEdit: (doc: any) => void }) => {
 
   const handleDownload = async (filePath: string, fileName: string) => {
 
-    const viewerUrl = `http://127.0.0.1:4000${filePath}`;
+    const viewerUrl = `${HTTPFILE}${filePath}`;
     try {
       const response = await fetch(viewerUrl);
       const blob = await response.blob();

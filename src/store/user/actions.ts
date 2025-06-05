@@ -1,32 +1,34 @@
 // store/user/actions.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserRole } from "../../models/rolePermissions";
+import { Http } from "../../utils/Http";
 
 //Update user profile
 export const updateUserProfile = createAsyncThunk(
   "user/updateProfile",
   async ({ userId, data }: { userId: string; data: any }, { rejectWithValue }) => {
     try {
-
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/profile/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      const datas = await response.json()
-
-      if (!response.ok) {
-        return rejectWithValue(datas.error);
-      }
-
+      const datas = await Http.put(`/user/profile/${userId}`, data)
       return datas;
+      // const token = localStorage.getItem("token");
+      // const response = await fetch(`http://127.0.0.1:4000/api/user/profile/${userId}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Authorization": `Bearer ${token}`,
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify(data)
+      // });
+
+      // const datas = await response.json()
+
+      // if (!response.ok) {
+      //   return rejectWithValue(datas.error);
+      // }
+
+      // return datas;
     } catch (error) {
-      return rejectWithValue("Failed to update profile");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to update user profile");
     }
   }
 );
@@ -36,28 +38,10 @@ export const changeUserPassword = createAsyncThunk(
   "user/changePassword",
   async ({ userId, data }: { userId: string; data: any }, { rejectWithValue }) => {
     try {
-
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/password/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      const datas = await response.json()
-
-      if (!response.ok) {
-        if (datas.error.status === 404) return rejectWithValue(datas.error.message);
-
-        return rejectWithValue(datas.error);
-      }
-
+      const datas = await Http.put(`/user/password/${userId}`, data)
       return datas;
     } catch (error) {
-      return rejectWithValue("Failed to change password");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to change password");
     }
   }
 );
@@ -67,26 +51,28 @@ export const desactivateUser = createAsyncThunk(
   "user/desactivateUser",
   async (userId: string, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/inactive/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
+      const datas = await Http.put(`/user/inactive/${userId}`)
+      return datas;
+      // const token = localStorage.getItem("token");
+      // const response = await fetch(`http://127.0.0.1:4000/api/user/inactive/${userId}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Authorization": `Bearer ${token}`,
+      //     "Content-Type": "application/json"
+      //   }
+      // });
 
-      const data = await response.json()
+      // const data = await response.json()
 
-      if (!response.ok) {
+      // if (!response.ok) {
 
-        return rejectWithValue(data.error);
-      }
+      //   return rejectWithValue(data.error);
+      // }
 
-      return data;
+      // return data;
 
     } catch (error) {
-      return rejectWithValue(error || "Failed to desactivate user");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to desactivate user");
     }
   }
 );
@@ -98,26 +84,11 @@ export const fetchUserProfile = createAsyncThunk(
   "user/fetchUserProfile",
   async (userId: string, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/profile/${userId}`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.get(`/user/profile/${userId}`)
       return data;
 
     } catch (error) {
-      return rejectWithValue("Failed to fetch profile");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to fetch profile");
     }
   }
 );
@@ -127,26 +98,11 @@ export const getAllUsers = createAsyncThunk(
   "user/getAllUsers",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/users`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.get(`/user/users`)
       return data;
 
     } catch (error) {
-      return rejectWithValue(error || "Failed to fetch all users");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to fetch users");
     }
   }
 );
@@ -156,22 +112,7 @@ export const activateUser = createAsyncThunk(
   "user/activateUser",
   async (userId: string, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/active/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.put(`/user/active/${userId}`)
       return data;
 
     } catch (error) {
@@ -185,26 +126,10 @@ export const getAllActiveUsers = createAsyncThunk(
   "user/getAllActiveUsers",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/active-users`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.get(`/user/active-users`)
       return data;
-
     } catch (error) {
-      return rejectWithValue(error || "Failed to fetch active users");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to fetch active users");
     }
   }
 );
@@ -214,26 +139,11 @@ export const getAllInactiveUsers = createAsyncThunk(
   "user/getAllInactiveUsers",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/inactive-users`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.get(`/user/inactive-users`)
       return data;
 
     } catch (error) {
-      return rejectWithValue(error || "Failed to fetch inactive users");
+      return rejectWithValue(error instanceof Error ? error.message : "Failed to fetch inactive users");
     }
   }
 );
@@ -243,28 +153,30 @@ export const updateUserRole = createAsyncThunk(
   "user/updateUserRole",
   async ({ userId, data }: { userId: string; data: { roleId: string } }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/admin/${userId}/role`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-      
-
-      const datas = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(datas.error);
-      }
-
+      const datas = await Http.put(`/user/admin/${userId}/role`, data)
       return datas;
+      // const token = localStorage.getItem("token");
+      // const response = await fetch(`http://127.0.0.1:4000/api/user/admin/${userId}/role`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Authorization": `Bearer ${token}`,
+      //     "Content-Type": "application/json"
+      //   },
+      //   body: JSON.stringify(data)
+      // });
+
+
+      // const datas = await response.json()
+
+      // if (!response.ok) {
+
+      //   return rejectWithValue(datas.error);
+      // }
+
+      // return datas;
 
     } catch (error) {
-      return rejectWithValue(error || "Failed to desactivate user");
+       return rejectWithValue(error instanceof Error ? error.message : "Failed to update user role");
     }
   }
 );
@@ -274,22 +186,7 @@ export const deleteUser = createAsyncThunk(
   "user/deleteUser",
   async (userId: string, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:4000/api/user/admin/${userId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      const data = await response.json()
-
-      if (!response.ok) {
-
-        return rejectWithValue(data.error);
-      }
-
+      const data = await Http.delete(`/user/admin/${userId}`)
       return data;
 
     } catch (error) {

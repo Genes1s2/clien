@@ -3,6 +3,7 @@ import { ApiResponse } from "../../models/store";
 import { RootState } from "../index";
 import { AuthUser, ILoginInput, IRegisterInput } from "../../models/auth";
 import { logError } from "../../utils/ErrorLogging";
+import { HTTP } from "../../utils/Http";
 
 export const loginAction = createAsyncThunk<
   ApiResponse,
@@ -12,7 +13,7 @@ export const loginAction = createAsyncThunk<
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://127.0.0.1:4000/api/auth/login", {
+      const response = await fetch(`${HTTP}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,9 +35,10 @@ export const loginAction = createAsyncThunk<
       return data;
     } catch (error: any) {
       logError(error)
-      return rejectWithValue({
-        message: error.message || "Login failed"
-      });
+      return rejectWithValue(error instanceof Error ? error.message :  "Login failed");
+      // return rejectWithValue({
+      //   message: error.message || "Login failed"
+      // });
     }
   }
 );
@@ -49,7 +51,7 @@ export const registerAction = createAsyncThunk<
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://127.0.0.1:4000/api/auth/register", {
+      const response = await fetch(`${HTTP}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +69,7 @@ export const registerAction = createAsyncThunk<
       return data;
     } catch (error: any) {
 
-      return rejectWithValue(error);
+      return rejectWithValue(error instanceof Error ? error.message :  "Registration failed");
     }
   }
 );
@@ -81,7 +83,7 @@ export const forgotPasswordAction = createAsyncThunk<
   "auth/forgotPassword",
   async ({ email }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://127.0.0.1:4000/api/auth/forgot-password", {
+      const response = await fetch(`${HTTP}/auth/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +95,7 @@ export const forgotPasswordAction = createAsyncThunk<
       if (!response.ok) return rejectWithValue(data.error);
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error instanceof Error ? error.message :  " Failed");
     }
   }
 );
@@ -106,7 +108,7 @@ export const resetPasswordAction = createAsyncThunk<
   "auth/resetPassword",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://127.0.0.1:4000/api/auth/reset-password", {
+      const response = await fetch(`${HTTP}/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +120,7 @@ export const resetPasswordAction = createAsyncThunk<
       if (!response.ok) return rejectWithValue(data.error);
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error instanceof Error ? error.message :  "Password reset failed");
     }
   }
 );

@@ -90,7 +90,9 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
           onSuccess?.();
         } catch (error: any) {
           // await dispatch(allDocumentsByOwner()).unwrap();
-          showError( 'Failed to process document');
+          console.log("error: ", error);
+          
+          showError('Failed to process document');
         }
       }}
     >
@@ -176,7 +178,7 @@ const DocumentForm = ({ existingDocument, onSuccess }: DocumentForms) => {
             disabled={isSubmitting}
             className={`w-full px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isSubmitting ? 'Submitting...' : existingDocument ? 'Update Category' : 'Create Category'}
+            {isSubmitting ? 'Submitting...' : existingDocument ? 'Update Document' : 'Create Document'}
           </button>
         </Form>
       )}
