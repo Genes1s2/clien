@@ -1,2 +1,12 @@
 [build]
   command = "npm install --legacy-peer-deps && npm run build"
+  publish = "build/"
+
+[build.environment]
+  NODE_VERSION = "18.18.2"  # Use Node 18 for better compatibility
+
+# For React Router compatibility
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
