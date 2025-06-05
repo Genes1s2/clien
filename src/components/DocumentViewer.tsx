@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { showError } from '../utils/Notifications';
 import * as ExcelJS from 'exceljs';
 import { renderAsync } from 'docx-preview';
-import { Presentation , Slide, Text, Image } from 'react-pptx';
+import { Presentation , Slide, Text } from 'react-pptx';
 import { HTTPFILE } from '../utils/Http';
 
 type SupportedExtensions = 'pdf' | 'docx' | 'xlsx' | 'xls' | 'pptx' | 'ppt' | 'xls';
@@ -35,7 +35,7 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
         .catch(error => handleError(error, 'DOCX rendering'))
         .finally(() => setIsLoading(false));
     }
-  }, [fileUrl, fileExtension]);
+  }, [fileUrl, fileExtension, viewerUrl]);
 
   // Handle Excel files
   useEffect(() => {
@@ -58,7 +58,7 @@ const DocumentViewer = ({ fileUrl }: { fileUrl: string }) => {
         .catch(error => handleError(error, 'Excel processing'))
         .finally(() => setIsLoading(false));
     }
-  }, [fileUrl, fileExtension]);
+  }, [fileUrl, fileExtension, viewerUrl]);
 
  // Handle PowerPoint files
   useEffect(() => {

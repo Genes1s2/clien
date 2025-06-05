@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { commentDocument } from '../../store/document/actions';
-import { AppDispatch, RootState } from '../../store';
+import { AppDispatch } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
 import { Text } from 'lucide-react';
-import { LoadingType } from '../../models/store';
 
 interface DocumentFormComment {
     documentId: string;
@@ -15,7 +14,6 @@ interface DocumentFormComment {
 const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const { currentDocument, status, error } = useSelector((state: RootState) => state.documents);
     const commentSchema = Yup.object().shape({
         content: Yup.string()
             .required('Comment is required')
@@ -35,8 +33,7 @@ const DocumentFormComments = ({ documentId, onSuccess }: DocumentFormComment) =>
                         })).unwrap();
                         showSuccess('Comment added successfully');
                         resetForm();
-                        if (status !== LoadingType.PENDING) onSuccess?.();
-                        // onSuccess?.();
+                        onSuccess?.();
                     } catch (error: any) {
                         showError(error || 'Failed to add comment');
                     } finally {

@@ -4,10 +4,9 @@ import { createCategory, updateCategory } from '../../store/categories/actions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
-import { useState } from 'react';
 import { Group } from 'lucide-react';
 
-interface CategoryForm {
+interface CategoryForms {
     existingCategory?: any;
     onSuccess?: () => void
 }
@@ -16,7 +15,7 @@ const categorySchema = Yup.object().shape({
     name: Yup.string().required('Category name is required')
 });
 
-const CategoryForm = ({ existingCategory, onSuccess }: CategoryForm) => {
+const CategoryForm = ({ existingCategory, onSuccess }: CategoryForms) => {
     const dispatch = useDispatch<AppDispatch>();
 
     return (

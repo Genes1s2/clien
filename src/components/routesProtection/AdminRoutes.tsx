@@ -5,8 +5,7 @@ import { RootState } from '../../store';
 import { LoadingType } from '../../models/store';
 
 const AdminRoute = () => {
-//   const { user } = useSelector((state: RootState) => state.auth);
-const { status, error } = useSelector(
+const { status } = useSelector(
     (state: RootState) => state.user.currentProfile
   );
 

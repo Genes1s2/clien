@@ -24,10 +24,10 @@ export const restoreUser = createAsyncThunk<
     if (error.message.includes("401")) {
       return errorMessage = 'SESSION_EXPIRED';
     } else if (error.message.includes("Network Error")) {
-      return errorMessage = 'Network error';
+      errorMessage = 'Network error';
+      return rejectWithValue(errorMessage);
     }
     return rejectWithValue(error instanceof Error ? error.message :  "Failed to restore user");
-    // return rejectWithValue(errorMessage || "Failed to restore user");
   }
 });
 

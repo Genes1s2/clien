@@ -2,7 +2,6 @@ import { useState } from 'react';
 import RoleForm from '../../../components/rolePermission/RoleForm';
 import RoleList from '../../../components/rolePermission/RoleList';
 import Modal from '../../../components/modal/Modal';
-import { UserRole } from '../../../models/rolePermissions';
 import { Plus } from 'lucide-react';
 
 export interface RoleType {

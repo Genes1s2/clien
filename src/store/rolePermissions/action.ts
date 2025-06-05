@@ -4,16 +4,16 @@ import { Http } from '../../utils/Http';
 
 // Helper function for handling fetch responses
 
-const handleResponse = async (response: Response) => {
-  const data = await response.json();
+// const handleResponse = async (response: Response) => {
+//   const data = await response.json();
+// 
+//   if (!response.ok) {
+//     const error = data.error || `HTTP error! status: ${response.status}`;
+//     throw new Error(error);
+//   }
 
-  if (!response.ok) {
-    const error = data.error || `HTTP error! status: ${response.status}`;
-    throw new Error(error);
-  }
-
-  return data;
-};
+//   return data;
+// };
 
 // Roles
 

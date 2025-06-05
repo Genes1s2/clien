@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Document } from '../../models/documents';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
-import Modal from '../modal/Modal';
-import { archiveDocument, fetchDocuments, getDocumentById, sensitiveDocument, softDeleteDocument, uploadNewVersionDocument } from '../../store/document/actions';
+import { archiveDocument, getDocumentById, sensitiveDocument, softDeleteDocument } from '../../store/document/actions';
 import { LoadingType } from '../../models/store';
 import { useNavigate } from 'react-router';
 import { UserActivity } from '../user/UserActivity';

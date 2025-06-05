@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Menu, Transition } from '@headlessui/react';
-import { ChevronDown, Edit, Trash, User, UserLock } from 'lucide-react';
-import { showError, showSuccess } from '../../utils/Notifications';
-import { desactivateUser, getAllActiveUsers, updateUserRole } from '../../store/user/actions';
+import { ChevronDown, User } from 'lucide-react';
+import { getAllActiveUsers } from '../../store/user/actions';
 import { getRandomColor } from '../../utils/RandomColor';
 import { LoadingType } from '../../models/store';
 import Pagination from '../Pagination';
-import ConfirmationModal from '../modal/ConfirmationModal';
-import RoleSelectModal from '../modal/RoleSelectModal';
 import { AuthUser, UserListEntry } from '../../models/auth';
 import { AppDispatch, RootState } from '../../store';
 import { useNavigate } from 'react-router';
@@ -20,9 +17,6 @@ const AllActiveUser = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedUser, setSelectedUser] = useState<UserListEntry | null>(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showRoleModal, setShowRoleModal] = useState(false);
     const avatarBgColor = useMemo(() => getRandomColor(), []);
     const navigate = useNavigate();
 
@@ -42,13 +36,6 @@ const AllActiveUser = () => {
     useEffect(() => {
         dispatch(getAllActiveUsers());
     }, [dispatch]);
-
-    const handleRoleUpdate = async (roleId: string) => {
-        if (selectedUser) {
-            await dispatch(updateUserRole({ userId: selectedUser.id, data: { roleId } })).unwrap();
-            setShowRoleModal(false);
-        }
-    };
 
     if (status === LoadingType.PENDING) return <div><TableSkeleton rows={paginatedUsers.length} cols={6} /></div>;
     if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
@@ -155,13 +142,6 @@ const AllActiveUser = () => {
                 totalItems={filteredUsers.length}
                 itemsPerPage={ITEMS_PER_PAGE}
                 onPageChange={setCurrentPage}
-            />
-
-            <RoleSelectModal
-                isOpen={showRoleModal}
-                onClose={() => setShowRoleModal(false)}
-                onConfirm={handleRoleUpdate}
-                currentRole={selectedUser?.roleId || ''}
             />
         </div>
     );

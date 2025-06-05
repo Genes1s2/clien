@@ -3,7 +3,7 @@ import { Document } from '../../models/documents';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { showError, showSuccess } from '../../utils/Notifications';
-import Modal, { ModalPreview } from '../modal/Modal';
+import { ModalPreview } from '../modal/Modal';
 import { allDeletedDocuments, hardeleteDocument, restoreDocument } from '../../store/document/actions';
 import { LoadingType } from '../../models/store';
 import excellLogo from '../../assets/images/excellogo.jpeg';

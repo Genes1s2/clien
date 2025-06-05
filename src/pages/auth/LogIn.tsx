@@ -8,9 +8,8 @@ import { useNavigate } from 'react-router';
 import { LoadingType } from '../../models/store';
 import { ILoginInput, IRegisterInput } from '../../models/auth';
 import { loginAction, registerAction, resetPasswordAction, forgotPasswordAction } from '../../store/auth/actions';
-import { showError, showPromise } from '../../utils/Notifications';
+import { showPromise } from '../../utils/Notifications';
 import { Eye, EyeOff } from 'lucide-react';
-import { restoreUser } from '../../store/auth/restoreUser/actions';
 
 
 type AuthMode = 'login' | 'register' | 'forgot-password' | 'reset-password';

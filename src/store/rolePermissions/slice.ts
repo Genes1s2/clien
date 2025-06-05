@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchRoles, createRole, updateRole, deleteRole, fetchPermissions } from './action';
 import { LoadingType } from '../../models/store';
-import { log } from 'console';
 
 interface RolePermissionState {
   roles: any[];

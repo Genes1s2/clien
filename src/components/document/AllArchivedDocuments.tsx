@@ -12,7 +12,7 @@ import pdfLogo from '../../assets/images/pdflogo.png';
 import wordLogo from '../../assets/images/wordlogo.jpeg';
 import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
 import DocumentViewer from '../DocumentViewer';
-import { Download, DownloadIcon, EyeIcon, Files, MoreVerticalIcon, PencilIcon, Plus, ShieldIcon } from 'lucide-react';
+import { Download, DownloadIcon, EyeIcon, Files, MoreVerticalIcon, PencilIcon, ShieldIcon } from 'lucide-react';
 import Pagination from '../Pagination';
 import { DocumentsSkeletonLoader } from '../SkeletonLoader';
 import { HTTPFILE } from '../../utils/Http';

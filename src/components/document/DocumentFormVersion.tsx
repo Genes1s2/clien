@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { getDocumentById, uploadNewVersionDocument } from '../../store/document/actions';
-import { AppDispatch, RootState } from '../../store';
+import { useDispatch } from 'react-redux';
+import { uploadNewVersionDocument } from '../../store/document/actions';
+import { AppDispatch } from '../../store';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { showError, showSuccess } from '../../utils/Notifications';
@@ -9,7 +9,6 @@ import excellLogo from '../../assets/images/excellogo.jpeg';
 import pdfLogo from '../../assets/images/pdflogo.png';
 import wordLogo from '../../assets/images/wordlogo.jpeg';
 import powerpointLogo from '../../assets/images/powerpointlogo.jpeg';
-import { LoadingType } from '../../models/store';
 
 interface DocumentFormVersion {
     documentId: string;
@@ -18,7 +17,6 @@ interface DocumentFormVersion {
 
 const DocumentFormVersions = ({ documentId, onSuccess }: DocumentFormVersion) => {
     const dispatch = useDispatch<AppDispatch>();
-const { currentDocument, status, error } = useSelector((state: RootState) => state.documents);
     const documentVersionSchema = Yup.object().shape({
         description: Yup.string().nullable(),
         filePath: Yup.mixed().required('File is required')
@@ -42,8 +40,8 @@ const { currentDocument, status, error } = useSelector((state: RootState) => sta
                         await dispatch(uploadNewVersionDocument({ documentId, formData })).unwrap();
                         showSuccess('New version uploaded successfully');
                         setSubmitting(false);
-                        if (status !== LoadingType.PENDING) onSuccess?.();
-                        // onSuccess?.();
+                        
+                        onSuccess?.();
                     } catch (error: any) {
                         
                         showError('Failed to process upload');

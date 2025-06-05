@@ -1,5 +1,5 @@
 import React from 'react';
-import { PercentDiamond, CheckCircle, XCircle, LockOpenIcon } from 'lucide-react';
+import { CheckCircle, XCircle, LockOpenIcon } from 'lucide-react';
 import { AccessRight } from '../../models/logActions';
 
 interface AccessRightsPanelProps {

@@ -1,6 +1,5 @@
 // store/user/actions.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { UserRole } from "../../models/rolePermissions";
 import { Http } from "../../utils/Http";
 
 //Update user profile
@@ -10,23 +9,6 @@ export const updateUserProfile = createAsyncThunk(
     try {
       const datas = await Http.put(`/user/profile/${userId}`, data)
       return datas;
-      // const token = localStorage.getItem("token");
-      // const response = await fetch(`http://127.0.0.1:4000/api/user/profile/${userId}`, {
-      //   method: "PUT",
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`,
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify(data)
-      // });
-
-      // const datas = await response.json()
-
-      // if (!response.ok) {
-      //   return rejectWithValue(datas.error);
-      // }
-
-      // return datas;
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : "Failed to update user profile");
     }

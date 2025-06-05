@@ -11,7 +11,7 @@
   to = "/index.html"
   status = 200
 
-  [context.production.environment]
+[context.production.environment]
   CI = false  # Disable strict CI checks
 
 [dev]

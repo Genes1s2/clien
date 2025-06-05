@@ -11,7 +11,7 @@ import { AccessRightProfile } from '../../../components/user/AccessRigntProfile'
 
 const UserProfilePage = () => {
 
-  const { status, error } = useSelector(
+  const { status } = useSelector(
     (state: RootState) => state.user.currentProfile
   );
   const [activeTab, setActiveTab] = useState('Infos et mis à Jours');
